@@ -1,20 +1,22 @@
 import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 export default function Home() {
+  const { basePath } = useRouter();
+
   useEffect(() => {
     const script = document.createElement('script');
-    script.src = '/phaser/phaser.min.js';
+    script.src = `${basePath}/phaser/phaser.min.js`;
     script.onload = () => {
-      import('../src/main'); // loads your game after Phaser is available
+      import('../src/main'); // start game
     };
     document.body.appendChild(script);
     return () => script.remove();
-  }, []);
-
+  }, [basePath]);
 
   return (
     <div>
-      <h1>Phaser in Next.js</h1>
+      <h1>Phaser Game</h1>
       <div id="phaser-container" />
     </div>
   );
