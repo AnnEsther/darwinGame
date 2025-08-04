@@ -1,4 +1,6 @@
 // [GameScene remains unchanged, omitted for brevity]
+import ParallaxClouds from './ParallaxCloud.js';
+
 export default class GameScene extends Phaser.Scene {
     constructor() {
         super('GameScene');
@@ -10,6 +12,7 @@ export default class GameScene extends Phaser.Scene {
 
     preload() {
         this.load.image('coin', 'assets/coin.png');
+        this.load.image('cloud', 'assets/cloud.png');
     }
 
     create() {
@@ -22,6 +25,8 @@ export default class GameScene extends Phaser.Scene {
         this.rocksPassedPrev = -1;
         this.rockSpeed = -200;
         this.levelColors = [0x0000ff, 0x00ffff, 0x00ff00, 0xffff00, 0xff00ff];
+
+        this.clouds = new ParallaxClouds(this, 'cloud', this.rockSpeed);
 
         this.ground = this.add.rectangle(400, 550, 800, 100, 0x00ff00);
         this.physics.add.existing(this.ground, true);
@@ -57,8 +62,13 @@ export default class GameScene extends Phaser.Scene {
         this.rocksText = this.add.text(10, 60, 'Rocks Passed: 0', { fontSize: '20px', fill: '#fff' });
     }
 
-    update() {
+    update(time,delta) {
         // console.log(this.coins.x, this.coins.body.velocity.x);
+        // console.log(time);
+        // console.log(delta);
+        // this.clouds.update(delta);
+
+        this.clouds.update();
 
         if (!this.reachedCenter) {
             if (this.player.x >= 400) {
@@ -83,8 +93,10 @@ export default class GameScene extends Phaser.Scene {
             this.rocksText.setText(`Rocks Passed: ${this.rocksPassed}`);
 
             if (this.rocksPassed > this.rocksPassedPrev) {
-                this.rockSpeed -= 5;
+                this.rockSpeed -= 25;
                 this.rocksPassedPrev = this.rocksPassed;
+                this.clouds.setSpeed(this.rockSpeed);
+                console.log("speed updated");
             }
 
             if (this.rocksPassed % 10 === 0) {
@@ -130,8 +142,8 @@ export default class GameScene extends Phaser.Scene {
         // const coin = this.physics.add.sprite(this.rock.x, this.rock.y + offsetY, 'coin');
         const coin = this.coins.create(this.rock.x, this.rock.y + offsetY, 'coin');
 
-        coin.displayWidth = 20;
-        coin.displayHeight = 20;
+        coin.displayWidth = 40;
+        coin.displayHeight = 40;
 
         coin.body.setSize(20, 20, true);       // Resizes the physics body
         coin.body.setAllowGravity(false);          // Prevent falling
