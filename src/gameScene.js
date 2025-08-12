@@ -18,8 +18,32 @@ export default class GameScene extends Phaser.Scene {
         this.load.image('Cloud1', 'assets/Enviornment/cloud_1.png');
         this.load.image('Ground', 'assets/Enviornment/ground_0.png');
 
+        // player animations
+        this.load.image('monkey_1', 'assets/monkey/run/MONKEY_RUN_TK020001 Background Removed.png');
+        this.load.image('monkey_2', 'assets/monkey/run/MONKEY_RUN_TK020002 Background Removed.png');
+        this.load.image('monkey_3', 'assets/monkey/run/MONKEY_RUN_TK020003 Background Removed.png');
+        this.load.image('monkey_4', 'assets/monkey/run/MONKEY_RUN_TK020004 Background Removed.png');
+        this.load.image('monkey_5', 'assets/monkey/run/MONKEY_RUN_TK020005 Background Removed.png');
+        this.load.image('monkey_6', 'assets/monkey/run/MONKEY_RUN_TK020006 Background Removed.png');
+        this.load.image('monkey_7', 'assets/monkey/run/MONKEY_RUN_TK020007 Background Removed.png');
+        this.load.image('monkey_8', 'assets/monkey/run/MONKEY_RUN_TK020008 Background Removed.png');
+        this.load.image('monkey_9', 'assets/monkey/run/MONKEY_RUN_TK020009 Background Removed.png');
+        this.load.image('monkey_10', 'assets/monkey/run/MONKEY_RUN_TK020010 Background Removed.png');
+        this.load.image('monkey_11', 'assets/monkey/run/MONKEY_RUN_TK020011 Background Removed.png');
+        this.load.image('monkey_12', 'assets/monkey/run/MONKEY_RUN_TK020012 Background Removed.png');
+        this.load.image('monkey_13', 'assets/monkey/run/MONKEY_RUN_TK020013 Background Removed.png');
+        this.load.image('monkey_14', 'assets/monkey/run/MONKEY_RUN_TK020014 Background Removed.png');
+        this.load.image('monkey_15', 'assets/monkey/run/MONKEY_RUN_TK020015 Background Removed.png');
+        this.load.image('monkey_16', 'assets/monkey/run/MONKEY_RUN_TK020016 Background Removed.png');
+        this.load.image('monkey_17', 'assets/monkey/run/MONKEY_RUN_TK020017 Background Removed.png');
+        this.load.image('monkey_18', 'assets/monkey/run/MONKEY_RUN_TK020018 Background Removed.png');
+        this.load.image('monkey_19', 'assets/monkey/run/MONKEY_RUN_TK020019 Background Removed.png');
+        this.load.image('monkey_20', 'assets/monkey/run/MONKEY_RUN_TK020020 Background Removed.png');
+        this.load.image('monkey_21', 'assets/monkey/run/MONKEY_RUN_TK020021 Background Removed.png');
+        this.load.image('monkey_22', 'assets/monkey/run/MONKEY_RUN_TK020022 Background Removed.png');
+
         this.load.image('lizard', 'assets/lizard.png');
-        this.load.image('monkey', 'assets/monkey.png');
+        // this.load.image('monkey', 'assets/monkey.png');
         this.load.image('ostrich', 'assets/ostrich.png');
         this.load.image('man', 'assets/man.png');
     }
@@ -33,13 +57,13 @@ export default class GameScene extends Phaser.Scene {
         this.rocksPassed = 0;
         this.rocksPassedPrev = -1;
         this.rockSpeed = -200;
-        this.levelSprites = ['lizard', 'monkey', 'ostrich', 'man'];
+        this.levelSprites = ['lizard', 'monkey_1', 'ostrich', 'man'];
         this.gravityY = 0;
         this.jumpVelocity = -400;
 
         this.background = new ParallaxBackground(this, 'cloud', this.rockSpeed);
 
-        this.ground = this.add.rectangle(this.scale.width/2, this.scale.height/2+50, this.scale.width, 20, 0x00000000);
+        this.ground = this.add.rectangle(this.scale.width / 2, this.scale.height / 2 + 50, this.scale.width, 20, 0x00000000);
         this.ground.alpha = 0;
         this.physics.add.existing(this.ground, true);
 
@@ -48,17 +72,50 @@ export default class GameScene extends Phaser.Scene {
         // this.player.body.setCollideWorldBounds(true);
         // this.player.body.setVelocityX(200);
 
-        this.player = this.physics.add.sprite(this.scale.height/2, this.ground.y - 100, this.levelSprites[this.level]);
+        // Create the animation using the loaded images
+        this.anims.create({
+            key: 'monkey_run', // Animation name
+            frames: [
+                { key: 'monkey_1' },
+                { key: 'monkey_2' },
+                { key: 'monkey_3' },
+                { key: 'monkey_4' },
+                { key: 'monkey_5' },
+                { key: 'monkey_6' },
+                { key: 'monkey_7' },
+                { key: 'monkey_8' },
+                { key: 'monkey_9' },
+                { key: 'monkey_10' },
+                { key: 'monkey_11' },
+                { key: 'monkey_12' },
+                { key: 'monkey_13' },
+                { key: 'monkey_14' },
+                { key: 'monkey_15' },
+                { key: 'monkey_16' },
+                { key: 'monkey_17' },
+                { key: 'monkey_18' },
+                { key: 'monkey_19' },
+                { key: 'monkey_20' },
+                { key: 'monkey_21' },
+                { key: 'monkey_22' },
+            ],
+            frameRate: 14, // 10 frames per second (adjust as needed)
+            repeat: -1 // Loop infinitely
+        });
+
+        this.player = this.physics.add.sprite(this.scale.height / 2, this.ground.y - 100, this.levelSprites[this.level]);
         this.player.setVelocityX(200); // Initial movement (if needed)
-        this.player.setScale(1 / 2);
+        this.player.setScale(0.5);
         this.player.setCollideWorldBounds(true); // Enable world bounds collision
         this.player.body.setGravityY(this.gravityY);
+
+
 
         this.physics.add.collider(this.player, this.ground, () => {
             this.jumpCount = 0;
         });
 
-        this.rock = this.add.rectangle(this.scale.width+100, this.scale.height/2, 40, 40, 0xff0000);
+        this.rock = this.add.rectangle(this.scale.width + 100, this.scale.height / 2, 40, 40, 0xff0000);
         this.physics.add.existing(this.rock);
         this.rock.body.setVelocityX(this.rockSpeed);
         this.rock.body.setImmovable(true);
@@ -90,8 +147,8 @@ export default class GameScene extends Phaser.Scene {
         this.background.update();
 
         if (!this.reachedCenter) {
-            if (this.player.x >= this.scale.width/2) {
-                this.player.x = this.scale.width/2;
+            if (this.player.x >= this.scale.width / 2) {
+                this.player.x = this.scale.width / 2;
                 this.player.body.setVelocityX(0);
                 this.reachedCenter = true;
             }
@@ -109,7 +166,7 @@ export default class GameScene extends Phaser.Scene {
             this.rocksPassed++;
             this.rocksText.setText(`Rocks Passed: ${this.rocksPassed}`);
 
-            if (this.level != this.levelSprites.length-1 && this.rocksPassed > this.rocksPassedPrev) {
+            if (this.level != this.levelSprites.length - 1 && this.rocksPassed > this.rocksPassedPrev) {
                 this.rockSpeed -= 25;
                 this.gravityY = this.gravityY + 10;
                 this.jumpVelocity -= 15;
@@ -138,6 +195,10 @@ export default class GameScene extends Phaser.Scene {
                 this.player.setTexture(this.levelSprites[this.level]);
                 this.player.setScale(1 / 2);
                 this.player.body.setSize(this.player.width, this.player.height, true);
+                if (this.level == 1) {
+                    this.player.setScale(0.15);
+                    this.player.play('monkey_run');
+                }
             }
             if (this.level >= this.levelSprites.length) {
                 this.scene.start('LeaderboardScene', {
@@ -156,13 +217,13 @@ export default class GameScene extends Phaser.Scene {
         this.spawnCoinNearRock();
 
         if (this.lives <= 0) {
-            if(this.level == this.levelSprites.length-1){
+            if (this.level == this.levelSprites.length - 1) {
                 this.scene.start('LeaderboardScene', {
                     playerName: this.playerName,
                     coins: this.coinsCollected
                 });
             }
-            else{
+            else {
                 this.scene.start('GameOverScene');
             }
         }
