@@ -7,8 +7,8 @@ import WinScene from './winScene';
 
 const config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: 1270,
+    height: 520,
     dom: {
         createContainer: true
     },

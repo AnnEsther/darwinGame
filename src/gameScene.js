@@ -12,7 +12,12 @@ export default class GameScene extends Phaser.Scene {
 
     preload() {
         this.load.image('coin', 'assets/coin.png');
-        this.load.image('cloud', 'assets/cloud.png');
+
+        this.load.image('Sky', 'assets/Enviornment/SkySmall.jpeg');
+        this.load.image('Cloud0', 'assets/Enviornment/cloud_0_medium.png');
+        this.load.image('Cloud1', 'assets/Enviornment/cloud_1.png');
+        this.load.image('Ground', 'assets/Enviornment/ground_0.png');
+
         this.load.image('lizard', 'assets/lizard.png');
         this.load.image('monkey', 'assets/monkey.png');
         this.load.image('ostrich', 'assets/ostrich.png');
@@ -27,15 +32,14 @@ export default class GameScene extends Phaser.Scene {
         this.level = 0;
         this.rocksPassed = 0;
         this.rocksPassedPrev = -1;
-        this.rockSpeed = -100;
+        this.rockSpeed = -200;
         this.levelSprites = ['lizard', 'monkey', 'ostrich', 'man'];
-        this.levelGravity = ['lizard', 'monkey', 'ostrich', 'man'];
         this.gravityY = 0;
         this.jumpVelocity = -400;
 
         this.clouds = new ParallaxClouds(this, 'cloud', this.rockSpeed);
 
-        this.ground = this.add.rectangle(400, 550, 800, 100, 0x00ff00);
+        this.ground = this.add.rectangle(this.scale.width/2, 550, this.scale.width, 100, 0x00ff00);
         this.physics.add.existing(this.ground, true);
 
         // this.player = this.add.rectangle(100, 300, 40, 40, this.levelColors[this.level]);
@@ -53,7 +57,7 @@ export default class GameScene extends Phaser.Scene {
             this.jumpCount = 0;
         });
 
-        this.rock = this.add.rectangle(850, 480, 40, 40, 0xff0000);
+        this.rock = this.add.rectangle(this.scale.width+100, 480, 40, 40, 0xff0000);
         this.physics.add.existing(this.rock);
         this.rock.body.setVelocityX(this.rockSpeed);
         this.rock.body.setImmovable(true);
@@ -85,8 +89,8 @@ export default class GameScene extends Phaser.Scene {
         this.clouds.update();
 
         if (!this.reachedCenter) {
-            if (this.player.x >= 400) {
-                this.player.x = 400;
+            if (this.player.x >= this.scale.width/2) {
+                this.player.x = this.scale.width/2;
                 this.player.body.setVelocityX(0);
                 this.reachedCenter = true;
             }
@@ -116,7 +120,7 @@ export default class GameScene extends Phaser.Scene {
 
         //rock left screen
         if (this.rock.x < -this.rock.width) {
-            this.rock.x = 850;
+            this.rock.x = this.scale.width + 100;
             this.rock.playerPassed = false;
             this.rock.body.setVelocityX(this.rockSpeed);
             this.spawnCoinNearRock();
@@ -146,7 +150,7 @@ export default class GameScene extends Phaser.Scene {
     handleHit(player, rock) {
         this.lives--;
         this.livesText.setText(`Lives: ${this.lives}`);
-        this.rock.x = 850;
+        this.rock.x = this.scale.width + 100;
         this.rock.body.setVelocityX(this.rockSpeed);
         this.spawnCoinNearRock();
 
