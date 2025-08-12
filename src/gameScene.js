@@ -39,7 +39,8 @@ export default class GameScene extends Phaser.Scene {
 
         this.background = new ParallaxBackground(this, 'cloud', this.rockSpeed);
 
-        this.ground = this.add.rectangle(this.scale.width/2, 550, this.scale.width, 100, 0x00ff00);
+        this.ground = this.add.rectangle(this.scale.width/2, this.scale.height/2+50, this.scale.width, 20, 0x00000000);
+        this.ground.alpha = 0;
         this.physics.add.existing(this.ground, true);
 
         // this.player = this.add.rectangle(100, 300, 40, 40, this.levelColors[this.level]);
@@ -47,7 +48,7 @@ export default class GameScene extends Phaser.Scene {
         // this.player.body.setCollideWorldBounds(true);
         // this.player.body.setVelocityX(200);
 
-        this.player = this.physics.add.sprite(100, 300, this.levelSprites[this.level]);
+        this.player = this.physics.add.sprite(this.scale.height/2, this.ground.y - 100, this.levelSprites[this.level]);
         this.player.setVelocityX(200); // Initial movement (if needed)
         this.player.setScale(1 / 2);
         this.player.setCollideWorldBounds(true); // Enable world bounds collision
@@ -57,7 +58,7 @@ export default class GameScene extends Phaser.Scene {
             this.jumpCount = 0;
         });
 
-        this.rock = this.add.rectangle(this.scale.width+100, 480, 40, 40, 0xff0000);
+        this.rock = this.add.rectangle(this.scale.width+100, this.scale.height/2, 40, 40, 0xff0000);
         this.physics.add.existing(this.rock);
         this.rock.body.setVelocityX(this.rockSpeed);
         this.rock.body.setImmovable(true);
