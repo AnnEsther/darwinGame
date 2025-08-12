@@ -1,4 +1,4 @@
-export default class ParallaxClouds {
+export default class ParallaxBackground {
     constructor(scene, textureKey = 'clouds', speed = 200) {
         this.scene = scene;
         this.speed = speed;

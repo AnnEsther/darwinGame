@@ -1,5 +1,5 @@
 // [GameScene remains unchanged, omitted for brevity]
-import ParallaxClouds from './ParallaxCloud.js';
+import ParallaxBackground from './ParallaxBackground.js';
 
 export default class GameScene extends Phaser.Scene {
     constructor() {
@@ -37,7 +37,7 @@ export default class GameScene extends Phaser.Scene {
         this.gravityY = 0;
         this.jumpVelocity = -400;
 
-        this.clouds = new ParallaxClouds(this, 'cloud', this.rockSpeed);
+        this.background = new ParallaxBackground(this, 'cloud', this.rockSpeed);
 
         this.ground = this.add.rectangle(this.scale.width/2, 550, this.scale.width, 100, 0x00ff00);
         this.physics.add.existing(this.ground, true);
@@ -84,9 +84,9 @@ export default class GameScene extends Phaser.Scene {
         // console.log(this.coins.x, this.coins.body.velocity.x);
         // console.log(time);
         // console.log(delta);
-        // this.clouds.update(delta);
+        // this.background.update(delta);
 
-        this.clouds.update();
+        this.background.update();
 
         if (!this.reachedCenter) {
             if (this.player.x >= this.scale.width/2) {
@@ -114,7 +114,7 @@ export default class GameScene extends Phaser.Scene {
                 this.jumpVelocity -= 15;
                 this.player.body.setGravityY(this.gravityY); // Faster fall
                 this.rocksPassedPrev = this.rocksPassed;
-                this.clouds.setSpeed(this.rockSpeed);
+                this.background.setSpeed(this.rockSpeed);
             }
         }
 
