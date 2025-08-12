@@ -23,4 +23,3 @@ const config = {
 };
 
 new Phaser.Game(config);
-// let highScores = JSON.parse(localStorage.getItem('highScores') || '[]');

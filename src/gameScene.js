@@ -13,6 +13,10 @@ export default class GameScene extends Phaser.Scene {
     preload() {
         this.load.image('coin', 'assets/coin.png');
         this.load.image('cloud', 'assets/cloud.png');
+        this.load.image('lizard', 'assets/lizard.png');
+        this.load.image('monkey', 'assets/monkey.png');
+        this.load.image('ostrich', 'assets/ostrich.png');
+        this.load.image('man', 'assets/man.png');
     }
 
     create() {
@@ -23,18 +27,27 @@ export default class GameScene extends Phaser.Scene {
         this.level = 0;
         this.rocksPassed = 0;
         this.rocksPassedPrev = -1;
-        this.rockSpeed = -200;
-        this.levelColors = [0x0000ff, 0x00ffff, 0x00ff00, 0xffff00, 0xff00ff];
+        this.rockSpeed = -100;
+        this.levelSprites = ['lizard', 'monkey', 'ostrich', 'man'];
+        this.levelGravity = ['lizard', 'monkey', 'ostrich', 'man'];
+        this.gravityY = 0;
+        this.jumpVelocity = -400;
 
         this.clouds = new ParallaxClouds(this, 'cloud', this.rockSpeed);
 
         this.ground = this.add.rectangle(400, 550, 800, 100, 0x00ff00);
         this.physics.add.existing(this.ground, true);
 
-        this.player = this.add.rectangle(100, 300, 40, 40, this.levelColors[this.level]);
-        this.physics.add.existing(this.player);
-        this.player.body.setCollideWorldBounds(true);
-        this.player.body.setVelocityX(200);
+        // this.player = this.add.rectangle(100, 300, 40, 40, this.levelColors[this.level]);
+        // this.physics.add.existing(this.player);
+        // this.player.body.setCollideWorldBounds(true);
+        // this.player.body.setVelocityX(200);
+
+        this.player = this.physics.add.sprite(100, 300, this.levelSprites[this.level]);
+        this.player.setVelocityX(200); // Initial movement (if needed)
+        this.player.setScale(1 / 2);
+        this.player.setCollideWorldBounds(true); // Enable world bounds collision
+        this.player.body.setGravityY(this.gravityY);
 
         this.physics.add.collider(this.player, this.ground, () => {
             this.jumpCount = 0;
@@ -46,6 +59,7 @@ export default class GameScene extends Phaser.Scene {
         this.rock.body.setImmovable(true);
         this.rock.body.setAllowGravity(false);
         this.physics.add.collider(this.rock, this.ground);
+        this.rock.playerPassed = false;
 
         // this.coins = this.physics.add.group();
         this.coins = this.physics.add.group({ allowGravity: false, immovable: true });
@@ -62,7 +76,7 @@ export default class GameScene extends Phaser.Scene {
         this.rocksText = this.add.text(10, 60, 'Rocks Passed: 0', { fontSize: '20px', fill: '#fff' });
     }
 
-    update(time,delta) {
+    update(time, delta) {
         // console.log(this.coins.x, this.coins.body.velocity.x);
         // console.log(time);
         // console.log(delta);
@@ -76,42 +90,55 @@ export default class GameScene extends Phaser.Scene {
                 this.player.body.setVelocityX(0);
                 this.reachedCenter = true;
             }
-        } 
+        }
         else {
             if (Phaser.Input.Keyboard.JustDown(this.spaceKey) && this.jumpCount < 2) {
-                this.player.body.setVelocityY(-400);
+                this.player.body.setVelocityY(this.jumpVelocity);
                 this.jumpCount++;
             }
         }
 
-        if (this.rock.x < -this.rock.width) {
-            this.rock.x = 850;
-            this.rock.body.setVelocityX(this.rockSpeed);
-            this.spawnCoinNearRock();
-
+        //rocks passed
+        if (!this.rock.playerPassed && this.rock.x + this.rock.width < this.player.x) {
+            this.rock.playerPassed = true;
             this.rocksPassed++;
             this.rocksText.setText(`Rocks Passed: ${this.rocksPassed}`);
 
-            if (this.rocksPassed > this.rocksPassedPrev) {
+            if (this.level != this.levelSprites.length-1 && this.rocksPassed > this.rocksPassedPrev) {
                 this.rockSpeed -= 25;
+                this.gravityY = this.gravityY + 10;
+                this.jumpVelocity -= 15;
+                this.player.body.setGravityY(this.gravityY); // Faster fall
                 this.rocksPassedPrev = this.rocksPassed;
                 this.clouds.setSpeed(this.rockSpeed);
-                console.log("speed updated");
             }
+        }
 
-            if (this.rocksPassed % 10 === 0) {
+        //rock left screen
+        if (this.rock.x < -this.rock.width) {
+            this.rock.x = 850;
+            this.rock.playerPassed = false;
+            this.rock.body.setVelocityX(this.rockSpeed);
+            this.spawnCoinNearRock();
+        }
 
-                const newLevel = Math.floor(this.rocksPassed / 100);
-                if (newLevel !== this.level && newLevel < this.levelColors.length) {
-                    this.level = newLevel;
-                    this.player.fillColor = this.levelColors[this.level];
-                }
-                if (this.level >= this.levelColors.length - 1) {
-                    this.scene.start('LeaderboardScene', {
-                        playerName: this.playerName,
-                        coins: this.coinsCollected
-                    });
-                }
+        //level up
+        if (this.rocksPassed % 10 === 0) {
+
+            const newLevel = Math.floor(this.rocksPassed / 10);
+            if (newLevel !== this.level && newLevel < this.levelSprites.length) {
+                this.level = newLevel;
+                console.log(this.level);
+                // this.player.fillColor = this.levelColors[this.level];
+                this.player.setTexture(this.levelSprites[this.level]);
+                this.player.setScale(1 / 2);
+                this.player.body.setSize(this.player.width, this.player.height, true);
+            }
+            if (this.level >= this.levelSprites.length) {
+                this.scene.start('LeaderboardScene', {
+                    playerName: this.playerName,
+                    coins: this.coinsCollected
+                });
             }
         }
     }
@@ -124,7 +151,15 @@ export default class GameScene extends Phaser.Scene {
         this.spawnCoinNearRock();
 
         if (this.lives <= 0) {
-            this.scene.start('GameOverScene');
+            if(this.level == this.levelSprites.length-1){
+                this.scene.start('LeaderboardScene', {
+                    playerName: this.playerName,
+                    coins: this.coinsCollected
+                });
+            }
+            else{
+                this.scene.start('GameOverScene');
+            }
         }
     }
 
@@ -137,7 +172,7 @@ export default class GameScene extends Phaser.Scene {
     spawnCoinNearRock() {
         this.coins.clear(true, true);
 
-        const offsetY = Phaser.Math.Between(-150, -50);
+        const offsetY = Phaser.Math.Between(-250, -50);
 
         // const coin = this.physics.add.sprite(this.rock.x, this.rock.y + offsetY, 'coin');
         const coin = this.coins.create(this.rock.x, this.rock.y + offsetY, 'coin');

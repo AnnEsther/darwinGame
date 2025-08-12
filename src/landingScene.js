@@ -6,7 +6,7 @@ export default class LandingScene extends Phaser.Scene {
         const startText = this.add.text(280, 300, 'Loading...', { fontSize: '24px', fill: '#fff' });
 
         this.time.delayedCall(2000, () => {
-            this.scene.start('GameScene');
+            this.scene.start('FormScene');
         });
     }
 }
