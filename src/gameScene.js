@@ -20,7 +20,7 @@ export default class GameScene extends Phaser.Scene {
         this.load.image('ground_0', 'assets/Enviornment/ground_0.png');
         this.load.image('ground_1', 'assets/Enviornment/ground_1.png');
         this.load.image('Grass', 'assets/Enviornment/grass.png');
-        
+
         this.load.image('rock1', 'assets/rock1.png');
         this.load.image('rock2', 'assets/rock2.png');
         this.load.image('rock3', 'assets/rock3.png');
@@ -161,20 +161,13 @@ export default class GameScene extends Phaser.Scene {
         this.rock = new Rock(this, this.scale.width + (Math.random() * this.scale.width) + 100, this.background.ground._0.y - this.background.ground._0.height - 10, this.rockSpeed);
         this.rock._sprite.setDepth(6);
         this.player.setDepth(7);
-        // this.rock = this.add.rectangle(this.scale.width + 100, this.scale.height / 2, 40, 40, 0xff0000);
-        // this.physics.add.existing(this.rock);
-        // this.rock.body.setVelocityX(this.rockSpeed);
-        // this.rock.body.setImmovable(true);
-        // this.rock.body.setAllowGravity(false);
-        // this.physics.add.collider(this.rock, this.ground);
-        // this.rock.playerPassed = false;
 
         // this.coins = this.physics.add.group();
         this.coins = this.physics.add.group({ allowGravity: false, immovable: true });
 
         this.spawnCoinNearRock();
 
-        this.physics.add.overlap(this.player, this.rock, this.handleHit, null, this);
+        this.physics.add.overlap(this.player, this.rock._sprite, this.handleHit, null, this);
         this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this);
 
         
