@@ -17,23 +17,6 @@ export default class ParallaxBackground {
         this.background.setImmovable(true);
         this.background.body.allowGravity = false;
 
-
-        // Cloud ----------------------------------------
-
-        var cloudConfig ={
-            x : 0,
-            y : 0,
-            texture: 'Cloud0',
-            origin : [0,0],
-            displaySize : [sceneWidth, sceneHeight],
-            velocity: speed * 0.2,
-            immovable: true,
-            allowGravity : false,
-            sceneWidth: sceneWidth,
-            
-        };
-        this.cloud = new ParallaxObject(this.physicsGroup, cloudConfig);
-
         // Ground ----------------------------------------
 
         var groundConfig ={
@@ -48,6 +31,40 @@ export default class ParallaxBackground {
             sceneWidth: sceneWidth
         };
         this.ground = new ParallaxObject(this.physicsGroup, groundConfig);
+
+        // Background items ----------------------------------------
+
+        var backgroundItemConfig ={
+            x : 0,
+            y : this.ground.getHeight(),
+            texture: 'background_item',
+            origin : [0,0],
+            displaySize : [sceneWidth, sceneHeight],
+            velocity: speed * 0.8,
+            immovable: true,
+            allowGravity : false,
+            sceneWidth: sceneWidth
+            
+        };
+        this.backgroundItem = new ParallaxObject(this.physicsGroup, backgroundItemConfig);
+
+        // Cloud ----------------------------------------
+
+        var cloudConfig ={
+            x : 0,
+            y : 0,
+            texture: 'Cloud0',
+            origin : [0,0],
+            displaySize : [sceneWidth, sceneHeight],
+            velocity: speed * 0.2,
+            immovable: true,
+            allowGravity : false,
+            sceneWidth: sceneWidth
+            
+        };
+        this.cloud = new ParallaxObject(this.physicsGroup, cloudConfig);
+
+        
 
         // Grass ----------------------------------------
 
@@ -71,6 +88,7 @@ export default class ParallaxBackground {
         const width = this.scene.scale.width;
 
         this.cloud.update();
+        this.backgroundItem.update();
         this.ground.update();
         this.grass.update();
 
@@ -80,6 +98,7 @@ export default class ParallaxBackground {
         this.speed = newSpeed;
 
         this.cloud.setSpeed(newSpeed * 0.2);
+        this.backgroundItem.setSpeed(newSpeed * 0.8);
         this.ground.setSpeed(newSpeed);
         this.grass.setSpeed(newSpeed * 1.2);
 

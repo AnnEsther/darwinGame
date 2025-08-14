@@ -14,6 +14,7 @@ export default class GameScene extends Phaser.Scene {
         this.load.image('coin', 'assets/coin.png');
 
         this.load.image('background', 'assets/Enviornment/background.png');
+        this.load.image('background_item', 'assets/Enviornment/background_item.png');
         this.load.image('Cloud0', 'assets/Enviornment/cloud_0_medium.png');
         this.load.image('Cloud1', 'assets/Enviornment/cloud_1.png');
         this.load.image('Ground', 'assets/Enviornment/ground_0.png');

@@ -40,4 +40,8 @@ export default class ParallaxObject {
         this._1.setVelocityX(newSpeed);
     }
 
+    getHeight(){
+        return this._0.displayHeight;
+    }
+
 }
