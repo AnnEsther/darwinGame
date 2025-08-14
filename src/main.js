@@ -7,8 +7,8 @@ import WinScene from './winScene';
 
 const config = {
     type: Phaser.AUTO,
-    width: 1270,
-    height: 520,
+    width: 1920,
+    height: 1080,
     dom: {
         createContainer: true
     },
@@ -16,10 +16,11 @@ const config = {
         default: 'arcade',
         arcade: {
             gravity: { y: 600 },
-            debug: true,
+            debug: false,
         }
     },
-    scene: [LandingScene, FormScene, GameScene, WinScene, GameOverScene, LeaderboardScene],
+    scene: [LandingScene, GameScene, WinScene, GameOverScene, LeaderboardScene],
+    // scene: [LandingScene, FormScene, GameScene, WinScene, GameOverScene, LeaderboardScene],
 };
 
 new Phaser.Game(config);

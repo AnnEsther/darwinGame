@@ -13,12 +13,14 @@ export default class GameScene extends Phaser.Scene {
     preload() {
         this.load.image('coin', 'assets/coin.png');
 
-        this.load.image('Sky', 'assets/Enviornment/SkySmall.jpeg');
+        this.load.image('background', 'assets/Enviornment/background.png');
         this.load.image('Cloud0', 'assets/Enviornment/cloud_0_medium.png');
         this.load.image('Cloud1', 'assets/Enviornment/cloud_1.png');
         this.load.image('Ground', 'assets/Enviornment/ground_0.png');
+        this.load.image('Grass', 'assets/Enviornment/Grass_Medium.png');
 
         // player animations
+        //monkey run
         this.load.image('monkey_1', 'assets/monkey/run/MONKEY_RUN_TK020001 Background Removed.png');
         this.load.image('monkey_2', 'assets/monkey/run/MONKEY_RUN_TK020002 Background Removed.png');
         this.load.image('monkey_3', 'assets/monkey/run/MONKEY_RUN_TK020003 Background Removed.png');
@@ -41,6 +43,35 @@ export default class GameScene extends Phaser.Scene {
         this.load.image('monkey_20', 'assets/monkey/run/MONKEY_RUN_TK020020 Background Removed.png');
         this.load.image('monkey_21', 'assets/monkey/run/MONKEY_RUN_TK020021 Background Removed.png');
         this.load.image('monkey_22', 'assets/monkey/run/MONKEY_RUN_TK020022 Background Removed.png');
+        //monkey jump
+        this.load.image('monkeyJump_1', 'assets/monkey/jump/MONKEY_jump_TK010001 Background Removed.png');
+        this.load.image('monkeyJump_2', 'assets/monkey/jump/MONKEY_jump_TK010002 Background Removed.png');
+        this.load.image('monkeyJump_3', 'assets/monkey/jump/MONKEY_jump_TK010003 Background Removed.png');
+        this.load.image('monkeyJump_4', 'assets/monkey/jump/MONKEY_jump_TK010004 Background Removed.png');
+        this.load.image('monkeyJump_5', 'assets/monkey/jump/MONKEY_jump_TK010005 Background Removed.png');
+        this.load.image('monkeyJump_6', 'assets/monkey/jump/MONKEY_jump_TK010006 Background Removed.png');
+        this.load.image('monkeyJump_7', 'assets/monkey/jump/MONKEY_jump_TK010007 Background Removed.png');
+        this.load.image('monkeyJump_8', 'assets/monkey/jump/MONKEY_jump_TK010008 Background Removed.png');
+        this.load.image('monkeyJump_9', 'assets/monkey/jump/MONKEY_jump_TK010009 Background Removed.png');
+        this.load.image('monkeyJump_10', 'assets/monkey/jump/MONKEY_jump_TK010010 Background Removed.png');
+        this.load.image('monkeyJump_11', 'assets/monkey/jump/MONKEY_jump_TK010011 Background Removed.png');
+        this.load.image('monkeyJump_12', 'assets/monkey/jump/MONKEY_jump_TK010012 Background Removed.png');
+        this.load.image('monkeyJump_13', 'assets/monkey/jump/MONKEY_jump_TK010013 Background Removed.png');
+        this.load.image('monkeyJump_14', 'assets/monkey/jump/MONKEY_jump_TK010014 Background Removed.png');
+        this.load.image('monkeyJump_15', 'assets/monkey/jump/MONKEY_jump_TK010015 Background Removed.png');
+        this.load.image('monkeyJump_16', 'assets/monkey/jump/MONKEY_jump_TK010016 Background Removed.png');
+        this.load.image('monkeyJump_17', 'assets/monkey/jump/MONKEY_jump_TK010017 Background Removed.png');
+        this.load.image('monkeyJump_18', 'assets/monkey/jump/MONKEY_jump_TK010018 Background Removed.png');
+        this.load.image('monkeyJump_19', 'assets/monkey/jump/MONKEY_jump_TK010019 Background Removed.png');
+        this.load.image('monkeyJump_20', 'assets/monkey/jump/MONKEY_jump_TK010020 Background Removed.png');
+        this.load.image('monkeyJump_21', 'assets/monkey/jump/MONKEY_jump_TK010021 Background Removed.png');
+        this.load.image('monkeyJump_22', 'assets/monkey/jump/MONKEY_jump_TK010022 Background Removed.png');
+        this.load.image('monkeyJump_23', 'assets/monkey/jump/MONKEY_jump_TK010023 Background Removed.png');
+        this.load.image('monkeyJump_24', 'assets/monkey/jump/MONKEY_jump_TK010024 Background Removed.png');
+        this.load.image('monkeyJump_25', 'assets/monkey/jump/MONKEY_jump_TK010025 Background Removed.png');
+        this.load.image('monkeyJump_26', 'assets/monkey/jump/MONKEY_jump_TK010026 Background Removed.png');
+
+
 
         this.load.image('lizard', 'assets/lizard.png');
         // this.load.image('monkey', 'assets/monkey.png');
@@ -61,7 +92,7 @@ export default class GameScene extends Phaser.Scene {
         this.gravityY = 0;
         this.jumpVelocity = -400;
 
-        this.background = new ParallaxBackground(this, 'cloud', this.rockSpeed);
+        this.background = new ParallaxBackground(this, this.rockSpeed);
 
         this.ground = this.add.rectangle(this.scale.width / 2, this.scale.height / 2 + 50, this.scale.width, 20, 0x00000000);
         this.ground.alpha = 0;
@@ -76,32 +107,35 @@ export default class GameScene extends Phaser.Scene {
         this.anims.create({
             key: 'monkey_run', // Animation name
             frames: [
-                { key: 'monkey_1' },
-                { key: 'monkey_2' },
-                { key: 'monkey_3' },
-                { key: 'monkey_4' },
-                { key: 'monkey_5' },
-                { key: 'monkey_6' },
-                { key: 'monkey_7' },
-                { key: 'monkey_8' },
-                { key: 'monkey_9' },
-                { key: 'monkey_10' },
-                { key: 'monkey_11' },
-                { key: 'monkey_12' },
-                { key: 'monkey_13' },
-                { key: 'monkey_14' },
-                { key: 'monkey_15' },
-                { key: 'monkey_16' },
-                { key: 'monkey_17' },
-                { key: 'monkey_18' },
-                { key: 'monkey_19' },
-                { key: 'monkey_20' },
-                { key: 'monkey_21' },
+                { key: 'monkey_1' }, { key: 'monkey_2' }, { key: 'monkey_3' },
+                { key: 'monkey_4' }, { key: 'monkey_5' }, { key: 'monkey_6' },
+                { key: 'monkey_7' }, { key: 'monkey_8' }, { key: 'monkey_9' },
+                { key: 'monkey_10' }, { key: 'monkey_11' }, { key: 'monkey_12' },
+                { key: 'monkey_13' }, { key: 'monkey_14' }, { key: 'monkey_15' },
+                { key: 'monkey_16' }, { key: 'monkey_17' }, { key: 'monkey_18' },
+                { key: 'monkey_19' }, { key: 'monkey_20' }, { key: 'monkey_21' },
                 { key: 'monkey_22' },
             ],
             frameRate: 14, // 10 frames per second (adjust as needed)
             repeat: -1 // Loop infinitely
         });
+        this.anims.create({
+            key: 'monkey_jump', // Animation name
+            frames: [
+                { key: 'monkeyJump_1' }, { key: 'monkeyJump_2' }, { key: 'monkeyJump_3' },
+                { key: 'monkeyJump_4' }, { key: 'monkeyJump_5' }, { key: 'monkeyJump_6' },
+                { key: 'monkeyJump_7' }, { key: 'monkeyJump_8' }, { key: 'monkeyJump_9' },
+                { key: 'monkeyJump_10' }, { key: 'monkeyJump_11' }, { key: 'monkeyJump_12' },
+                { key: 'monkeyJump_13' }, { key: 'monkeyJump_14' }, { key: 'monkeyJump_15' },
+                { key: 'monkeyJump_16' }, { key: 'monkeyJump_17' }, { key: 'monkeyJump_18' },
+                { key: 'monkeyJump_19' }, { key: 'monkeyJump_20' }, { key: 'monkeyJump_21' },
+                { key: 'monkeyJump_22' }, { key: 'monkeyJump_23' }, { key: 'monkeyJump_24' },
+                { key: 'monkeyJump_25' }, { key: 'monkeyJump_26' }
+            ],
+            frameRate: 14, // 10 frames per second (adjust as needed)
+            repeat: 0 // Loop infinitely
+        });
+        
 
         this.player = this.physics.add.sprite(this.scale.height / 2, this.ground.y - 100, this.levelSprites[this.level]);
         this.player.setVelocityX(200); // Initial movement (if needed)
@@ -109,6 +143,12 @@ export default class GameScene extends Phaser.Scene {
         this.player.setCollideWorldBounds(true); // Enable world bounds collision
         this.player.body.setGravityY(this.gravityY);
 
+        // Listen for animation complete event
+        this.player.on('animationcomplete-monkey_jump', () => {
+            // console.log('Run animation completed!');
+            // Your custom code here - switch to jump
+            this.player.play('monkey_run');
+        });
 
 
         this.physics.add.collider(this.player, this.ground, () => {
@@ -131,11 +171,17 @@ export default class GameScene extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.rock, this.handleHit, null, this);
         this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this);
 
+        
+
         this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        this.OneKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
+        this.TwoKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
+        this.ThreeKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
 
         this.livesText = this.add.text(10, 10, 'Lives: 3', { fontSize: '20px', fill: '#fff' });
         this.coinsText = this.add.text(10, 35, 'Coins: 0', { fontSize: '20px', fill: '#fff' });
         this.rocksText = this.add.text(10, 60, 'Rocks Passed: 0', { fontSize: '20px', fill: '#fff' });
+
     }
 
     update(time, delta) {
@@ -157,8 +203,13 @@ export default class GameScene extends Phaser.Scene {
             if (Phaser.Input.Keyboard.JustDown(this.spaceKey) && this.jumpCount < 2) {
                 this.player.body.setVelocityY(this.jumpVelocity);
                 this.jumpCount++;
+                if (this.level == 1) {
+                    this.player.setScale(0.15);
+                    this.player.play('monkey_jump');
+                }
             }
         }
+
 
         //rocks passed
         if (!this.rock.playerPassed && this.rock.x + this.rock.width < this.player.x) {

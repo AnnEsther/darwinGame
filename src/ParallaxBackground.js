@@ -12,7 +12,7 @@ export default class ParallaxBackground {
 
         // Background Blue ------------------------
 
-        this.background = this.physicsGroup.create(0, 0, 'Sky');
+        this.background = this.physicsGroup.create(0, 0, 'background');
         this.background.setOrigin(0,0);
         this.background.setImmovable(true);
         this.background.body.allowGravity = false;
