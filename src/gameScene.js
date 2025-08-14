@@ -1,5 +1,6 @@
 // [GameScene remains unchanged, omitted for brevity]
 import ParallaxBackground from './ParallaxBackground.js';
+import Rock from './Rock.js';
 
 export default class GameScene extends Phaser.Scene {
     constructor() {
@@ -18,7 +19,12 @@ export default class GameScene extends Phaser.Scene {
         this.load.image('cloud_big', 'assets/Enviornment/Cloud_Big.png');
         this.load.image('ground_0', 'assets/Enviornment/ground_0.png');
         this.load.image('ground_1', 'assets/Enviornment/ground_1.png');
-        this.load.image('Grass', 'assets/Enviornment/Grass_Medium.png');
+        this.load.image('Grass', 'assets/Enviornment/grass.png');
+        
+        this.load.image('rock1', 'assets/rock1.png');
+        this.load.image('rock2', 'assets/rock2.png');
+        this.load.image('rock3', 'assets/rock3.png');
+        this.load.image('rock4', 'assets/rock4.png');
 
         // player animations
         //monkey run
@@ -95,14 +101,10 @@ export default class GameScene extends Phaser.Scene {
 
         this.background = new ParallaxBackground(this, this.rockSpeed);
 
-        this.ground = this.add.rectangle(this.scale.width / 2, this.scale.height / 2 + 50, this.scale.width, 20, 0x00000000);
+        this.ground = this.add.rectangle(this.scale.width / 2, this.background.ground._0.y - this.background.ground._0.height + 75, this.scale.width, 20, 0x00000000);
         this.ground.alpha = 0;
         this.physics.add.existing(this.ground, true);
 
-        // this.player = this.add.rectangle(100, 300, 40, 40, this.levelColors[this.level]);
-        // this.physics.add.existing(this.player);
-        // this.player.body.setCollideWorldBounds(true);
-        // this.player.body.setVelocityX(200);
 
         // Create the animation using the loaded images
         this.anims.create({
@@ -156,13 +158,16 @@ export default class GameScene extends Phaser.Scene {
             this.jumpCount = 0;
         });
 
-        this.rock = this.add.rectangle(this.scale.width + 100, this.scale.height / 2, 40, 40, 0xff0000);
-        this.physics.add.existing(this.rock);
-        this.rock.body.setVelocityX(this.rockSpeed);
-        this.rock.body.setImmovable(true);
-        this.rock.body.setAllowGravity(false);
-        this.physics.add.collider(this.rock, this.ground);
-        this.rock.playerPassed = false;
+        this.rock = new Rock(this, this.scale.width + (Math.random() * this.scale.width) + 100, this.background.ground._0.y - this.background.ground._0.height - 10, this.rockSpeed);
+        this.rock._sprite.setDepth(6);
+        this.player.setDepth(7);
+        // this.rock = this.add.rectangle(this.scale.width + 100, this.scale.height / 2, 40, 40, 0xff0000);
+        // this.physics.add.existing(this.rock);
+        // this.rock.body.setVelocityX(this.rockSpeed);
+        // this.rock.body.setImmovable(true);
+        // this.rock.body.setAllowGravity(false);
+        // this.physics.add.collider(this.rock, this.ground);
+        // this.rock.playerPassed = false;
 
         // this.coins = this.physics.add.group();
         this.coins = this.physics.add.group({ allowGravity: false, immovable: true });
@@ -229,10 +234,11 @@ export default class GameScene extends Phaser.Scene {
         }
 
         //rock left screen
-        if (this.rock.x < -this.rock.width) {
-            this.rock.x = this.scale.width + 100;
+        if (this.rock._sprite.x < -this.rock._sprite.width) {
+            this.rock.updateSprite();
+            this.rock._sprite.x = this.scale.width + (Math.random() * this.scale.width);
             this.rock.playerPassed = false;
-            this.rock.body.setVelocityX(this.rockSpeed);
+            this.rock._sprite.body.setVelocityX(this.rockSpeed);
             this.spawnCoinNearRock();
         }
 
@@ -264,8 +270,8 @@ export default class GameScene extends Phaser.Scene {
     handleHit(player, rock) {
         this.lives--;
         this.livesText.setText(`Lives: ${this.lives}`);
-        this.rock.x = this.scale.width + 100;
-        this.rock.body.setVelocityX(this.rockSpeed);
+        this.rock._sprite.x = this.scale.width + 100;
+        this.rock._sprite.body.setVelocityX(this.rockSpeed);
         this.spawnCoinNearRock();
 
         if (this.lives <= 0) {
@@ -293,7 +299,7 @@ export default class GameScene extends Phaser.Scene {
         const offsetY = Phaser.Math.Between(-250, -50);
 
         // const coin = this.physics.add.sprite(this.rock.x, this.rock.y + offsetY, 'coin');
-        const coin = this.coins.create(this.rock.x, this.rock.y + offsetY, 'coin');
+        const coin = this.coins.create(this.rock._sprite.x, this.rock._sprite.y + offsetY, 'coin');
 
         coin.displayWidth = 40;
         coin.displayHeight = 40;

@@ -25,6 +25,7 @@ export default class ParallaxBackground {
             x : 0,
             y : sceneHeight + groundBottomBuffer,
             texture0: 'ground_0',
+            // texture1: null,
             texture1: 'ground_1',
             origin : [0,1],
             displaySize : [sceneWidth, sceneHeight],
@@ -89,8 +90,11 @@ export default class ParallaxBackground {
             sceneWidth: sceneWidth
         };
         this.grass = new ParallaxObject(this.physicsGroup, grassConfig);
+        this.grass._1.flipX = true; // Flip horizontally
+
 
         this.ground.setZIndex(5);
+        this.grass.setZIndex(6);
 
     }
 
