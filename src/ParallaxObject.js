@@ -4,7 +4,19 @@ export default class ParallaxObject {
         this.physicsGroup = physicsGroup;
         this.sceneWidth = config.sceneWidth;
 
-        this._0 = this.physicsGroup.create(config.x, config.y, config.texture);
+        var text0 = '';
+        var text1 = '';
+        if(config.texture1 == null){
+            text0 = config.texture0;
+            text1 = config.texture0;
+        }
+        else{
+            text0 = config.texture0;
+            text1 = config.texture1;
+        }
+        
+
+        this._0 = this.physicsGroup.create(config.x, config.y, text0);
         this._0.setOrigin(config.origin[0], config.origin[1]);
 
         // this._0.setDisplaySize(config.displaySize[0]);
@@ -19,7 +31,7 @@ export default class ParallaxObject {
 
 
 
-        this._1 = this.physicsGroup.create(this.sceneWidth, config.y, config.texture);
+        this._1 = this.physicsGroup.create(this.sceneWidth, config.y, text1);
         this._1.setOrigin(config.origin[0], config.origin[1]);
 
         // this._1.setDisplaySize(config.displaySize[0]);
@@ -42,6 +54,11 @@ export default class ParallaxObject {
 
     getHeight(){
         return this._0.displayHeight;
+    }
+
+    setZIndex(zIndex){
+        this._0.setDepth(zIndex); // move to front/back inside layer
+        this._1.setDepth(zIndex); // move to front/back inside layer
     }
 
 }

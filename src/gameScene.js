@@ -15,9 +15,9 @@ export default class GameScene extends Phaser.Scene {
 
         this.load.image('background', 'assets/Enviornment/background.png');
         this.load.image('background_item', 'assets/Enviornment/background_item.png');
-        this.load.image('Cloud0', 'assets/Enviornment/cloud_0_medium.png');
-        this.load.image('Cloud1', 'assets/Enviornment/cloud_1.png');
-        this.load.image('Ground', 'assets/Enviornment/ground_0.png');
+        this.load.image('cloud_big', 'assets/Enviornment/Cloud_Big.png');
+        this.load.image('ground_0', 'assets/Enviornment/ground_0.png');
+        this.load.image('ground_1', 'assets/Enviornment/ground_1.png');
         this.load.image('Grass', 'assets/Enviornment/Grass_Medium.png');
 
         // player animations

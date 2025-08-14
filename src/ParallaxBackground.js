@@ -1,5 +1,7 @@
 import ParallaxObject from "./ParallaxObject";
 
+const groundTopBuffer = -80;
+const groundBottomBuffer = -75;
 
 export default class ParallaxBackground {
     constructor(scene, speed = 200) {
@@ -21,8 +23,9 @@ export default class ParallaxBackground {
 
         var groundConfig ={
             x : 0,
-            y : sceneHeight,
-            texture: 'Ground',
+            y : sceneHeight + groundBottomBuffer,
+            texture0: 'ground_0',
+            texture1: 'ground_1',
             origin : [0,1],
             displaySize : [sceneWidth, sceneHeight],
             velocity: speed,
@@ -32,12 +35,32 @@ export default class ParallaxBackground {
         };
         this.ground = new ParallaxObject(this.physicsGroup, groundConfig);
 
+        // Cloud ----------------------------------------
+
+        var cloudConfig ={
+            x : 0,
+            y : this.ground._0.y - this.ground.getHeight() - groundTopBuffer,
+            texture0: 'cloud_big',
+            texture1: null,
+            origin : [0,0],
+            displaySize : [sceneWidth, sceneHeight],
+            velocity: speed * 0.2,
+            immovable: true,
+            allowGravity : false,
+            sceneWidth: sceneWidth
+        };
+        this.cloud = new ParallaxObject(this.physicsGroup, cloudConfig);
+        this.cloud._0.setY(this.cloud._0.y - (this.cloud._0.displayHeight));
+        this.cloud._1.setY(this.cloud._1.y - (this.cloud._1.displayHeight));
+        this.cloud._1.flipX = true; // Flip horizontally
+
         // Background items ----------------------------------------
 
         var backgroundItemConfig ={
             x : 0,
-            y : this.ground.getHeight(),
-            texture: 'background_item',
+            y : this.ground._0.y - this.ground.getHeight() - groundTopBuffer,
+            texture0: 'background_item',
+            texture1: null,
             origin : [0,0],
             displaySize : [sceneWidth, sceneHeight],
             velocity: speed * 0.8,
@@ -47,31 +70,17 @@ export default class ParallaxBackground {
             
         };
         this.backgroundItem = new ParallaxObject(this.physicsGroup, backgroundItemConfig);
+        this.backgroundItem._0.setY(this.backgroundItem._0.y - (this.backgroundItem._0.displayHeight));
+        this.backgroundItem._1.setY(this.backgroundItem._1.y - (this.backgroundItem._1.displayHeight));
 
-        // Cloud ----------------------------------------
-
-        var cloudConfig ={
-            x : 0,
-            y : 0,
-            texture: 'Cloud0',
-            origin : [0,0],
-            displaySize : [sceneWidth, sceneHeight],
-            velocity: speed * 0.2,
-            immovable: true,
-            allowGravity : false,
-            sceneWidth: sceneWidth
-            
-        };
-        this.cloud = new ParallaxObject(this.physicsGroup, cloudConfig);
-
-        
 
         // Grass ----------------------------------------
 
         var grassConfig ={
             x : 0,
             y : sceneHeight,
-            texture: 'Grass',
+            texture0: 'Grass',
+            texture1: null,
             origin : [0,1],
             displaySize : [sceneWidth, sceneHeight],
             velocity: speed * 1.2,
@@ -80,6 +89,8 @@ export default class ParallaxBackground {
             sceneWidth: sceneWidth
         };
         this.grass = new ParallaxObject(this.physicsGroup, grassConfig);
+
+        this.ground.setZIndex(5);
 
     }
 
