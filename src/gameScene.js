@@ -1,6 +1,7 @@
 // [GameScene remains unchanged, omitted for brevity]
 import ParallaxBackground from './ParallaxBackground.js';
 import Rock from './Rock.js';
+// import Player from './player.js';
 
 export default class GameScene extends Phaser.Scene {
     constructor() {
@@ -16,7 +17,9 @@ export default class GameScene extends Phaser.Scene {
 
         this.load.image('background', 'assets/Enviornment/background.png');
         this.load.image('background_item', 'assets/Enviornment/background_item.png');
-        this.load.image('cloud_big', 'assets/Enviornment/Cloud_Big.png');
+        this.load.image('cloud_big', 'assets/Enviornment/cloud_big.png');
+        this.load.image('cloud_small_0', 'assets/Enviornment/cloud_small_0.png');
+        this.load.image('cloud_small_1', 'assets/Enviornment/cloud_small_1.png');
         this.load.image('ground_0', 'assets/Enviornment/ground_0.png');
         this.load.image('ground_1', 'assets/Enviornment/ground_1.png');
         this.load.image('Grass', 'assets/Enviornment/grass.png');
@@ -97,7 +100,7 @@ export default class GameScene extends Phaser.Scene {
         this.rockSpeed = -200;
         this.levelSprites = ['lizard', 'monkey_1', 'ostrich', 'man'];
         this.gravityY = 0;
-        this.jumpVelocity = -400;
+        this.jumpVelocity = -800;
 
         this.background = new ParallaxBackground(this, this.rockSpeed);
 
@@ -140,6 +143,7 @@ export default class GameScene extends Phaser.Scene {
         });
         
 
+        // this.player = new Player(this,);
         this.player = this.physics.add.sprite(this.scale.height / 2, this.ground.y - 100, this.levelSprites[this.level]);
         this.player.setVelocityX(200); // Initial movement (if needed)
         this.player.setScale(0.5);
@@ -167,7 +171,7 @@ export default class GameScene extends Phaser.Scene {
 
         this.spawnCoinNearRock();
 
-        this.physics.add.overlap(this.player, this.rock._sprite, this.handleHit, null, this);
+        this.physics.add.overlap(this.player, [this.rock.rockRect, this,this.rock.rockCircle], this.handleHit, null, this);
         this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this);
 
         
@@ -229,7 +233,10 @@ export default class GameScene extends Phaser.Scene {
         //rock left screen
         if (this.rock._sprite.x < -this.rock._sprite.width) {
             this.rock.updateSprite();
-            this.rock._sprite.x = this.scale.width + (Math.random() * this.scale.width);
+            var nextPos = this.scale.width + (Math.random() * this.scale.width);
+            this.rock._sprite.x = nextPos;
+            this.rock.rockCircle.x = nextPos;
+            this.rock.rockRect.x = nextPos;
             this.rock.playerPassed = false;
             this.rock._sprite.body.setVelocityX(this.rockSpeed);
             this.spawnCoinNearRock();

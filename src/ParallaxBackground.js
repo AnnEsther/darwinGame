@@ -55,6 +55,23 @@ export default class ParallaxBackground {
         this.cloud._1.setY(this.cloud._1.y - (this.cloud._1.displayHeight));
         this.cloud._1.flipX = true; // Flip horizontally
 
+         var cloudSmallConfig ={
+            x : 0,
+            y : this.ground._0.y - this.ground.getHeight() - groundTopBuffer,
+            texture0: 'cloud_small_0',
+            texture1: 'cloud_small_1',
+            origin : [0,0],
+            displaySize : [sceneWidth, sceneHeight],
+            velocity: speed * 0.4,
+            immovable: true,
+            allowGravity : false,
+            sceneWidth: sceneWidth
+        };
+        this.cloudSmall = new ParallaxObject(this.physicsGroup, cloudSmallConfig);
+        this.cloudSmall._0.setY(this.cloudSmall._0.y - this.cloudSmall._0.height - (Math.random() * (sceneHeight-this.cloudSmall._0.y - this.cloudSmall._0.height - 100)));
+        this.cloudSmall._1.setY(this.cloudSmall._1.y - - this.cloudSmall._0.height - (Math.random() * (sceneHeight-this.cloudSmall._1.y - this.cloudSmall._1.height - 100)));
+        // this.cloudSmall._1.flipX = true; // Flip horizontally
+
         // Background items ----------------------------------------
 
         var backgroundItemConfig ={
