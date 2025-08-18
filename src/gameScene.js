@@ -185,7 +185,7 @@ export default class GameScene extends Phaser.Scene {
 
         this.spawnCoinNearRock();
 
-        this.physics.add.overlap(this.player, [this.rock.rockRect, this, this.rock.rockCircle], this.handleHit, null, this);
+        this.physics.add.overlap(this.player, this.rock.getColliders(), this.handleHit, null, this);
         this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this);
 
 
@@ -324,8 +324,6 @@ export default class GameScene extends Phaser.Scene {
         this.lives--;
         this.livesText.setText(`Lives: ${this.lives}`);
         this.rock.resetRockPos(this.rockSpeed);
-        // this.rock.setX(this.scale.width + 100); //TODO : Make it random
-        // this.rock.setVelocityX(this.rockSpeed);
         this.spawnCoinNearRock();
 
         if (this.lives <= 0) {
