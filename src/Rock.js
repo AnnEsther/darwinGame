@@ -33,6 +33,30 @@ export default class Rock {
         var nextRock = Math.floor(Math.random() * 3) + 1;
         this._sprite.setTexture('rock' + nextRock);
         this._sprite.body.setSize(this._sprite.displayWidth, this._sprite.displayHeight, true);
+    }
 
+    setVelocityX(speed){
+        this._sprite.setVelocityX(speed);
+        this.rockCircle.setVelocityX(speed);
+        this.rockRect.setVelocityX(speed); 
+    }
+
+    setX(x){
+        this._sprite.body.x = x;//(speed);
+        this.rockCircle.x =x;//(speed);
+        this.rockRect.x =x;//setVelocityX(speed);
+    }
+
+    resetRockPos(speed){
+        this.updateSprite();
+        var nextPos = this.scene.scale.width + (Math.random() * this.scene.scale.width);
+        console.log("Next Pos : ", nextPos);
+        this.setX(nextPos);
+        this.playerPassed = false;
+        this.setVelocityX(speed);
+    }
+
+    leftScreen(){
+        return (this._sprite.x + this._sprite.width/2) < 0;
     }
 }

@@ -19,10 +19,10 @@ export default class GameScene extends Phaser.Scene {
         this.load.image('background_item', 'assets/Enviornment/background_item.png');
         this.load.image('cloud_big', 'assets/Enviornment/cloud_big.png');
         this.load.image('cloud_small_0', 'assets/Enviornment/cloud_small_0.png');
-        this.load.image('cloud_small_1', 'assets/Enviornment/cloud_small_1.png');
         this.load.image('ground_0', 'assets/Enviornment/ground_0.png');
         this.load.image('ground_1', 'assets/Enviornment/ground_1.png');
-        this.load.image('Grass', 'assets/Enviornment/grass.png');
+        this.load.image('grass_0', 'assets/Enviornment/grass_0.png');
+        this.load.image('grass_1', 'assets/Enviornment/grass_1.png');
 
         this.load.image('rock1', 'assets/rock1.png');
         this.load.image('rock2', 'assets/rock2.png');
@@ -97,10 +97,23 @@ export default class GameScene extends Phaser.Scene {
         this.level = 0;
         this.rocksPassed = 0;
         this.rocksPassedPrev = -1;
-        this.rockSpeed = -200;
         this.levelSprites = ['lizard', 'monkey_1', 'ostrich', 'man'];
         this.gravityY = 0;
+
+        this.rockSpeed = -200;
+        this.baseSpeed = -200;
+        this.rockStepSpeed = 25;
+        this.maxRockSpeed = -700;
         this.jumpVelocity = -800;
+        this.jumpBaseVelocity = -800;
+        this.jumpStepVelocity = 15;
+        this.maxJumpVelocity = -1000;
+
+        // Distance-based ramp
+        this.distance = 0;      // total distance "run" in pixels
+        this.speedEveryPixels = 2500;   // threshold to increase speed
+        this._nextSpeedAt = this.speedEveryPixels;
+
 
         this.background = new ParallaxBackground(this, this.rockSpeed);
 
@@ -141,7 +154,7 @@ export default class GameScene extends Phaser.Scene {
             frameRate: 14, // 10 frames per second (adjust as needed)
             repeat: 0 // Loop infinitely
         });
-        
+
 
         // this.player = new Player(this,);
         this.player = this.physics.add.sprite(this.scale.height / 2, this.ground.y - 100, this.levelSprites[this.level]);
@@ -171,10 +184,10 @@ export default class GameScene extends Phaser.Scene {
 
         this.spawnCoinNearRock();
 
-        this.physics.add.overlap(this.player, [this.rock.rockRect, this,this.rock.rockCircle], this.handleHit, null, this);
+        this.physics.add.overlap(this.player, [this.rock.rockRect, this, this.rock.rockCircle], this.handleHit, null, this);
         this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this);
 
-        
+
 
         this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         this.OneKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
@@ -185,6 +198,50 @@ export default class GameScene extends Phaser.Scene {
         this.coinsText = this.add.text(10, 35, 'Coins: 0', { fontSize: '20px', fill: '#fff' });
         this.rocksText = this.add.text(10, 60, 'Rocks Passed: 0', { fontSize: '20px', fill: '#fff' });
 
+
+        this.applySpeed = (s) => {
+            this.rockSpeed = s;//Phaser.Math.Clamp(s, 50, this.maxRockSpeed);
+
+            // Example: single rock
+            this.rock.setVelocityX(this.rockSpeed);
+            this.background.setSpeed(this.rockSpeed);
+
+            // Example: coins group
+            if (this.coins) {
+                this.coins.children.iterate(c => c?.body?.setVelocityX(this.rockSpeed));
+            }
+
+            // Optional: scale gravity with speed so jumps feel consistent
+            if (this.player?.body) {
+                const gBase = 600;
+                this.player.body.setGravityY(gBase * (this.rockSpeed / this.baseSpeed));
+            }
+
+            // HUD update
+            if (this.speedText) this.speedText.setText(`Speed: ${Math.round(this.currentSpeed)} px/s`);
+        };
+        // HUD texts
+        this.speedText = this.add.text(10, 80, `Speed: ${Math.round(this.rockSpeed)} px/s`, { fontSize: '16px', fill: '#fff' });
+        this.jumpText = this.add.text(10, 100, `Jump: ${Math.round(this.jumpVelocity)} px/s`, { fontSize: '16px', fill: '#fff' });
+        this.distText = this.add.text(10, 120, `Dist: 0 px`, { fontSize: '16px', fill: '#fff' });
+
+        // Sliders (only width: adjust positions as you like)
+        this.makeSlider(
+            this, 200, 80, 240,
+            this.maxRockSpeed, 150, this.rockSpeed,
+            'Speed',
+            (val) => this.applySpeed(val)
+        );
+
+        this.makeSlider(
+            this, 200, 110, 240,
+            -800, 200, this.jumpVelocity,
+            'Jump',
+            (val) => {
+                this.jumpVelocity = val;
+                this.jumpText.setText(`Jump: ${Math.round(this.jumpBaseVelocity)} px/s`);
+            }
+        );
     }
 
     update(time, delta) {
@@ -221,9 +278,9 @@ export default class GameScene extends Phaser.Scene {
             this.rocksText.setText(`Rocks Passed: ${this.rocksPassed}`);
 
             if (this.level != this.levelSprites.length - 1 && this.rocksPassed > this.rocksPassedPrev) {
-                this.rockSpeed -= 25;
+                this.rockSpeed -= this.rockStepSpeed;
                 this.gravityY = this.gravityY + 10;
-                this.jumpVelocity -= 15;
+                this.jumpVelocity -= this.jumpStepVelocity;
                 this.player.body.setGravityY(this.gravityY); // Faster fall
                 this.rocksPassedPrev = this.rocksPassed;
                 this.background.setSpeed(this.rockSpeed);
@@ -231,14 +288,8 @@ export default class GameScene extends Phaser.Scene {
         }
 
         //rock left screen
-        if (this.rock._sprite.x < -this.rock._sprite.width) {
-            this.rock.updateSprite();
-            var nextPos = this.scale.width + (Math.random() * this.scale.width);
-            this.rock._sprite.x = nextPos;
-            this.rock.rockCircle.x = nextPos;
-            this.rock.rockRect.x = nextPos;
-            this.rock.playerPassed = false;
-            this.rock._sprite.body.setVelocityX(this.rockSpeed);
+        if (this.rock.leftScreen()) {
+            this.rock.resetRockPos(this.rockSpeed);
             this.spawnCoinNearRock();
         }
 
@@ -270,8 +321,9 @@ export default class GameScene extends Phaser.Scene {
     handleHit(player, rock) {
         this.lives--;
         this.livesText.setText(`Lives: ${this.lives}`);
-        this.rock._sprite.x = this.scale.width + 100;
-        this.rock._sprite.body.setVelocityX(this.rockSpeed);
+        this.rock.resetRockPos(this.rockSpeed);
+        // this.rock.setX(this.scale.width + 100); //TODO : Make it random
+        // this.rock.setVelocityX(this.rockSpeed);
         this.spawnCoinNearRock();
 
         if (this.lives <= 0) {
@@ -311,4 +363,43 @@ export default class GameScene extends Phaser.Scene {
 
 
     }
+
+    makeSlider(scene, x, y, width, min, max, initial, label, onChange) {
+        const track = scene.add.rectangle(x, y, width, 6, 0x666666).setOrigin(0, 0.5).setInteractive();
+        const knobX = x + ((initial - min) / (max - min)) * width;
+        const knob = scene.add.circle(knobX, y, 10, 0xffffff).setInteractive({ draggable: true });
+        const text = scene.add.text(x, y - 24, `${label}: ${Math.round(initial)}`, { fontSize: '16px', fill: '#fff' });
+
+        // Drag logic
+        scene.input.setDraggable(knob, true);
+        knob.on('drag', (_pointer, dragX) => {
+            // clamp to track
+            const clamped = Phaser.Math.Clamp(dragX, x, x + width);
+            knob.x = clamped;
+
+            // normalize: fraction along the track (0..1)
+            const t = (clamped - x) / width;
+
+            // safe interpolation between min and max
+            const value = Phaser.Math.Linear(min, max, t);
+
+            text.setText(`${label}: ${Math.round(value)}`);
+            onChange(value);
+        });
+
+        // Click on track jumps knob
+        track.on('pointerdown', (pointer) => {
+            const clamped = Phaser.Math.Clamp(pointer.x, x, x + width);
+            knob.x = clamped;
+
+            const t = (clamped - x) / width;
+            const value = Phaser.Math.Linear(min, max, t);
+
+            text.setText(`${label}: ${Math.round(value)}`);
+            onChange(value);
+        });
+
+        return { track, knob, text };
+    }
+
 }

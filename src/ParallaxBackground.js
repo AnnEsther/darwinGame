@@ -1,7 +1,7 @@
 import ParallaxObject from "./ParallaxObject";
 
-const groundTopBuffer = -80;
-const groundBottomBuffer = -75;
+const groundTopBuffer = -25
+const groundBottomBuffer = 0;
 
 export default class ParallaxBackground {
     constructor(scene, speed = 200) {
@@ -16,6 +16,7 @@ export default class ParallaxBackground {
 
         this.background = this.physicsGroup.create(0, 0, 'background');
         this.background.setOrigin(0,0);
+        this.background.setScale(1.15,1.15);
         this.background.setImmovable(true);
         this.background.body.allowGravity = false;
 
@@ -59,7 +60,7 @@ export default class ParallaxBackground {
             x : 0,
             y : this.ground._0.y - this.ground.getHeight() - groundTopBuffer,
             texture0: 'cloud_small_0',
-            texture1: 'cloud_small_1',
+            texture1: null,
             origin : [0,0],
             displaySize : [sceneWidth, sceneHeight],
             velocity: speed * 0.4,
@@ -97,8 +98,8 @@ export default class ParallaxBackground {
         var grassConfig ={
             x : 0,
             y : sceneHeight,
-            texture0: 'Grass',
-            texture1: null,
+            texture0: 'grass_0',
+            texture1: 'grass_1',
             origin : [0,1],
             displaySize : [sceneWidth, sceneHeight],
             velocity: speed * 1.2,
@@ -107,7 +108,7 @@ export default class ParallaxBackground {
             sceneWidth: sceneWidth
         };
         this.grass = new ParallaxObject(this.physicsGroup, grassConfig);
-        this.grass._1.flipX = true; // Flip horizontally
+        // this.grass._1.flipX = true; // Flip horizontally
 
 
         this.ground.setZIndex(5);
