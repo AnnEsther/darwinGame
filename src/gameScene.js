@@ -25,10 +25,10 @@ export default class GameScene extends Phaser.Scene {
         this.load.image('grass_0', 'assets/Enviornment/grass_0.png');
         this.load.image('grass_1', 'assets/Enviornment/grass_1.png');
 
-        this.load.image('rock1', 'assets/rock1.png');
-        this.load.image('rock2', 'assets/rock2.png');
-        this.load.image('rock3', 'assets/rock3.png');
-        this.load.image('rock4', 'assets/rock4.png');
+        this.load.image('rock1', 'assets/Rock/rock1.png');
+        this.load.image('rock2', 'assets/Rock/rock2.png');
+        this.load.image('rock3', 'assets/Rock/rock3.png');
+        this.load.image('rock4', 'assets/Rock/rock4.png');
 
         // player animations
         //monkey run
