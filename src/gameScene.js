@@ -1,6 +1,7 @@
 // [GameScene remains unchanged, omitted for brevity]
 import ParallaxBackground from './ParallaxBackground.js';
 import Rock from './Rock.js';
+import ScoreHUD from './ScoreHUD.js';
 // import Player from './player.js';
 
 export default class GameScene extends Phaser.Scene {
@@ -117,7 +118,7 @@ export default class GameScene extends Phaser.Scene {
 
         this.background = new ParallaxBackground(this, this.rockSpeed);
 
-        this.ground = this.add.rectangle(this.scale.width / 2, this.background.ground._0.y - this.background.ground._0.height + 75, this.scale.width, 20, 0x00000000);
+        this.ground = this.add.rectangle(this.scale.width / 2, this.background.ground._0.y - this.background.ground._0.height + 25, this.scale.width, 2, 0x00000000);
         this.ground.alpha = 0;
         this.physics.add.existing(this.ground, true);
 
@@ -226,31 +227,32 @@ export default class GameScene extends Phaser.Scene {
         this.distText = this.add.text(10, 120, `Dist: 0 px`, { fontSize: '16px', fill: '#fff' });
 
         // Sliders (only width: adjust positions as you like)
-        this.makeSlider(
-            this, 200, 80, 240,
-            this.maxRockSpeed, 150, this.rockSpeed,
-            'Speed',
+        this.makeSlider(this, 200, 80, 240, this.maxRockSpeed, 150, this.rockSpeed, 'Speed',
             (val) => this.applySpeed(val)
         );
 
-        this.makeSlider(
-            this, 200, 110, 240,
-            -800, 200, this.jumpVelocity,
-            'Jump',
+        this.makeSlider(this, 200, 110, 240, -800, 200, this.jumpVelocity, 'Jump',
             (val) => {
                 this.jumpVelocity = val;
                 this.jumpText.setText(`Jump: ${Math.round(this.jumpBaseVelocity)} px/s`);
             }
         );
+
+        // Create the HUD at top-left; 1 px = 1 cm default (0.01 m/px)
+        this.scoreHUD = new ScoreHUD(this, {
+            x: this.scale.width -  150, y: 10,
+            label: 'Score',
+            minDigits: 5,
+            maxDigits: 10,
+            metersPerPixel: 0.01,  // tweak as you like
+            fontSize: 18
+        });
     }
 
     update(time, delta) {
-        // console.log(this.coins.x, this.coins.body.velocity.x);
-        // console.log(time);
-        // console.log(delta);
-        // this.background.update(delta);
 
         this.background.update();
+        this.scoreHUD.addBySpeedAndDelta(this.rockSpeed, delta);
 
         if (!this.reachedCenter) {
             if (this.player.x >= this.scale.width / 2) {
@@ -272,7 +274,7 @@ export default class GameScene extends Phaser.Scene {
 
 
         //rocks passed
-        if (!this.rock.playerPassed && this.rock.x + this.rock.width < this.player.x) {
+        if (!this.rock.playerPassed && this.rock._sprite.x + this.rock._sprite.width < this.player.x) {
             this.rock.playerPassed = true;
             this.rocksPassed++;
             this.rocksText.setText(`Rocks Passed: ${this.rocksPassed}`);
@@ -288,7 +290,7 @@ export default class GameScene extends Phaser.Scene {
         }
 
         //rock left screen
-        if (this.rock.leftScreen()) {
+        if (this.rock.playerPassed && this.rock.leftScreen()) {
             this.rock.resetRockPos(this.rockSpeed);
             this.spawnCoinNearRock();
         }
