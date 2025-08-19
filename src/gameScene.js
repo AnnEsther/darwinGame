@@ -2,6 +2,7 @@
 import ParallaxBackground from './ParallaxBackground.js';
 import Rock from './Rock.js';
 import ScoreHUD from './ScoreHUD.js';
+import Coins from './Coins.js';
 // import Player from './player.js';
 
 export default class GameScene extends Phaser.Scene {
@@ -14,7 +15,12 @@ export default class GameScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('coin', 'assets/coin.png');
+        this.load.image('coin0000', 'assets/Coin/coin0000.png');
+        this.load.image('coin0001', 'assets/Coin/coin0001.png');
+        this.load.image('coin0002', 'assets/Coin/coin0002.png');
+        this.load.image('coin0003', 'assets/Coin/coin0003.png');
+        this.load.image('coin0004', 'assets/Coin/coin0004.png');
+        this.load.image('coin0005', 'assets/Coin/coin0005.png');
 
         this.load.image('background', 'assets/Enviornment/background.png');
         this.load.image('background_item', 'assets/Enviornment/background_item.png');
@@ -106,7 +112,7 @@ export default class GameScene extends Phaser.Scene {
         this.rockStepSpeed = 25;
         this.maxRockSpeed = -700;
         this.jumpVelocity = -800;
-        this.jumpBaseVelocity = -800;
+        this.jumpBaseVelocity = -600;
         this.jumpStepVelocity = 15;
         this.maxJumpVelocity = -1000;
 
@@ -181,12 +187,13 @@ export default class GameScene extends Phaser.Scene {
         this.player.setDepth(7);
 
         // this.coins = this.physics.add.group();
-        this.coins = this.physics.add.group({ allowGravity: false, immovable: true });
+        this.coins = new Coins(this);
+        
 
         this.spawnCoinNearRock();
 
         this.physics.add.overlap(this.player, this.rock.getColliders(), this.handleHit, null, this);
-        this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this);
+        this.physics.add.overlap(this.player, this.coins.getColliders(), this.collectCoin, null, this);
 
 
 
@@ -203,14 +210,10 @@ export default class GameScene extends Phaser.Scene {
         this.applySpeed = (s) => {
             this.rockSpeed = s;//Phaser.Math.Clamp(s, 50, this.maxRockSpeed);
 
-            // Example: single rock
             this.rock.setVelocityX(this.rockSpeed);
             this.background.setSpeed(this.rockSpeed);
-
-            // Example: coins group
-            if (this.coins) {
-                this.coins.children.iterate(c => c?.body?.setVelocityX(this.rockSpeed));
-            }
+            this.coins.setVelocityX(this.rockSpeed);
+   
 
             // Optional: scale gravity with speed so jumps feel consistent
             if (this.player?.body) {
@@ -346,20 +349,26 @@ export default class GameScene extends Phaser.Scene {
     }
 
     spawnCoinNearRock() {
-        this.coins.clear(true, true);
 
-        const offsetY = Phaser.Math.Between(-250, -50);
+        // this.coins.clear(true, true);
+
+        const offsetY = Phaser.Math.Between(-250, -100);
+        // const offsetX = Phaser.Math.Between(-250, -100);
+        var config = {
+            maxCount : 6,
+            minCount : 1,
+            arcWidth : 150,   // ellipse width (diameter) in px
+            arcHeight : 150,  // ellipse height (diameter) in px
+            startDeg : -180,   // arc start angle (degrees)
+            endDeg : 0,      // arc end angle (degrees)
+            speedX : this.rockSpeed,    // leftward speed
+            scale : 0.2       // coin visual scale
+        }
+        this.coins.spawnCoinsArc(this.rock._sprite.x, this.rock._sprite.y - 100, config);
 
         // const coin = this.physics.add.sprite(this.rock.x, this.rock.y + offsetY, 'coin');
-        const coin = this.coins.create(this.rock._sprite.x, this.rock._sprite.y + offsetY, 'coin');
 
-        coin.displayWidth = 40;
-        coin.displayHeight = 40;
-
-        coin.body.setSize(20, 20, true);       // Resizes the physics body
-        coin.body.setAllowGravity(false);          // Prevent falling
-        coin.body.setImmovable(false);             // Make sure it's a dynamic body
-        coin.body.setVelocityX(this.rockSpeed);    // Set horizontal movement
+        
 
 
     }
