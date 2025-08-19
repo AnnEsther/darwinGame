@@ -3,7 +3,7 @@ import ParallaxBackground from './ParallaxBackground.js';
 import Rock from './Rock.js';
 import ScoreHUD from './ScoreHUD.js';
 import Coins from './Coins.js';
-// import Player from './player.js';
+import Player from './Player.js';
 
 export default class GameScene extends Phaser.Scene {
     constructor() {
@@ -15,13 +15,14 @@ export default class GameScene extends Phaser.Scene {
     }
 
     preload() {
+        //COINS
         this.load.image('coin0000', 'assets/Coin/coin0000.png');
         this.load.image('coin0001', 'assets/Coin/coin0001.png');
         this.load.image('coin0002', 'assets/Coin/coin0002.png');
         this.load.image('coin0003', 'assets/Coin/coin0003.png');
         this.load.image('coin0004', 'assets/Coin/coin0004.png');
         this.load.image('coin0005', 'assets/Coin/coin0005.png');
-
+        //BACKGROUND
         this.load.image('background', 'assets/Enviornment/background.png');
         this.load.image('background_item', 'assets/Enviornment/background_item.png');
         this.load.image('cloud_big', 'assets/Enviornment/cloud_big.png');
@@ -30,7 +31,7 @@ export default class GameScene extends Phaser.Scene {
         this.load.image('ground_1', 'assets/Enviornment/ground_1.png');
         this.load.image('grass_0', 'assets/Enviornment/grass_0.png');
         this.load.image('grass_1', 'assets/Enviornment/grass_1.png');
-
+        //FOSSILS
         this.load.image('rock1', 'assets/Rock/rock1.png');
         this.load.image('rock2', 'assets/Rock/rock2.png');
         this.load.image('rock3', 'assets/Rock/rock3.png');
@@ -129,62 +130,24 @@ export default class GameScene extends Phaser.Scene {
         this.physics.add.existing(this.ground, true);
 
 
-        // Create the animation using the loaded images
-        this.anims.create({
-            key: 'monkey_run', // Animation name
-            frames: [
-                { key: 'monkey_1' }, { key: 'monkey_2' }, { key: 'monkey_3' },
-                { key: 'monkey_4' }, { key: 'monkey_5' }, { key: 'monkey_6' },
-                { key: 'monkey_7' }, { key: 'monkey_8' }, { key: 'monkey_9' },
-                { key: 'monkey_10' }, { key: 'monkey_11' }, { key: 'monkey_12' },
-                { key: 'monkey_13' }, { key: 'monkey_14' }, { key: 'monkey_15' },
-                { key: 'monkey_16' }, { key: 'monkey_17' }, { key: 'monkey_18' },
-                { key: 'monkey_19' }, { key: 'monkey_20' }, { key: 'monkey_21' },
-                { key: 'monkey_22' },
-            ],
-            frameRate: 14, // 10 frames per second (adjust as needed)
-            repeat: -1 // Loop infinitely
-        });
-        this.anims.create({
-            key: 'monkey_jump', // Animation name
-            frames: [
-                { key: 'monkeyJump_1' }, { key: 'monkeyJump_2' }, { key: 'monkeyJump_3' },
-                { key: 'monkeyJump_4' }, { key: 'monkeyJump_5' }, { key: 'monkeyJump_6' },
-                { key: 'monkeyJump_7' }, { key: 'monkeyJump_8' }, { key: 'monkeyJump_9' },
-                { key: 'monkeyJump_10' }, { key: 'monkeyJump_11' }, { key: 'monkeyJump_12' },
-                { key: 'monkeyJump_13' }, { key: 'monkeyJump_14' }, { key: 'monkeyJump_15' },
-                { key: 'monkeyJump_16' }, { key: 'monkeyJump_17' }, { key: 'monkeyJump_18' },
-                { key: 'monkeyJump_19' }, { key: 'monkeyJump_20' }, { key: 'monkeyJump_21' },
-                { key: 'monkeyJump_22' }, { key: 'monkeyJump_23' }, { key: 'monkeyJump_24' },
-                { key: 'monkeyJump_25' }, { key: 'monkeyJump_26' }
-            ],
-            frameRate: 14, // 10 frames per second (adjust as needed)
-            repeat: 0 // Loop infinitely
-        });
+
+        var playerConfig = {
+            x : this.scale.height / 2,
+            y : this.ground.y - 100,
+            level : this.level,
+            scale : 0.5,
+            initialVelocity : 200,
+            gravityY: this.gravityY
+        };
+        this.player = new Player(this, playerConfig);
+        
 
 
-        // this.player = new Player(this,);
-        this.player = this.physics.add.sprite(this.scale.height / 2, this.ground.y - 100, this.levelSprites[this.level]);
-        this.player.setVelocityX(200); // Initial movement (if needed)
-        this.player.setScale(0.5);
-        this.player.setCollideWorldBounds(true); // Enable world bounds collision
-        this.player.body.setGravityY(this.gravityY);
-
-        // Listen for animation complete event
-        this.player.on('animationcomplete-monkey_jump', () => {
-            // console.log('Run animation completed!');
-            // Your custom code here - switch to jump
-            this.player.play('monkey_run');
-        });
-
-
-        this.physics.add.collider(this.player, this.ground, () => {
-            this.jumpCount = 0;
-        });
+        this.physics.add.collider(this.player.getColliders(), this.ground, () => {this.jumpCount = 0;});
 
         this.rock = new Rock(this, this.scale.width + (Math.random() * this.scale.width) + 100, this.background.ground._0.y - this.background.ground._0.height - 10, this.rockSpeed);
         this.rock._sprite.setDepth(6);
-        this.player.setDepth(7);
+        this.player._currPlayer.setDepth(7);
 
         // this.coins = this.physics.add.group();
         this.coins = new Coins(this);
@@ -192,8 +155,8 @@ export default class GameScene extends Phaser.Scene {
 
         this.spawnCoinNearRock();
 
-        this.physics.add.overlap(this.player, this.rock.getColliders(), this.handleHit, null, this);
-        this.physics.add.overlap(this.player, this.coins.getColliders(), this.collectCoin, null, this);
+        this.physics.add.overlap(this.player.getColliders(), this.rock.getColliders(), this.handleHit, null, this);
+        this.physics.add.overlap(this.player.getColliders(), this.coins.getColliders(), this.collectCoin, null, this);
 
 
 
@@ -216,10 +179,8 @@ export default class GameScene extends Phaser.Scene {
    
 
             // Optional: scale gravity with speed so jumps feel consistent
-            if (this.player?.body) {
-                const gBase = 600;
-                this.player.body.setGravityY(gBase * (this.rockSpeed / this.baseSpeed));
-            }
+            const gBase = 600;
+            this.player.updateGravity(gBase, this.rockSpeed, this.baseSpeed);
 
             // HUD update
             if (this.speedText) this.speedText.setText(`Speed: ${Math.round(this.currentSpeed)} px/s`);
@@ -258,26 +219,26 @@ export default class GameScene extends Phaser.Scene {
         this.scoreHUD.addBySpeedAndDelta(this.rockSpeed, delta);
 
         if (!this.reachedCenter) {
-            if (this.player.x >= this.scale.width / 2) {
-                this.player.x = this.scale.width / 2;
-                this.player.body.setVelocityX(0);
+            if (this.player.getX() >= this.scale.width / 2) {
+                this.player.setX(this.scale.width / 2);
+                this.player.setVelocityX(0);
                 this.reachedCenter = true;
             }
         }
         else {
             if (Phaser.Input.Keyboard.JustDown(this.spaceKey) && this.jumpCount < 2) {
-                this.player.body.setVelocityY(this.jumpVelocity);
+                this.player._currPlayer.setVelocityY(this.jumpVelocity);
                 this.jumpCount++;
                 if (this.level == 1) {
-                    this.player.setScale(0.15);
-                    this.player.play('monkey_jump');
+                    this.player._currPlayer.setScale(0.15);
+                    this.player._currPlayer.play('monkey_jump');
                 }
             }
         }
 
 
         //rocks passed
-        if (!this.rock.playerPassed && this.rock._sprite.x + this.rock._sprite.width < this.player.x) {
+        if (!this.rock.playerPassed && this.rock._sprite.x + this.rock._sprite.width < this.player._currPlayer.x) {
             this.rock.playerPassed = true;
             this.rocksPassed++;
             this.rocksText.setText(`Rocks Passed: ${this.rocksPassed}`);
@@ -286,7 +247,7 @@ export default class GameScene extends Phaser.Scene {
                 this.rockSpeed -= this.rockStepSpeed;
                 this.gravityY = this.gravityY + 10;
                 this.jumpVelocity -= this.jumpStepVelocity;
-                this.player.body.setGravityY(this.gravityY); // Faster fall
+                this.player._currPlayer.setGravityY(this.gravityY); // Faster fall
                 this.rocksPassedPrev = this.rocksPassed;
                 this.background.setSpeed(this.rockSpeed);
             }
@@ -299,20 +260,13 @@ export default class GameScene extends Phaser.Scene {
         }
 
         //level up
+        
         if (this.rocksPassed % 10 === 0) {
 
             const newLevel = Math.floor(this.rocksPassed / 10);
             if (newLevel !== this.level && newLevel < this.levelSprites.length) {
                 this.level = newLevel;
-                console.log(this.level);
-                // this.player.fillColor = this.levelColors[this.level];
-                this.player.setTexture(this.levelSprites[this.level]);
-                this.player.setScale(1 / 2);
-                this.player.body.setSize(this.player.width, this.player.height, true);
-                if (this.level == 1) {
-                    this.player.setScale(0.15);
-                    this.player.play('monkey_run');
-                }
+                this.player.updateLevel(this.level);
             }
             if (this.level >= this.levelSprites.length) {
                 this.scene.start('LeaderboardScene', {
