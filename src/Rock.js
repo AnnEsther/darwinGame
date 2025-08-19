@@ -1,20 +1,21 @@
 import next from "next";
 
 export default class Rock {
-    constructor(scene, x, y, speed) {
+    constructor(scene, config) {
         this.scene = scene;
+        this.rockBase = config.rockBase;
 
         this._colliders = [];
-        this._sprite = this.scene.physics.add.sprite(x, y, 'rock1');
+        this._sprite = this.scene.physics.add.sprite(config.x, config.y, 'rock1');
 
         this._sprite.body.setAllowGravity(false); // Disable gravity so it never falls
-        this._sprite.setVelocityX(speed); // Keep horizontal movement
+        this._sprite.setVelocityX(config.speed); // Keep horizontal movement
         this._sprite.setImmovable(true);  // Make sure other objects don't push it
         this._sprite.setBounce(0);// Optional: prevent bouncing on collisions
 
         this._sprite.playerPassed = false;// Flag for tracking pass
 
-        this.updateSprite(x, y, speed);
+        this.updateSprite(config.x, config.y, config.speed);
 
     }
 
@@ -116,16 +117,13 @@ export default class Rock {
     resetRockPos(speed) {
         this.setVelocityX(0)
         this.updateSprite();
-        var nextPos = this.scene.scale.width + (Math.random() * this.scene.scale.width);
+        var nextPos = this.rockBase.x + (Math.random() * this.rockBase.width);
         // console.log("Next Pos : ", nextPos);
         this.setX(nextPos);
         this.playerPassed = false;
         this.setVelocityX(speed);
     }
 
-    leftScreen() {
-        return (this._sprite.x + this._sprite.width / 2) < 0;
-    }
 
     getColliders() {
         return this._colliders;

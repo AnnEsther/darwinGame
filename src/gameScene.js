@@ -38,69 +38,109 @@ export default class GameScene extends Phaser.Scene {
         this.load.image('rock4', 'assets/Rock/rock4.png');
 
         // player animations
-        //monkey run
+        // //monkey run
         this.load.image('monkey_1', 'assets/monkey/run/MONKEY_RUN_TK020001 Background Removed.png');
-        this.load.image('monkey_2', 'assets/monkey/run/MONKEY_RUN_TK020002 Background Removed.png');
-        this.load.image('monkey_3', 'assets/monkey/run/MONKEY_RUN_TK020003 Background Removed.png');
-        this.load.image('monkey_4', 'assets/monkey/run/MONKEY_RUN_TK020004 Background Removed.png');
-        this.load.image('monkey_5', 'assets/monkey/run/MONKEY_RUN_TK020005 Background Removed.png');
-        this.load.image('monkey_6', 'assets/monkey/run/MONKEY_RUN_TK020006 Background Removed.png');
-        this.load.image('monkey_7', 'assets/monkey/run/MONKEY_RUN_TK020007 Background Removed.png');
-        this.load.image('monkey_8', 'assets/monkey/run/MONKEY_RUN_TK020008 Background Removed.png');
-        this.load.image('monkey_9', 'assets/monkey/run/MONKEY_RUN_TK020009 Background Removed.png');
-        this.load.image('monkey_10', 'assets/monkey/run/MONKEY_RUN_TK020010 Background Removed.png');
-        this.load.image('monkey_11', 'assets/monkey/run/MONKEY_RUN_TK020011 Background Removed.png');
-        this.load.image('monkey_12', 'assets/monkey/run/MONKEY_RUN_TK020012 Background Removed.png');
-        this.load.image('monkey_13', 'assets/monkey/run/MONKEY_RUN_TK020013 Background Removed.png');
-        this.load.image('monkey_14', 'assets/monkey/run/MONKEY_RUN_TK020014 Background Removed.png');
-        this.load.image('monkey_15', 'assets/monkey/run/MONKEY_RUN_TK020015 Background Removed.png');
-        this.load.image('monkey_16', 'assets/monkey/run/MONKEY_RUN_TK020016 Background Removed.png');
-        this.load.image('monkey_17', 'assets/monkey/run/MONKEY_RUN_TK020017 Background Removed.png');
-        this.load.image('monkey_18', 'assets/monkey/run/MONKEY_RUN_TK020018 Background Removed.png');
-        this.load.image('monkey_19', 'assets/monkey/run/MONKEY_RUN_TK020019 Background Removed.png');
-        this.load.image('monkey_20', 'assets/monkey/run/MONKEY_RUN_TK020020 Background Removed.png');
-        this.load.image('monkey_21', 'assets/monkey/run/MONKEY_RUN_TK020021 Background Removed.png');
-        this.load.image('monkey_22', 'assets/monkey/run/MONKEY_RUN_TK020022 Background Removed.png');
-        //monkey jump
-        this.load.image('monkeyJump_1', 'assets/monkey/jump/MONKEY_jump_TK010001 Background Removed.png');
-        this.load.image('monkeyJump_2', 'assets/monkey/jump/MONKEY_jump_TK010002 Background Removed.png');
-        this.load.image('monkeyJump_3', 'assets/monkey/jump/MONKEY_jump_TK010003 Background Removed.png');
-        this.load.image('monkeyJump_4', 'assets/monkey/jump/MONKEY_jump_TK010004 Background Removed.png');
-        this.load.image('monkeyJump_5', 'assets/monkey/jump/MONKEY_jump_TK010005 Background Removed.png');
-        this.load.image('monkeyJump_6', 'assets/monkey/jump/MONKEY_jump_TK010006 Background Removed.png');
-        this.load.image('monkeyJump_7', 'assets/monkey/jump/MONKEY_jump_TK010007 Background Removed.png');
-        this.load.image('monkeyJump_8', 'assets/monkey/jump/MONKEY_jump_TK010008 Background Removed.png');
-        this.load.image('monkeyJump_9', 'assets/monkey/jump/MONKEY_jump_TK010009 Background Removed.png');
-        this.load.image('monkeyJump_10', 'assets/monkey/jump/MONKEY_jump_TK010010 Background Removed.png');
-        this.load.image('monkeyJump_11', 'assets/monkey/jump/MONKEY_jump_TK010011 Background Removed.png');
-        this.load.image('monkeyJump_12', 'assets/monkey/jump/MONKEY_jump_TK010012 Background Removed.png');
-        this.load.image('monkeyJump_13', 'assets/monkey/jump/MONKEY_jump_TK010013 Background Removed.png');
-        this.load.image('monkeyJump_14', 'assets/monkey/jump/MONKEY_jump_TK010014 Background Removed.png');
-        this.load.image('monkeyJump_15', 'assets/monkey/jump/MONKEY_jump_TK010015 Background Removed.png');
-        this.load.image('monkeyJump_16', 'assets/monkey/jump/MONKEY_jump_TK010016 Background Removed.png');
-        this.load.image('monkeyJump_17', 'assets/monkey/jump/MONKEY_jump_TK010017 Background Removed.png');
-        this.load.image('monkeyJump_18', 'assets/monkey/jump/MONKEY_jump_TK010018 Background Removed.png');
-        this.load.image('monkeyJump_19', 'assets/monkey/jump/MONKEY_jump_TK010019 Background Removed.png');
-        this.load.image('monkeyJump_20', 'assets/monkey/jump/MONKEY_jump_TK010020 Background Removed.png');
-        this.load.image('monkeyJump_21', 'assets/monkey/jump/MONKEY_jump_TK010021 Background Removed.png');
-        this.load.image('monkeyJump_22', 'assets/monkey/jump/MONKEY_jump_TK010022 Background Removed.png');
-        this.load.image('monkeyJump_23', 'assets/monkey/jump/MONKEY_jump_TK010023 Background Removed.png');
-        this.load.image('monkeyJump_24', 'assets/monkey/jump/MONKEY_jump_TK010024 Background Removed.png');
-        this.load.image('monkeyJump_25', 'assets/monkey/jump/MONKEY_jump_TK010025 Background Removed.png');
-        this.load.image('monkeyJump_26', 'assets/monkey/jump/MONKEY_jump_TK010026 Background Removed.png');
+        // this.load.image('monkey_2', 'assets/monkey/run/MONKEY_RUN_TK020002 Background Removed.png');
+        // this.load.image('monkey_3', 'assets/monkey/run/MONKEY_RUN_TK020003 Background Removed.png');
+        // this.load.image('monkey_4', 'assets/monkey/run/MONKEY_RUN_TK020004 Background Removed.png');
+        // this.load.image('monkey_5', 'assets/monkey/run/MONKEY_RUN_TK020005 Background Removed.png');
+        // this.load.image('monkey_6', 'assets/monkey/run/MONKEY_RUN_TK020006 Background Removed.png');
+        // this.load.image('monkey_7', 'assets/monkey/run/MONKEY_RUN_TK020007 Background Removed.png');
+        // this.load.image('monkey_8', 'assets/monkey/run/MONKEY_RUN_TK020008 Background Removed.png');
+        // this.load.image('monkey_9', 'assets/monkey/run/MONKEY_RUN_TK020009 Background Removed.png');
+        // this.load.image('monkey_10', 'assets/monkey/run/MONKEY_RUN_TK020010 Background Removed.png');
+        // this.load.image('monkey_11', 'assets/monkey/run/MONKEY_RUN_TK020011 Background Removed.png');
+        // this.load.image('monkey_12', 'assets/monkey/run/MONKEY_RUN_TK020012 Background Removed.png');
+        // this.load.image('monkey_13', 'assets/monkey/run/MONKEY_RUN_TK020013 Background Removed.png');
+        // this.load.image('monkey_14', 'assets/monkey/run/MONKEY_RUN_TK020014 Background Removed.png');
+        // this.load.image('monkey_15', 'assets/monkey/run/MONKEY_RUN_TK020015 Background Removed.png');
+        // this.load.image('monkey_16', 'assets/monkey/run/MONKEY_RUN_TK020016 Background Removed.png');
+        // this.load.image('monkey_17', 'assets/monkey/run/MONKEY_RUN_TK020017 Background Removed.png');
+        // this.load.image('monkey_18', 'assets/monkey/run/MONKEY_RUN_TK020018 Background Removed.png');
+        // this.load.image('monkey_19', 'assets/monkey/run/MONKEY_RUN_TK020019 Background Removed.png');
+        // this.load.image('monkey_20', 'assets/monkey/run/MONKEY_RUN_TK020020 Background Removed.png');
+        // this.load.image('monkey_21', 'assets/monkey/run/MONKEY_RUN_TK020021 Background Removed.png');
+        // this.load.image('monkey_22', 'assets/monkey/run/MONKEY_RUN_TK020022 Background Removed.png');
+        // //monkey jump
+        // this.load.image('monkeyJump_1', 'assets/monkey/jump/MONKEY_jump_TK010001 Background Removed.png');
+        // this.load.image('monkeyJump_2', 'assets/monkey/jump/MONKEY_jump_TK010002 Background Removed.png');
+        // this.load.image('monkeyJump_3', 'assets/monkey/jump/MONKEY_jump_TK010003 Background Removed.png');
+        // this.load.image('monkeyJump_4', 'assets/monkey/jump/MONKEY_jump_TK010004 Background Removed.png');
+        // this.load.image('monkeyJump_5', 'assets/monkey/jump/MONKEY_jump_TK010005 Background Removed.png');
+        // this.load.image('monkeyJump_6', 'assets/monkey/jump/MONKEY_jump_TK010006 Background Removed.png');
+        // this.load.image('monkeyJump_7', 'assets/monkey/jump/MONKEY_jump_TK010007 Background Removed.png');
+        // this.load.image('monkeyJump_8', 'assets/monkey/jump/MONKEY_jump_TK010008 Background Removed.png');
+        // this.load.image('monkeyJump_9', 'assets/monkey/jump/MONKEY_jump_TK010009 Background Removed.png');
+        // this.load.image('monkeyJump_10', 'assets/monkey/jump/MONKEY_jump_TK010010 Background Removed.png');
+        // this.load.image('monkeyJump_11', 'assets/monkey/jump/MONKEY_jump_TK010011 Background Removed.png');
+        // this.load.image('monkeyJump_12', 'assets/monkey/jump/MONKEY_jump_TK010012 Background Removed.png');
+        // this.load.image('monkeyJump_13', 'assets/monkey/jump/MONKEY_jump_TK010013 Background Removed.png');
+        // this.load.image('monkeyJump_14', 'assets/monkey/jump/MONKEY_jump_TK010014 Background Removed.png');
+        // this.load.image('monkeyJump_15', 'assets/monkey/jump/MONKEY_jump_TK010015 Background Removed.png');
+        // this.load.image('monkeyJump_16', 'assets/monkey/jump/MONKEY_jump_TK010016 Background Removed.png');
+        // this.load.image('monkeyJump_17', 'assets/monkey/jump/MONKEY_jump_TK010017 Background Removed.png');
+        // this.load.image('monkeyJump_18', 'assets/monkey/jump/MONKEY_jump_TK010018 Background Removed.png');
+        // this.load.image('monkeyJump_19', 'assets/monkey/jump/MONKEY_jump_TK010019 Background Removed.png');
+        // this.load.image('monkeyJump_20', 'assets/monkey/jump/MONKEY_jump_TK010020 Background Removed.png');
+        // this.load.image('monkeyJump_21', 'assets/monkey/jump/MONKEY_jump_TK010021 Background Removed.png');
+        // this.load.image('monkeyJump_22', 'assets/monkey/jump/MONKEY_jump_TK010022 Background Removed.png');
+        // this.load.image('monkeyJump_23', 'assets/monkey/jump/MONKEY_jump_TK010023 Background Removed.png');
+        // this.load.image('monkeyJump_24', 'assets/monkey/jump/MONKEY_jump_TK010024 Background Removed.png');
+        // this.load.image('monkeyJump_25', 'assets/monkey/jump/MONKEY_jump_TK010025 Background Removed.png');
+        // this.load.image('monkeyJump_26', 'assets/monkey/jump/MONKEY_jump_TK010026 Background Removed.png');
 
+
+        // this.load.image('LizardJump_000001', 'assets/lizard/LizardJump_000001.png');
+        // this.load.image('LizardJump_000002', 'assets/lizard/LizardJump_000002.png');
+        // this.load.image('LizardJump_000003', 'assets/lizard/LizardJump_000003.png');
+        // this.load.image('LizardJump_000004', 'assets/lizard/LizardJump_000004.png');
+        // this.load.image('LizardJump_000005', 'assets/lizard/LizardJump_000005.png');
+        // this.load.image('LizardJump_000006', 'assets/lizard/LizardJump_000006.png');
+        // this.load.image('LizardJump_000007', 'assets/lizard/LizardJump_000007.png');
+        // this.load.image('LizardJump_000008', 'assets/lizard/LizardJump_000008.png');
+        // this.load.image('LizardJump_000009', 'assets/lizard/LizardJump_000009.png');
+        // this.load.image('LizardJump_000010', 'assets/lizard/LizardJump_000010.png');
+        // this.load.image('LizardJump_000011', 'assets/lizard/LizardJump_000011.png');
+        // this.load.image('LizardJump_000012', 'assets/lizard/LizardJump_000012.png');
+        // this.load.image('LizardJump_000013', 'assets/lizard/LizardJump_000013.png');
+        // this.load.image('LizardJump_000014', 'assets/lizard/LizardJump_000014.png');
+        // this.load.image('LizardJump_000015', 'assets/lizard/LizardJump_000015.png');
+        // this.load.image('LizardJump_000016', 'assets/lizard/LizardJump_000016.png');
+        // this.load.image('LizardJump_000017', 'assets/lizard/LizardJump_000017.png');
+        // this.load.image('LizardJump_000018', 'assets/lizard/LizardJump_000018.png');
+
+        // this.load.image('LizardRun_000001', 'assets/lizard/LizardRun_000001.png');
+        // this.load.image('LizardRun_000002', 'assets/lizard/LizardRun_000002.png');
+        // this.load.image('LizardRun_000003', 'assets/lizard/LizardRun_000003.png');
+        // this.load.image('LizardRun_000004', 'assets/lizard/LizardRun_000004.png');
+        // this.load.image('LizardRun_000005', 'assets/lizard/LizardRun_000005.png');
+        // this.load.image('LizardRun_000006', 'assets/lizard/LizardRun_000006.png');
+        // this.load.image('LizardRun_000007', 'assets/lizard/LizardRun_000007.png');
+        // this.load.image('LizardRun_000008', 'assets/lizard/LizardRun_000008.png');
+        // this.load.image('LizardRun_000009', 'assets/lizard/LizardRun_000009.png');
+        // this.load.image('LizardRun_000010', 'assets/lizard/LizardRun_000010.png');
 
 
         this.load.image('lizard', 'assets/lizard.png');
-        // this.load.image('monkey', 'assets/monkey.png');
         this.load.image('ostrich', 'assets/ostrich.png');
         this.load.image('man', 'assets/man.png');
+
+        this.load.image('explosion0000', 'assets/explosion/explosion0000.png');
+        this.load.image('explosion0001', 'assets/explosion/explosion0001.png');
+        this.load.image('explosion0002', 'assets/explosion/explosion0002.png');
+        this.load.image('explosion0003', 'assets/explosion/explosion0003.png');
+        this.load.image('explosion0004', 'assets/explosion/explosion0004.png');
+        this.load.image('explosion0005', 'assets/explosion/explosion0005.png');
+        this.load.image('explosion0006', 'assets/explosion/explosion0006.png');
+        this.load.image('explosion0007', 'assets/explosion/explosion0007.png');
+        this.load.image('explosion0008', 'assets/explosion/explosion0008.png');
+
     }
 
     create() {
         this.reachedCenter = false;
         this.jumpCount = 0;
-        this.lives = 3;
+        this.lives = 1;
         this.coinsCollected = 0;
         this.level = 0;
         this.rocksPassed = 0;
@@ -108,7 +148,7 @@ export default class GameScene extends Phaser.Scene {
         this.levelSprites = ['lizard', 'monkey_1', 'ostrich', 'man'];
         this.gravityY = 0;
 
-        this.rockSpeed = -200;
+        this.rockSpeed = -400;
         this.baseSpeed = -200;
         this.rockStepSpeed = 25;
         this.maxRockSpeed = -700;
@@ -123,7 +163,7 @@ export default class GameScene extends Phaser.Scene {
         this._nextSpeedAt = this.speedEveryPixels;
 
 
-        this.background = new ParallaxBackground(this, this.rockSpeed);
+        this.background = new ParallaxBackground(this, this.rockSpeed, this.onGround0Reset.bind(this));
 
         this.ground = this.add.rectangle(this.scale.width / 2, this.background.ground._0.y - this.background.ground._0.height + 25, this.scale.width, 2, 0x00000000);
         this.ground.alpha = 0;
@@ -132,26 +172,33 @@ export default class GameScene extends Phaser.Scene {
 
 
         var playerConfig = {
-            x : this.scale.height / 2,
-            y : this.ground.y - 100,
-            level : this.level,
-            scale : 0.5,
-            initialVelocity : 200,
-            gravityY: this.gravityY
+            x: this.scale.height / 2,
+            y: this.ground.y - 100,
+            level: this.level,
+            scale: 0.5,
+            initialVelocity: 200,
+            gravityY: this.gravityY, 
+            groundY: this.ground.y
         };
         this.player = new Player(this, playerConfig);
-        
 
 
-        this.physics.add.collider(this.player.getColliders(), this.ground, () => {this.jumpCount = 0;});
 
-        this.rock = new Rock(this, this.scale.width + (Math.random() * this.scale.width) + 100, this.background.ground._0.y - this.background.ground._0.height - 10, this.rockSpeed);
+        this.physics.add.collider(this.player.getColliders(), this.ground, () => { this.jumpCount = 0; });
+
+        var rockConfig = {
+            x :  this.scale.width + (Math.random() * this.scale.width) + 100,
+            y : this.background.ground._0.y - this.background.ground._0.height - 10,
+            speed : this.rockSpeed,
+            rockBase : this.background.ground._0
+        };
+        this.rock = new Rock(this, rockConfig);
         this.rock._sprite.setDepth(6);
         this.player._currPlayer.setDepth(7);
 
         // this.coins = this.physics.add.group();
         this.coins = new Coins(this);
-        
+
 
         this.spawnCoinNearRock();
 
@@ -176,7 +223,6 @@ export default class GameScene extends Phaser.Scene {
             this.rock.setVelocityX(this.rockSpeed);
             this.background.setSpeed(this.rockSpeed);
             this.coins.setVelocityX(this.rockSpeed);
-   
 
             // Optional: scale gravity with speed so jumps feel consistent
             const gBase = 600;
@@ -204,13 +250,15 @@ export default class GameScene extends Phaser.Scene {
 
         // Create the HUD at top-left; 1 px = 1 cm default (0.01 m/px)
         this.scoreHUD = new ScoreHUD(this, {
-            x: this.scale.width -  150, y: 10,
+            x: this.scale.width - 150, y: 10,
             label: 'Score',
             minDigits: 5,
             maxDigits: 10,
             metersPerPixel: 0.01,  // tweak as you like
             fontSize: 18
         });
+
+
     }
 
     update(time, delta) {
@@ -249,18 +297,12 @@ export default class GameScene extends Phaser.Scene {
                 this.jumpVelocity -= this.jumpStepVelocity;
                 this.player._currPlayer.setGravityY(this.gravityY); // Faster fall
                 this.rocksPassedPrev = this.rocksPassed;
-                this.background.setSpeed(this.rockSpeed);
+                this.background.setVelocityX(this.rockSpeed);
             }
         }
 
-        //rock left screen
-        if (this.rock.playerPassed && this.rock.leftScreen()) {
-            this.rock.resetRockPos(this.rockSpeed);
-            this.spawnCoinNearRock();
-        }
-
         //level up
-        
+
         if (this.rocksPassed % 10 === 0) {
 
             const newLevel = Math.floor(this.rocksPassed / 10);
@@ -280,8 +322,6 @@ export default class GameScene extends Phaser.Scene {
     handleHit(player, rock) {
         this.lives--;
         this.livesText.setText(`Lives: ${this.lives}`);
-        this.rock.resetRockPos(this.rockSpeed);
-        this.spawnCoinNearRock();
 
         if (this.lives <= 0) {
             if (this.level == this.levelSprites.length - 1) {
@@ -291,10 +331,27 @@ export default class GameScene extends Phaser.Scene {
                 });
             }
             else {
-                this.scene.start('GameOverScene');
+
+                this.player.deadth();
+                this.rockSpeed = 0;
+                this.rock.setVelocityX(this.rockSpeed);
+                this.background.setVelocityX(this.rockSpeed);
+                this.coins.setVelocityX(this.rockSpeed);
+                
             }
         }
+        else {
+            this.rock.resetRockPos(this.rockSpeed);
+            this.spawnCoinNearRock();
+
+        }
     }
+
+    onGround0Reset(){
+        this.rock.resetRockPos(this.rockSpeed);
+        this.spawnCoinNearRock();
+    }
+
 
     collectCoin(player, coin) {
         coin.destroy();
@@ -309,20 +366,20 @@ export default class GameScene extends Phaser.Scene {
         const offsetY = Phaser.Math.Between(-250, -100);
         // const offsetX = Phaser.Math.Between(-250, -100);
         var config = {
-            maxCount : 6,
-            minCount : 1,
-            arcWidth : 150,   // ellipse width (diameter) in px
-            arcHeight : 150,  // ellipse height (diameter) in px
-            startDeg : -180,   // arc start angle (degrees)
-            endDeg : 0,      // arc end angle (degrees)
-            speedX : this.rockSpeed,    // leftward speed
-            scale : 0.2       // coin visual scale
+            maxCount: 6,
+            minCount: 1,
+            arcWidth: 150,   // ellipse width (diameter) in px
+            arcHeight: 150,  // ellipse height (diameter) in px
+            startDeg: -180,   // arc start angle (degrees)
+            endDeg: 0,      // arc end angle (degrees)
+            speedX: this.rockSpeed,    // leftward speed
+            scale: 0.2       // coin visual scale
         }
         this.coins.spawnCoinsArc(this.rock._sprite.x, this.rock._sprite.y - 100, config);
 
         // const coin = this.physics.add.sprite(this.rock.x, this.rock.y + offsetY, 'coin');
 
-        
+
 
 
     }

@@ -4,9 +4,10 @@ const groundTopBuffer = -25
 const groundBottomBuffer = 0;
 
 export default class ParallaxBackground {
-    constructor(scene, speed = 200) {
+    constructor(scene, speed = 200, onGround0Reset) {
         this.scene = scene;
         this.speed = speed;
+        this.onGround0Reset = onGround0Reset;
         this.physicsGroup = scene.physics.add.group({ allowGravity: false, immovable: true });
 
         const sceneWidth = this.scene.scale.width;
@@ -122,18 +123,21 @@ export default class ParallaxBackground {
 
         this.cloud.update();
         this.backgroundItem.update();
-        this.ground.update();
+        var reset = this.ground.update();
+        if(reset[0]){
+            this.onGround0Reset();
+        }
         this.grass.update();
 
     }
 
-    setSpeed(newSpeed) {
+    setVelocityX(newSpeed) {
         this.speed = newSpeed;
 
-        this.cloud.setSpeed(newSpeed * 0.2);
-        this.backgroundItem.setSpeed(newSpeed * 0.8);
-        this.ground.setSpeed(newSpeed);
-        this.grass.setSpeed(newSpeed * 1.2);
+        this.cloud.setVelocityX(newSpeed * 0.2);
+        this.backgroundItem.setVelocityX(newSpeed * 0.8);
+        this.ground.setVelocityX(newSpeed);
+        this.grass.setVelocityX(newSpeed * 1.2);
 
     }
 }

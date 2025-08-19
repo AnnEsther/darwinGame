@@ -43,11 +43,14 @@ export default class ParallaxObject {
     }
 
     update() {
-        if (this._0.x + this.sceneWidth <= 0) { this._0.x = this._1.x + this.sceneWidth; }
-        else if (this._1.x + this.sceneWidth <= 0) { this._1.x = this._0.x + this.sceneWidth; }
+        var zero = false;
+        var one = false;
+        if (this._0.x + this.sceneWidth <= 0) { this._0.x = this._1.x + this.sceneWidth; zero = true; }
+        else if (this._1.x + this.sceneWidth <= 0) { this._1.x = this._0.x + this.sceneWidth; one = true;}
+        return [zero,one];
     }
 
-    setSpeed(newSpeed) {
+    setVelocityX(newSpeed) {
         this._0.setVelocityX(newSpeed);
         this._1.setVelocityX(newSpeed);
     }
