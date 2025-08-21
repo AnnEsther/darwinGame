@@ -1,7 +1,8 @@
 
 // const levelSprites = ['LizardRun_000001', 'monkey_1', 'ostrich', 'man'];
-const levelSprites = ['lizard', 'monkey_1', 'ostrich', 'man'];
-const levelAnims = ['LizardRun_000001', 'monkey_run', 'ostrich', 'man'];
+const levelSprites = ['LizardRun_000001', 'monkey_1', 'ostrichRun_1', 'man'];
+const levelRunAnims = ['lizard_run', 'monkey_run', 'ostrich_run', 'human_run'];
+const levelJumpAnims = ['lizard_jump', 'monkey_jump', 'ostrich_jump', 'human_jump'];
 export default class Player {
     constructor(scene, config) {
         this.scene = scene;
@@ -9,20 +10,20 @@ export default class Player {
         this._currPlayer = this.scene.physics.add.sprite(config.x, config.y, levelSprites[config.level]);
 
 
+        this.createAnims();
 
         this.setVelocityX(config.initialVelocity); // Initial movement (if needed)
 
         this.updateLevel(config.level);
+        this.level = config.level;
 
-        this._currPlayer.setScale(0.5);
 
         this._currPlayer.body.setGravityY(config.gravityY);
 
-        this.createAnims();
 
-        this._explosion = this.scene.add.sprite(this.scene.scale.width/2, config.groundY, 'explosion');
+        this._explosion = this.scene.add.sprite(this.scene.scale.width / 2, config.groundY, 'explosion');
         this._explosion.setScale(0.25);
-        this._explosion.setY(this._explosion.y - this._explosion.height/2 + 20);
+        this._explosion.setY(this._explosion.y - this._explosion.height / 2 + 20);
         this._explosion.setDepth(8);
         this._explosion.setVisible(false);
     }
@@ -48,62 +49,117 @@ export default class Player {
     }
 
     createAnims() {
+        //EXPLOSION
         this.scene.anims.create({
             key: 'explosion',
             frames: [{ key: 'explosion0000' }, { key: 'explosion0001' }, { key: 'explosion0002' }, { key: 'explosion0003' }, { key: 'explosion0004' }, { key: 'explosion0005' },
             { key: 'explosion0006' }, { key: 'explosion0007' }, { key: 'explosion0008' }
             ], frameRate: 7, repeat: 1
         });
-        return;
 
-        //MONKEY
-        this.scene.anims.create({
-            key: 'monkey_run',
-            frames: [{ key: 'monkey_1' }, { key: 'monkey_2' }, { key: 'monkey_3' }, { key: 'monkey_4' }, { key: 'monkey_5' }, { key: 'monkey_6' },
-            { key: 'monkey_7' }, { key: 'monkey_8' }, { key: 'monkey_9' }, { key: 'monkey_10' }, { key: 'monkey_11' }, { key: 'monkey_12' },
-            { key: 'monkey_13' }, { key: 'monkey_14' }, { key: 'monkey_15' }, { key: 'monkey_16' }, { key: 'monkey_17' }, { key: 'monkey_18' },
-            { key: 'monkey_19' }, { key: 'monkey_20' }, { key: 'monkey_21' }, { key: 'monkey_22' },
-            ], frameRate: 14, repeat: -1
-        });
-        this.scene.anims.create({
-            key: 'monkey_jump',
-            frames: [{ key: 'monkeyJump_1' }, { key: 'monkeyJump_2' }, { key: 'monkeyJump_3' }, { key: 'monkeyJump_4' }, { key: 'monkeyJump_5' }, { key: 'monkeyJump_6' },
-            { key: 'monkeyJump_7' }, { key: 'monkeyJump_8' }, { key: 'monkeyJump_9' }, { key: 'monkeyJump_10' }, { key: 'monkeyJump_11' }, { key: 'monkeyJump_12' },
-            { key: 'monkeyJump_13' }, { key: 'monkeyJump_14' }, { key: 'monkeyJump_15' }, { key: 'monkeyJump_16' }, { key: 'monkeyJump_17' }, { key: 'monkeyJump_18' },
-            { key: 'monkeyJump_19' }, { key: 'monkeyJump_20' }, { key: 'monkeyJump_21' }, { key: 'monkeyJump_22' }, { key: 'monkeyJump_23' }, { key: 'monkeyJump_24' },
-            { key: 'monkeyJump_25' }, { key: 'monkeyJump_26' }
-            ], frameRate: 14, repeat: 0
-        });
-        this._currPlayer.on('animationcomplete-monkey_jump', () => {
-            this._currPlayer.play('monkey_run');
-        });
         //LIZARD
         this.scene.anims.create({
             key: 'lizard_run',
             frames: [{ key: 'LizardRun_000001' }, { key: 'LizardRun_000002' }, { key: 'LizardRun_000003' }, { key: 'LizardRun_000004' }, { key: 'LizardRun_000005' }, { key: 'LizardRun_000006' },
             { key: 'LizardRun_000007' }, { key: 'LizardRun_000008' }, { key: 'LizardRun_000009' }, { key: 'LizardRun_000010' }
-            ], frameRate: 14, repeat: -1
+            ], frameRate: 20, repeat: -1
         });
         this.scene.anims.create({
             key: 'lizard_jump',
             frames: [{ key: 'LizardJump_000001' }, { key: 'LizardJump_000002' }, { key: 'LizardJump_000003' }, { key: 'LizardJump_000004' }, { key: 'LizardJump_000005' }, { key: 'LizardJump_000006' },
-            { key: 'LizardJump_000007' }, { key: 'LizardJump_000008' }, { key: 'LizardJump_000009' }, { key: 'LizardJump_000010' }, { key: 'LizardJump_000011' }, { key: 'LizardJump_000012' },
-            { key: 'LizardJump_000013' }, { key: 'LizardJump_000014' }, { key: 'LizardJump_000015' }, { key: 'LizardJump_000016' }, { key: 'LizardJump_000017' }, { key: 'LizardJump_000018' }
-            ], frameRate: 14, repeat: 0
+            { key: 'LizardJump_000007' }, { key: 'LizardJump_000008' }
+            ], frameRate: 2, repeat: 0
         });
         this._currPlayer.on('animationcomplete-lizard_jump', () => {
             this._currPlayer.play('lizard_run');
         });
+
+        //MONKEY
+        this.scene.anims.create({
+            key: 'monkey_run',
+            frames: [{ key: 'monkey_1' }, { key: 'monkey_2' }, { key: 'monkey_3' }, { key: 'monkey_4' }, { key: 'monkey_5' }, { key: 'monkey_6' },
+            { key: 'monkey_7' }, { key: 'monkey_8' }, { key: 'monkey_9' }, { key: 'monkey_10' }, { key: 'monkey_11' }
+            ], frameRate: 14, repeat: -1
+        });
+        this.scene.anims.create({
+            key: 'monkey_jump',
+            frames: [{ key: 'monkeyJump_1' }, { key: 'monkeyJump_2' }, { key: 'monkeyJump_3' }, { key: 'monkeyJump_4' }, { key: 'monkeyJump_5' }, { key: 'monkeyJump_6' },
+            { key: 'monkeyJump_7' }, { key: 'monkeyJump_8' }
+            ], frameRate: 14, repeat: 0
+        });
+        this._currPlayer.on('animationcomplete-monkey_jump', () => {
+            this._currPlayer.play('monkey_run');
+        });
+
+        //BIRD
+        this.scene.anims.create({
+            key: 'ostrich_run',
+            frames: [
+            { key: 'ostrichRun_1' },
+            { key: 'ostrichRun_2' },
+            { key: 'ostrichRun_3' },
+            { key: 'ostrichRun_4' },
+            { key: 'ostrichRun_5' },
+            { key: 'ostrichRun_6' },
+            { key: 'ostrichRun_7' },
+            { key: 'ostrichRun_8' },
+            { key: 'ostrichRun_9' },
+            { key: 'ostrichRun_10' }
+            ], frameRate: 14, repeat: -1
+        });
+        this.scene.anims.create({
+            key: 'ostrich_jump',
+            frames: [
+            { key: 'ostrichJump_0' },
+            { key: 'ostrichJump_1' },
+            { key: 'ostrichJump_2' },
+            { key: 'ostrichJump_3' },
+            { key: 'ostrichJump_4' },
+            { key: 'ostrichJump_5' },
+            { key: 'ostrichJump_6' }
+            ], frameRate: 14, repeat: -1
+        });
+        this._currPlayer.on('animationcomplete-ostritch_jump', () => {
+            this._currPlayer.play('ostrich_run');
+        });
+
+         //HUMAN
+        this.scene.anims.create({
+            key: 'human_run',
+            frames: [
+            { key: 'humanRun_1' },
+            { key: 'humanRun_2' },
+            { key: 'humanRun_3' },
+            { key: 'humanRun_4' },
+            { key: 'humanRun_5' },
+            { key: 'humanRun_6' },
+            { key: 'humanRun_7' },
+            { key: 'humanRun_8' },
+            { key: 'humanRun_9' },
+            { key: 'humanRun_10' }
+            ], frameRate: 14, repeat: -1
+        });
+        this.scene.anims.create({
+            key: 'human_jump',
+            frames: [
+            { key: 'humanJump_0' },
+            { key: 'humanJump_1' },
+            { key: 'humanJump_2' },
+            { key: 'humanJump_3' },
+            { key: 'humanJump_4' },
+            { key: 'humanJump_5' }
+            ], frameRate: 14, repeat: -1
+        });
+        this._currPlayer.on('animationcomplete-human_jump', () => {
+            this._currPlayer.play('human_run');
+        });
+
     }
 
     updateLevel(level) {
-
+        this.level = level;
         this._currPlayer.setTexture(levelSprites[level]);
-        if (level == 0) { this._currPlayer.setScale(0.5); }
-        else if (level == 1) { this._currPlayer.setScale(0.15); }
-        else if (level == 2) { this._currPlayer.setScale(0.5); }
-        else if (level == 3) { this._currPlayer.setScale(0.5); }
-
+        this._currPlayer.play(levelRunAnims[level]);
 
         this.evolvePlayer(level);
 
@@ -130,7 +186,7 @@ export default class Player {
                     this._currPlayer.setVisible(true); // ensure visible
 
                     this._currPlayer.setTexture(levelSprites[level]); // switch sprite
-                    // this._currPlayer.play(levelAnims[level]);
+                    this._currPlayer.play(levelRunAnims[level]);
 
                 }
 
@@ -140,13 +196,17 @@ export default class Player {
         });
     }
 
-    deadth(){
+    deadth(exit) {
         this._currPlayer.setVisible(false);
         this._explosion.setVisible(true);
         this._explosion.anims.play('explosion', true);
 
         this._explosion.once(`animationcomplete-explosion`, () => {
-            this.scene.scene.start('GameOverScene');
+            exit();
         });
+    }
+
+    jump() {
+        this._currPlayer.play(levelJumpAnims[this.level]);
     }
 }
