@@ -26,7 +26,7 @@ export default class Coins {
     }
 
     setVelocityX(speed) {
-        this._activeCoins.forEach(c => c?.setVelocityX(speed))
+        this._activeCoins.forEach(c => c?.body?.setVelocityX(speed))
     }
 
     // Spawns N coins along an upward-opening ellipse arc

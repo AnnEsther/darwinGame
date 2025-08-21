@@ -128,4 +128,12 @@ export default class Rock {
     getColliders() {
         return this._colliders;
     }
+
+    getX(){
+        return this._sprite.x;
+    }
+
+    getY(){
+        return this._sprite.y;
+    }
 }

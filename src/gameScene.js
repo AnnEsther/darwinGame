@@ -36,89 +36,86 @@ export default class GameScene extends Phaser.Scene {
         this.load.image('rock2', 'assets/Rock/rock2.png');
         this.load.image('rock3', 'assets/Rock/rock3.png');
         this.load.image('rock4', 'assets/Rock/rock4.png');
+        //LIZARD_JUMP
+        this.load.image('LizardJump_000001', 'assets/lizard/jump/Lizard_jumpo_000001.png');
+        this.load.image('LizardJump_000002', 'assets/lizard/jump/Lizard_jumpo_000003.png');
+        this.load.image('LizardJump_000003', 'assets/lizard/jump/Lizard_jumpo_000005.png');
+        this.load.image('LizardJump_000004', 'assets/lizard/jump/Lizard_jumpo_000007.png');
+        this.load.image('LizardJump_000005', 'assets/lizard/jump/Lizard_jumpo_000009.png');
+        this.load.image('LizardJump_000006', 'assets/lizard/jump/Lizard_jumpo_000011.png');
+        this.load.image('LizardJump_000007', 'assets/lizard/jump/Lizard_jumpo_000013.png');
+        this.load.image('LizardJump_000008', 'assets/lizard/jump/Lizard_jumpo_000015.png');
+        //LIZARD_RUN
+        this.load.image('LizardRun_000001', 'assets/lizard/run/Lizard_run_000001.png');
+        this.load.image('LizardRun_000002', 'assets/lizard/run/Lizard_run_000002.png');
+        this.load.image('LizardRun_000003', 'assets/lizard/run/Lizard_run_000003.png');
+        this.load.image('LizardRun_000004', 'assets/lizard/run/Lizard_run_000004.png');
+        this.load.image('LizardRun_000005', 'assets/lizard/run/Lizard_run_000005.png');
+        this.load.image('LizardRun_000006', 'assets/lizard/run/Lizard_run_000006.png');
+        this.load.image('LizardRun_000007', 'assets/lizard/run/Lizard_run_000007.png');
+        this.load.image('LizardRun_000008', 'assets/lizard/run/Lizard_run_000008.png');
+        this.load.image('LizardRun_000009', 'assets/lizard/run/Lizard_run_000009.png');
+        this.load.image('LizardRun_000010', 'assets/lizard/run/Lizard_run_000010.png');
+        // MONKEY_RUN
+        this.load.image('monkey_1', 'assets/monkey/run/mONKEY_RUN_000002.png');
+        this.load.image('monkey_2', 'assets/monkey/run/mONKEY_RUN_000004.png');
+        this.load.image('monkey_3', 'assets/monkey/run/mONKEY_RUN_000006.png');
+        this.load.image('monkey_4', 'assets/monkey/run/mONKEY_RUN_000008.png');
+        this.load.image('monkey_5', 'assets/monkey/run/mONKEY_RUN_000010.png');
+        this.load.image('monkey_6', 'assets/monkey/run/mONKEY_RUN_000012.png');
+        this.load.image('monkey_7', 'assets/monkey/run/mONKEY_RUN_000014.png');
+        this.load.image('monkey_8', 'assets/monkey/run/mONKEY_RUN_000016.png');
+        this.load.image('monkey_9', 'assets/monkey/run/mONKEY_RUN_000018.png');
+        this.load.image('monkey_10', 'assets/monkey/run/mONKEY_RUN_000020.png');
+        this.load.image('monkey_11', 'assets/monkey/run/mONKEY_RUN_000021.png');
+        //MONKEY_JUMP
+        this.load.image('monkeyJump_1', 'assets/monkey/jump/alpha canvas0005.png');
+        this.load.image('monkeyJump_2', 'assets/monkey/jump/alpha canvas0007.png');
+        this.load.image('monkeyJump_3', 'assets/monkey/jump/alpha canvas0009.png');
+        this.load.image('monkeyJump_4', 'assets/monkey/jump/alpha canvas0011.png');
+        this.load.image('monkeyJump_5', 'assets/monkey/jump/alpha canvas0013.png');
+        this.load.image('monkeyJump_6', 'assets/monkey/jump/alpha canvas0015.png');
+        this.load.image('monkeyJump_7', 'assets/monkey/jump/alpha canvas0017.png');
+        this.load.image('monkeyJump_8', 'assets/monkey/jump/alpha canvas0019.png');
+        //BIRD_RUN
+        this.load.image('ostrichRun_1', 'assets/bird/run/ostrich_run(1).png');
+        this.load.image('ostrichRun_2', 'assets/bird/run/ostrich_run(2).png');
+        this.load.image('ostrichRun_3', 'assets/bird/run/ostrich_run(3).png');
+        this.load.image('ostrichRun_4', 'assets/bird/run/ostrich_run(4).png');
+        this.load.image('ostrichRun_5', 'assets/bird/run/ostrich_run(5).png');
+        this.load.image('ostrichRun_6', 'assets/bird/run/ostrich_run(6).png');
+        this.load.image('ostrichRun_7', 'assets/bird/run/ostrich_run(7).png');
+        this.load.image('ostrichRun_8', 'assets/bird/run/ostrich_run(8).png');
+        this.load.image('ostrichRun_9', 'assets/bird/run/ostrich_run(9).png');
+        this.load.image('ostrichRun_10', 'assets/bird/run/ostrich_run(10).png');
+        //BIRD_JUMP
+        this.load.image('ostrichJump_0', 'assets/bird/jump/ostrich-jump-(1)_0000_Layer-1.png');
+        this.load.image('ostrichJump_1', 'assets/bird/jump/ostrich-jump-(1)_0001_ostrich-jump-(2).png');
+        this.load.image('ostrichJump_2', 'assets/bird/jump/ostrich-jump-(1)_0002_ostrich-jump-(3).png');
+        this.load.image('ostrichJump_3', 'assets/bird/jump/ostrich-jump-(1)_0003_ostrich-jump-(4).png');
+        this.load.image('ostrichJump_4', 'assets/bird/jump/ostrich-jump-(1)_0003_ostrich-jump-(5).png');
+        this.load.image('ostrichJump_5', 'assets/bird/jump/ostrich-jump-(1)_0003_ostrich-jump-(6).png');
+        this.load.image('ostrichJump_6', 'assets/bird/jump/ostrich-jump-(1)_0006_ostrich-jump-(7).png');
+        //HUMAN_RUN
+        this.load.image('humanRun_0', 'assets/human/run/Man_RUn_00001.png');
+        this.load.image('humanRun_1', 'assets/human/run/Man_RUn_00003.png');
+        this.load.image('humanRun_2', 'assets/human/run/Man_RUn_00005.png');
+        this.load.image('humanRun_3', 'assets/human/run/Man_RUn_00007.png');
+        this.load.image('humanRun_4', 'assets/human/run/Man_RUn_00009.png');
+        this.load.image('humanRun_5', 'assets/human/run/Man_RUn_00011.png');
+        this.load.image('humanRun_6', 'assets/human/run/Man_RUn_00013.png');
+        this.load.image('humanRun_7', 'assets/human/run/Man_RUn_00015.png');
+        this.load.image('humanRun_8', 'assets/human/run/Man_RUn_00017.png');
+        this.load.image('humanRun_9', 'assets/human/run/Man_RUn_00019.png');
+        this.load.image('humanRun_10', 'assets/human/run/Man_RUn_00021.png');
+        //HUMAN_JUMP        
+        this.load.image('humanJump_0', 'assets/human/jump/man_Jump_tk010002.png');
+        this.load.image('humanJump_1', 'assets/human/jump/man_Jump_tk010006.png');
+        this.load.image('humanJump_2', 'assets/human/jump/man_Jump_tk010008.png');
+        this.load.image('humanJump_3', 'assets/human/jump/man_Jump_tk010010.png');
+        this.load.image('humanJump_4', 'assets/human/jump/man_Jump_tk010012.png');
+        this.load.image('humanJump_5', 'assets/human/jump/man_Jump_tk010014.png');
 
-        // player animations
-        // //monkey run
-        this.load.image('monkey_1', 'assets/monkey/run/MONKEY_RUN_TK020001 Background Removed.png');
-        // this.load.image('monkey_2', 'assets/monkey/run/MONKEY_RUN_TK020002 Background Removed.png');
-        // this.load.image('monkey_3', 'assets/monkey/run/MONKEY_RUN_TK020003 Background Removed.png');
-        // this.load.image('monkey_4', 'assets/monkey/run/MONKEY_RUN_TK020004 Background Removed.png');
-        // this.load.image('monkey_5', 'assets/monkey/run/MONKEY_RUN_TK020005 Background Removed.png');
-        // this.load.image('monkey_6', 'assets/monkey/run/MONKEY_RUN_TK020006 Background Removed.png');
-        // this.load.image('monkey_7', 'assets/monkey/run/MONKEY_RUN_TK020007 Background Removed.png');
-        // this.load.image('monkey_8', 'assets/monkey/run/MONKEY_RUN_TK020008 Background Removed.png');
-        // this.load.image('monkey_9', 'assets/monkey/run/MONKEY_RUN_TK020009 Background Removed.png');
-        // this.load.image('monkey_10', 'assets/monkey/run/MONKEY_RUN_TK020010 Background Removed.png');
-        // this.load.image('monkey_11', 'assets/monkey/run/MONKEY_RUN_TK020011 Background Removed.png');
-        // this.load.image('monkey_12', 'assets/monkey/run/MONKEY_RUN_TK020012 Background Removed.png');
-        // this.load.image('monkey_13', 'assets/monkey/run/MONKEY_RUN_TK020013 Background Removed.png');
-        // this.load.image('monkey_14', 'assets/monkey/run/MONKEY_RUN_TK020014 Background Removed.png');
-        // this.load.image('monkey_15', 'assets/monkey/run/MONKEY_RUN_TK020015 Background Removed.png');
-        // this.load.image('monkey_16', 'assets/monkey/run/MONKEY_RUN_TK020016 Background Removed.png');
-        // this.load.image('monkey_17', 'assets/monkey/run/MONKEY_RUN_TK020017 Background Removed.png');
-        // this.load.image('monkey_18', 'assets/monkey/run/MONKEY_RUN_TK020018 Background Removed.png');
-        // this.load.image('monkey_19', 'assets/monkey/run/MONKEY_RUN_TK020019 Background Removed.png');
-        // this.load.image('monkey_20', 'assets/monkey/run/MONKEY_RUN_TK020020 Background Removed.png');
-        // this.load.image('monkey_21', 'assets/monkey/run/MONKEY_RUN_TK020021 Background Removed.png');
-        // this.load.image('monkey_22', 'assets/monkey/run/MONKEY_RUN_TK020022 Background Removed.png');
-        // //monkey jump
-        // this.load.image('monkeyJump_1', 'assets/monkey/jump/MONKEY_jump_TK010001 Background Removed.png');
-        // this.load.image('monkeyJump_2', 'assets/monkey/jump/MONKEY_jump_TK010002 Background Removed.png');
-        // this.load.image('monkeyJump_3', 'assets/monkey/jump/MONKEY_jump_TK010003 Background Removed.png');
-        // this.load.image('monkeyJump_4', 'assets/monkey/jump/MONKEY_jump_TK010004 Background Removed.png');
-        // this.load.image('monkeyJump_5', 'assets/monkey/jump/MONKEY_jump_TK010005 Background Removed.png');
-        // this.load.image('monkeyJump_6', 'assets/monkey/jump/MONKEY_jump_TK010006 Background Removed.png');
-        // this.load.image('monkeyJump_7', 'assets/monkey/jump/MONKEY_jump_TK010007 Background Removed.png');
-        // this.load.image('monkeyJump_8', 'assets/monkey/jump/MONKEY_jump_TK010008 Background Removed.png');
-        // this.load.image('monkeyJump_9', 'assets/monkey/jump/MONKEY_jump_TK010009 Background Removed.png');
-        // this.load.image('monkeyJump_10', 'assets/monkey/jump/MONKEY_jump_TK010010 Background Removed.png');
-        // this.load.image('monkeyJump_11', 'assets/monkey/jump/MONKEY_jump_TK010011 Background Removed.png');
-        // this.load.image('monkeyJump_12', 'assets/monkey/jump/MONKEY_jump_TK010012 Background Removed.png');
-        // this.load.image('monkeyJump_13', 'assets/monkey/jump/MONKEY_jump_TK010013 Background Removed.png');
-        // this.load.image('monkeyJump_14', 'assets/monkey/jump/MONKEY_jump_TK010014 Background Removed.png');
-        // this.load.image('monkeyJump_15', 'assets/monkey/jump/MONKEY_jump_TK010015 Background Removed.png');
-        // this.load.image('monkeyJump_16', 'assets/monkey/jump/MONKEY_jump_TK010016 Background Removed.png');
-        // this.load.image('monkeyJump_17', 'assets/monkey/jump/MONKEY_jump_TK010017 Background Removed.png');
-        // this.load.image('monkeyJump_18', 'assets/monkey/jump/MONKEY_jump_TK010018 Background Removed.png');
-        // this.load.image('monkeyJump_19', 'assets/monkey/jump/MONKEY_jump_TK010019 Background Removed.png');
-        // this.load.image('monkeyJump_20', 'assets/monkey/jump/MONKEY_jump_TK010020 Background Removed.png');
-        // this.load.image('monkeyJump_21', 'assets/monkey/jump/MONKEY_jump_TK010021 Background Removed.png');
-        // this.load.image('monkeyJump_22', 'assets/monkey/jump/MONKEY_jump_TK010022 Background Removed.png');
-        // this.load.image('monkeyJump_23', 'assets/monkey/jump/MONKEY_jump_TK010023 Background Removed.png');
-        // this.load.image('monkeyJump_24', 'assets/monkey/jump/MONKEY_jump_TK010024 Background Removed.png');
-        // this.load.image('monkeyJump_25', 'assets/monkey/jump/MONKEY_jump_TK010025 Background Removed.png');
-        // this.load.image('monkeyJump_26', 'assets/monkey/jump/MONKEY_jump_TK010026 Background Removed.png');
-
-
-        // this.load.image('LizardJump_000001', 'assets/lizard/LizardJump_000001.png');
-        // this.load.image('LizardJump_000002', 'assets/lizard/LizardJump_000002.png');
-        // this.load.image('LizardJump_000003', 'assets/lizard/LizardJump_000003.png');
-        // this.load.image('LizardJump_000004', 'assets/lizard/LizardJump_000004.png');
-        // this.load.image('LizardJump_000005', 'assets/lizard/LizardJump_000005.png');
-        // this.load.image('LizardJump_000006', 'assets/lizard/LizardJump_000006.png');
-        // this.load.image('LizardJump_000007', 'assets/lizard/LizardJump_000007.png');
-        // this.load.image('LizardJump_000008', 'assets/lizard/LizardJump_000008.png');
-        // this.load.image('LizardJump_000009', 'assets/lizard/LizardJump_000009.png');
-        // this.load.image('LizardJump_000010', 'assets/lizard/LizardJump_000010.png');
-        // this.load.image('LizardJump_000011', 'assets/lizard/LizardJump_000011.png');
-        // this.load.image('LizardJump_000012', 'assets/lizard/LizardJump_000012.png');
-        // this.load.image('LizardJump_000013', 'assets/lizard/LizardJump_000013.png');
-        // this.load.image('LizardJump_000014', 'assets/lizard/LizardJump_000014.png');
-        // this.load.image('LizardJump_000015', 'assets/lizard/LizardJump_000015.png');
-        // this.load.image('LizardJump_000016', 'assets/lizard/LizardJump_000016.png');
-        // this.load.image('LizardJump_000017', 'assets/lizard/LizardJump_000017.png');
-        // this.load.image('LizardJump_000018', 'assets/lizard/LizardJump_000018.png');
-
-        // this.load.image('LizardRun_000001', 'assets/lizard/LizardRun_000001.png');
-        // this.load.image('LizardRun_000002', 'assets/lizard/LizardRun_000002.png');
-        // this.load.image('LizardRun_000003', 'assets/lizard/LizardRun_000003.png');
-        // this.load.image('LizardRun_000004', 'assets/lizard/LizardRun_000004.png');
-        // this.load.image('LizardRun_000005', 'assets/lizard/LizardRun_000005.png');
-        // this.load.image('LizardRun_000006', 'assets/lizard/LizardRun_000006.png');
-        // this.load.image('LizardRun_000007', 'assets/lizard/LizardRun_000007.png');
-        // this.load.image('LizardRun_000008', 'assets/lizard/LizardRun_000008.png');
-        // this.load.image('LizardRun_000009', 'assets/lizard/LizardRun_000009.png');
-        // this.load.image('LizardRun_000010', 'assets/lizard/LizardRun_000010.png');
 
 
         this.load.image('lizard', 'assets/lizard.png');
@@ -163,7 +160,7 @@ export default class GameScene extends Phaser.Scene {
         this._nextSpeedAt = this.speedEveryPixels;
 
 
-        this.background = new ParallaxBackground(this, this.rockSpeed, this.onGround0Reset.bind(this));
+        this.background = new ParallaxBackground(this, this.rockSpeed, this.onGroundReset.bind(this));
 
         this.ground = this.add.rectangle(this.scale.width / 2, this.background.ground._0.y - this.background.ground._0.height + 25, this.scale.width, 2, 0x00000000);
         this.ground.alpha = 0;
@@ -177,7 +174,7 @@ export default class GameScene extends Phaser.Scene {
             level: this.level,
             scale: 0.5,
             initialVelocity: 200,
-            gravityY: this.gravityY, 
+            gravityY: this.gravityY,
             groundY: this.ground.y
         };
         this.player = new Player(this, playerConfig);
@@ -187,10 +184,10 @@ export default class GameScene extends Phaser.Scene {
         this.physics.add.collider(this.player.getColliders(), this.ground, () => { this.jumpCount = 0; });
 
         var rockConfig = {
-            x :  this.scale.width + (Math.random() * this.scale.width) + 100,
-            y : this.background.ground._0.y - this.background.ground._0.height - 10,
-            speed : this.rockSpeed,
-            rockBase : this.background.ground._0
+            x: this.background.ground._0.width + this.background.ground._1.width + (Math.random() * this.background.ground._0.width),
+            y: this.background.ground._0.y - this.background.ground._0.height - 10,
+            speed: this.rockSpeed,
+            rockBase: this.background.ground._0
         };
         this.rock = new Rock(this, rockConfig);
         this.rock._sprite.setDepth(6);
@@ -200,7 +197,7 @@ export default class GameScene extends Phaser.Scene {
         this.coins = new Coins(this);
 
 
-        this.spawnCoinNearRock();
+        this.spawnCoins(this.rock.getX(), this.rock.getY());
 
         this.physics.add.overlap(this.player.getColliders(), this.rock.getColliders(), this.handleHit, null, this);
         this.physics.add.overlap(this.player.getColliders(), this.coins.getColliders(), this.collectCoin, null, this);
@@ -221,7 +218,7 @@ export default class GameScene extends Phaser.Scene {
             this.rockSpeed = s;//Phaser.Math.Clamp(s, 50, this.maxRockSpeed);
 
             this.rock.setVelocityX(this.rockSpeed);
-            this.background.setSpeed(this.rockSpeed);
+            this.background.setVelocityX(this.rockSpeed);
             this.coins.setVelocityX(this.rockSpeed);
 
             // Optional: scale gravity with speed so jumps feel consistent
@@ -277,10 +274,7 @@ export default class GameScene extends Phaser.Scene {
             if (Phaser.Input.Keyboard.JustDown(this.spaceKey) && this.jumpCount < 2) {
                 this.player._currPlayer.setVelocityY(this.jumpVelocity);
                 this.jumpCount++;
-                if (this.level == 1) {
-                    this.player._currPlayer.setScale(0.15);
-                    this.player._currPlayer.play('monkey_jump');
-                }
+                this.player.jump();
             }
         }
 
@@ -325,31 +319,42 @@ export default class GameScene extends Phaser.Scene {
 
         if (this.lives <= 0) {
             if (this.level == this.levelSprites.length - 1) {
-                this.scene.start('LeaderboardScene', {
-                    playerName: this.playerName,
-                    coins: this.coinsCollected
+                this.player.deadth(() => {
+                    this.scene.start('LeaderboardScene', {  playerName: this.playerName, coins: this.coinsCollected });
                 });
             }
             else {
-
-                this.player.deadth();
-                this.rockSpeed = 0;
-                this.rock.setVelocityX(this.rockSpeed);
-                this.background.setVelocityX(this.rockSpeed);
-                this.coins.setVelocityX(this.rockSpeed);
-                
+                this.player.deadth(()=>{this.scene.start('GameOverScene')});
             }
+            this.rockSpeed = 0;
+            this.rock.setVelocityX(this.rockSpeed);
+            this.background.setVelocityX(this.rockSpeed);
+            this.coins.setVelocityX(this.rockSpeed);
         }
         else {
             this.rock.resetRockPos(this.rockSpeed);
-            this.spawnCoinNearRock();
+            this.spawnCoins(this.rock.getX(), this.rock.getY() - 100);
+
 
         }
     }
 
-    onGround0Reset(){
-        this.rock.resetRockPos(this.rockSpeed);
-        this.spawnCoinNearRock();
+    onGroundReset(isReset) {
+        if (isReset[0]) {
+            console.log("rock reset")
+            this.rock.resetRockPos(this.rockSpeed);
+            this.spawnCoins(this.rock.getX(), this.rock.getY() - 100);
+        }
+        else if (isReset[1]) {
+            var spawnCoin = Math.floor(Math.random() * 10);
+            console.log("spawnCoin", spawnCoin)
+            if (spawnCoin > 5) {
+                console.log("coin reset")
+                this.spawnCoins(
+                    this.background.ground._1.x + Math.random(this.background.ground._1.width),
+                    this.rock.getY() - 100);
+            }
+        }
     }
 
 
@@ -359,12 +364,10 @@ export default class GameScene extends Phaser.Scene {
         this.coinsText.setText(`Coins: ${this.coinsCollected}`);
     }
 
-    spawnCoinNearRock() {
+    spawnCoins(x, y) {
 
-        // this.coins.clear(true, true);
+        console.log(x, y);
 
-        const offsetY = Phaser.Math.Between(-250, -100);
-        // const offsetX = Phaser.Math.Between(-250, -100);
         var config = {
             maxCount: 6,
             minCount: 1,
@@ -375,11 +378,7 @@ export default class GameScene extends Phaser.Scene {
             speedX: this.rockSpeed,    // leftward speed
             scale: 0.2       // coin visual scale
         }
-        this.coins.spawnCoinsArc(this.rock._sprite.x, this.rock._sprite.y - 100, config);
-
-        // const coin = this.physics.add.sprite(this.rock.x, this.rock.y + offsetY, 'coin');
-
-
+        this.coins.spawnCoinsArc(x, y, config);
 
 
     }
