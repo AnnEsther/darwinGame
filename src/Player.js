@@ -1,8 +1,8 @@
 
 // const levelSprites = ['LizardRun_000001', 'monkey_1', 'ostrich', 'man'];
-const levelSprites = ['LizardRun_000001', 'monkey_1', 'ostrichRun_1', 'man'];
-const levelRunAnims = ['lizard_run', 'monkey_run', 'ostrich_run', 'human_run'];
-const levelJumpAnims = ['lizard_jump', 'monkey_jump', 'ostrich_jump', 'human_jump'];
+const levelSprites = ['LizardRun_000001', 'ostrichRun_1', 'monkey_1', 'man'];
+const levelRunAnims = ['lizard_run', 'ostrich_run', 'monkey_run', 'human_run'];
+const levelJumpAnims = ['lizard_jump', 'ostrich_jump','monkey_jump', 'human_jump'];
 export default class Player {
     constructor(scene, config) {
         this.scene = scene;
@@ -21,9 +21,9 @@ export default class Player {
         this._currPlayer.body.setGravityY(config.gravityY);
 
 
-        this._explosion = this.scene.add.sprite(this.scene.scale.width / 2, config.groundY, 'explosion');
-        this._explosion.setScale(0.25);
-        this._explosion.setY(this._explosion.y - this._explosion.height / 2 + 20);
+        this._explosion = this.scene.add.sprite(this.scene.scale.width / 2, config.groundY, 'explosion_small');
+        // this._explosion.setScale(0.25);
+        // this._explosion.setY(this._explosion.y - this._explosion.height / 2 + 20);
         this._explosion.setDepth(8);
         this._explosion.setVisible(false);
     }
@@ -51,9 +51,32 @@ export default class Player {
     createAnims() {
         //EXPLOSION
         this.scene.anims.create({
-            key: 'explosion',
-            frames: [{ key: 'explosion0000' }, { key: 'explosion0001' }, { key: 'explosion0002' }, { key: 'explosion0003' }, { key: 'explosion0004' }, { key: 'explosion0005' },
-            { key: 'explosion0006' }, { key: 'explosion0007' }, { key: 'explosion0008' }
+            key: 'explosion_small',
+            frames: [
+                { key: 'explosionSmall_0' },
+                { key: 'explosionSmall_1' },
+                { key: 'explosionSmall_2' },
+                { key: 'explosionSmall_3' },
+                { key: 'explosionSmall_4' },
+                { key: 'explosionSmall_5' },
+                { key: 'explosionSmall_6' },
+                { key: 'explosionSmall_7' },
+                { key: 'explosionSmall_8' }
+            ], frameRate: 7, repeat: 1
+        });
+
+        this.scene.anims.create({
+            key: 'explosion_large',
+            frames: [
+                { key: 'explosionLarge_0' },
+                { key: 'explosionLarge_1' },
+                { key: 'explosionLarge_2' },
+                { key: 'explosionLarge_3' },
+                { key: 'explosionLarge_4' },
+                { key: 'explosionLarge_5' },
+                { key: 'explosionLarge_6' },
+                { key: 'explosionLarge_7' },
+                { key: 'explosionLarge_8' }
             ], frameRate: 7, repeat: 1
         });
 
@@ -95,59 +118,59 @@ export default class Player {
         this.scene.anims.create({
             key: 'ostrich_run',
             frames: [
-            { key: 'ostrichRun_1' },
-            { key: 'ostrichRun_2' },
-            { key: 'ostrichRun_3' },
-            { key: 'ostrichRun_4' },
-            { key: 'ostrichRun_5' },
-            { key: 'ostrichRun_6' },
-            { key: 'ostrichRun_7' },
-            { key: 'ostrichRun_8' },
-            { key: 'ostrichRun_9' },
-            { key: 'ostrichRun_10' }
+                { key: 'ostrichRun_1' },
+                { key: 'ostrichRun_2' },
+                { key: 'ostrichRun_3' },
+                { key: 'ostrichRun_4' },
+                { key: 'ostrichRun_5' },
+                { key: 'ostrichRun_6' },
+                { key: 'ostrichRun_7' },
+                { key: 'ostrichRun_8' },
+                { key: 'ostrichRun_9' },
+                { key: 'ostrichRun_10' }
             ], frameRate: 14, repeat: -1
         });
         this.scene.anims.create({
             key: 'ostrich_jump',
             frames: [
-            { key: 'ostrichJump_0' },
-            { key: 'ostrichJump_1' },
-            { key: 'ostrichJump_2' },
-            { key: 'ostrichJump_3' },
-            { key: 'ostrichJump_4' },
-            { key: 'ostrichJump_5' },
-            { key: 'ostrichJump_6' }
+                { key: 'ostrichJump_0' },
+                { key: 'ostrichJump_1' },
+                { key: 'ostrichJump_2' },
+                { key: 'ostrichJump_3' },
+                { key: 'ostrichJump_4' },
+                { key: 'ostrichJump_5' },
+                { key: 'ostrichJump_6' }
             ], frameRate: 14, repeat: -1
         });
         this._currPlayer.on('animationcomplete-ostritch_jump', () => {
             this._currPlayer.play('ostrich_run');
         });
 
-         //HUMAN
+        //HUMAN
         this.scene.anims.create({
             key: 'human_run',
             frames: [
-            { key: 'humanRun_1' },
-            { key: 'humanRun_2' },
-            { key: 'humanRun_3' },
-            { key: 'humanRun_4' },
-            { key: 'humanRun_5' },
-            { key: 'humanRun_6' },
-            { key: 'humanRun_7' },
-            { key: 'humanRun_8' },
-            { key: 'humanRun_9' },
-            { key: 'humanRun_10' }
+                { key: 'humanRun_1' },
+                { key: 'humanRun_2' },
+                { key: 'humanRun_3' },
+                { key: 'humanRun_4' },
+                { key: 'humanRun_5' },
+                { key: 'humanRun_6' },
+                { key: 'humanRun_7' },
+                { key: 'humanRun_8' },
+                { key: 'humanRun_9' },
+                { key: 'humanRun_10' }
             ], frameRate: 14, repeat: -1
         });
         this.scene.anims.create({
             key: 'human_jump',
             frames: [
-            { key: 'humanJump_0' },
-            { key: 'humanJump_1' },
-            { key: 'humanJump_2' },
-            { key: 'humanJump_3' },
-            { key: 'humanJump_4' },
-            { key: 'humanJump_5' }
+                { key: 'humanJump_0' },
+                { key: 'humanJump_1' },
+                { key: 'humanJump_2' },
+                { key: 'humanJump_3' },
+                { key: 'humanJump_4' },
+                { key: 'humanJump_5' }
             ], frameRate: 14, repeat: -1
         });
         this._currPlayer.on('animationcomplete-human_jump', () => {
@@ -197,13 +220,21 @@ export default class Player {
     }
 
     deadth(exit) {
-        this._currPlayer.setVisible(false);
+        // this._currPlayer.setVisible(false);
         this._explosion.setVisible(true);
-        this._explosion.anims.play('explosion', true);
+        if (this.level == 0 || this.level == 1) {
+            this._explosion.anims.play('explosion_small', true);
+            this._explosion.once(`animationcomplete-explosion_small`, () => {
+                exit();
+            });
+        }
+        else {
+            this._explosion.anims.play('explosion_large', true);
+            this._explosion.once(`animationcomplete-explosion_large`, () => {
+                exit();
+            });
+        }
 
-        this._explosion.once(`animationcomplete-explosion`, () => {
-            exit();
-        });
     }
 
     jump() {
