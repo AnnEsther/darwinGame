@@ -39,7 +39,7 @@ export default class Coins {
             startDeg = -30,   // arc start angle (degrees)
             endDeg = 30,      // arc end angle (degrees)
             speedX = -200,    // leftward speed
-            scale = 0.5       // coin visual scale
+            scale = 2       // coin visual scale
         } = {}) {
 
         const rx = arcWidth / 2;   // ellipse radius X
