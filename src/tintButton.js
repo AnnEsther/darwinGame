@@ -22,13 +22,19 @@ export default class TintButton {
     this._tints = { hoverTint, downTint, upTint };
     this._pressScale = pressScale;
     this._labelDy = labelDy;
+    this._isOver = false;
 
     // Background sprite (acts as the button)
-    this.sprite = scene.add.sprite(x, y, bgKey).setOrigin(0.5,0).setInteractive({ useHandCursor: useHand });
+    this.sprite = scene.add.sprite(x, y, bgKey, frame)
+      .setOrigin(0.5, 0)
+      .setInteractive({ useHandCursor: useHand });
+
     this.baseScaleX = this.sprite.scaleX;
     this.baseScaleY = this.sprite.scaleY;
 
     if (depth !== null) this.sprite.setDepth(depth);
+    // Idle tint (optional)
+    if (upTint !== null) this.sprite.setTint(upTint);
 
     // Optional centered label (separate object; this class keeps it aligned)
     this.label = null;
@@ -43,21 +49,28 @@ export default class TintButton {
 
     // Bind handlers so we can detach later
     this._onOver = () => {
+      this._isOver = true;
       if (hoverTint !== null) this.sprite.setTint(hoverTint);
       if (this.label) this.label.setAlpha(1);
     };
+
     this._onOut = () => {
+      this._isOver = false;
       if (upTint !== null) this.sprite.setTint(upTint); else this.sprite.clearTint();
       this.sprite.setScale(this.baseScaleX, this.baseScaleY);
       if (this.label) this.label.setAlpha(0.95);
     };
+
     this._onDown = () => {
       if (downTint !== null) this.sprite.setTint(downTint);
-      if (this._pressScale) this.sprite.setScale(this.baseScaleX * this._pressScale, this.baseScaleY * this._pressScale);
+      if (this._pressScale) {
+        this.sprite.setScale(this.baseScaleX * this._pressScale, this.baseScaleY * this._pressScale);
+      }
     };
+
     this._onUp = (pointer) => {
-      // Restore tint depending on hover state
-      if (this.sprite.input && this.sprite.input.pointerOver()) {
+      // Restore tint depending on current hover flag
+      if (this._isOver) {
         if (hoverTint !== null) this.sprite.setTint(hoverTint);
       } else {
         if (upTint !== null) this.sprite.setTint(upTint); else this.sprite.clearTint();
@@ -65,9 +78,17 @@ export default class TintButton {
       this.sprite.setScale(this.baseScaleX, this.baseScaleY);
 
       // Click only if released while still over the button
-      if (this.sprite.input && this.sprite.input.pointerOver()) {
+      if (this._isOver) {
         this.onClick(pointer);
       }
+    };
+
+    // If pointer is released outside the sprite, also reset visuals
+    this._onUpOutside = () => {
+      this._isOver = false;
+      if (upTint !== null) this.sprite.setTint(upTint); else this.sprite.clearTint();
+      this.sprite.setScale(this.baseScaleX, this.baseScaleY);
+      if (this.label) this.label.setAlpha(0.95);
     };
 
     // Wire events
@@ -75,6 +96,7 @@ export default class TintButton {
     this.sprite.on('pointerout',  this._onOut);
     this.sprite.on('pointerdown', this._onDown);
     this.sprite.on('pointerup',   this._onUp);
+    this.sprite.on('pointerupoutside', this._onUpOutside);
   }
 
   // --- Convenience API ---
@@ -135,6 +157,7 @@ export default class TintButton {
     this.sprite.off('pointerout',  this._onOut);
     this.sprite.off('pointerdown', this._onDown);
     this.sprite.off('pointerup',   this._onUp);
+    this.sprite.off('pointerupoutside', this._onUpOutside);
 
     // Destroy objects
     this.sprite.destroy();

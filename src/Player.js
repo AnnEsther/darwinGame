@@ -14,8 +14,10 @@ export default class Player {
 
         this.setVelocityX(config.initialVelocity); // Initial movement (if needed)
 
-        this.updateLevel(config.level);
+        // this.updateLevel(config.level);
         this.level = config.level;
+        this._currPlayer.setTexture(levelSprites[this.level]);
+        this._currPlayer.play(levelRunAnims[this.level]);
 
 
         this._currPlayer.body.setGravityY(config.gravityY);
@@ -42,6 +44,10 @@ export default class Player {
 
     setVelocityX(velocity) {
         this._currPlayer.setVelocityX(velocity); // Initial movement (if needed)
+    }
+
+    setVisible(flag){
+        this._currPlayer.setVisible(flag);
     }
 
     updateGravity(gBase, currSpeed, baseSpeed) {

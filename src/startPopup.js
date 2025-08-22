@@ -67,10 +67,12 @@ export default class StartPopup {
         this.companyBox.setVisible(false);
 
         this.emailBox = new TextInputBox(this.scene, this.nameBox.x, this.companyBox.y + (this.companyBox.height) + padding, 420, '', {
+            type: 'email',
+            required: true,
             placeholder: "_Email_",
             // basic email-friendly chars
             charPattern: /^[a-zA-Z0-9@._+\-]$/,
-            onEnter: () => this.startGame(),
+            onEnter: () => this.trySubmit(),
             bgKey: 'emailLabel'
         });
         this.emailBox.setVisible(false);
@@ -80,7 +82,7 @@ export default class StartPopup {
             this.emailBox.y + (this.emailBox.height / 2) + padding,
             'startBtn',
             '',
-            () => { console.log('Play clicked!'); },
+            this.trySubmit.bind(this),
             {
                 fontSize: 22,
                 hoverTint: 0xe6e6ff,
@@ -100,8 +102,8 @@ export default class StartPopup {
         this.instructionBox.setVisible(false);
 
         this.instructionBox_text = this.scene.add.text(
-            this.instructionBox.x + this.instructionBox.width/2, // X position (center of the camera)
-            this.instructionBox.y - this.instructionBox.height/2, // Y position (center of the camera)
+            this.instructionBox.x + this.instructionBox.width / 2, // X position (center of the camera)
+            this.instructionBox.y - this.instructionBox.height / 2, // Y position (center of the camera)
             'Catch the coins!\ndon\'t touch the fossils!', // Text content with new lines
             {
                 fontFamily: 'Arial',
@@ -110,7 +112,7 @@ export default class StartPopup {
                 align: 'center' // This aligns multi-line text horizontally
             }
         );
-        this.instructionBox_text.setOrigin(0.5,0.5);
+        this.instructionBox_text.setOrigin(0.5, 0.5);
         this.instructionBox_text.setVisible(false);
 
     }
@@ -122,7 +124,6 @@ export default class StartPopup {
         this.title.destroy();
         this.title2.destroy();
         this.subtitle.destroy();
-
 
         //Coin
         this.coin.setVisible(true);
@@ -176,18 +177,18 @@ export default class StartPopup {
         );
     }
 
+    trySubmit() {
+        const name = this.nameBox.getValue().trim();
+        const company = this.companyBox.getValue().trim();
+        const email = this.emailBox.getValue().trim();
 
-    startGame() {
-        const playerName = this.nameInput.node.value || 'Player';
-
-        // Clean up elements
-        this.nameInput.destroy();
-        this.startButton.destroy();
-
-        // Run callback
-        if (this.onStartCallback) {
-            this.onStartCallback(playerName);
+        if (!this.emailBox.isValid()) {
+            this.emailBox.flashInvalid();          // small feedback
+            return;                                // block submit
         }
+
+        // proceed with valid data
+        this.onStartCallback?.({ name, company, email});
     }
 
     setDepth(depth) {
@@ -202,9 +203,20 @@ export default class StartPopup {
         this.nameLabel ? this.nameLabel.setDepth(depth) : null;
         this.nameInput ? this.nameInput.setDepth(depth) : null;
 
-        this.instructionBox.setDepth(depth );
-        this.instructionBox_text.setDepth(depth+1);
+        this.instructionBox.setDepth(depth);
+        this.instructionBox_text.setDepth(depth + 1);
 
 
+    }
+
+    setVisible(flag) {
+
+        this.coin.setVisible(flag);
+        this.nameBox.setVisible(flag);
+        this.companyBox.setVisible(flag);
+        this.emailBox.setVisible(flag);
+        this.submitBg.setVisible(flag);
+        this.instructionBox.setVisible(flag);
+        this.instructionBox_text.setVisible(flag);
     }
 }

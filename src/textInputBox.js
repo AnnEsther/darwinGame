@@ -1,3 +1,5 @@
+const EMAIL_RE = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+
 export default class TextInputBox extends Phaser.GameObjects.Container {
     constructor(scene, x, y, width, label, options = {}) {
         super(scene, x, y);
@@ -14,6 +16,20 @@ export default class TextInputBox extends Phaser.GameObjects.Container {
         this.bgKey = options.bgKey || null;        // <-- NEW: background image key
         this.bgFrame = options.bgFrame || null;    // optional frame
         this.labelGap = options.labelGap ?? 10;    // gap between box and right-side label
+
+        // NEW: validation options
+        this.type = options.type || null;            // e.g., 'email'
+        this.required = !!options.required;          // require non-empty?
+        this.validator = options.validator || null;  // custom function (v)=>boolean
+        this.onChange = typeof options.onChange === 'function' ? options.onChange : null;
+
+        // colors for validity (optional)
+        this.validColor = options.validColor || '#000000';
+        this.invalidColor = options.invalidColor || '#b00020';
+
+        // NEW: defer validation until user focuses the field (clicked)
+        this.deferEmailUntilFocus = options.deferEmailUntilFocus ?? true;
+        this._touched = false;   // becomes true on first focus()
 
         // --- Background ---
         if (this.bgKey) {
@@ -99,6 +115,8 @@ export default class TextInputBox extends Phaser.GameObjects.Container {
         }
 
         this.updateDisplay();
+
+
     }
 
     focus() {
@@ -110,6 +128,7 @@ export default class TextInputBox extends Phaser.GameObjects.Container {
         this.scene.__activeTextInputBox = this;
 
         this.focused = true;
+        this._touched = true;
         // this.focusBorder.setStrokeStyle(2, 0x88ff88);
 
         if (!this.keyHandler) {
@@ -140,38 +159,84 @@ export default class TextInputBox extends Phaser.GameObjects.Container {
 
     handleKey(event) {
         const k = event.key;
-
-        if (k === 'Tab') {
-            event.preventDefault?.();
-            this.blur();
-            return;
-        }
-        if (k === 'Enter') {
-            if (typeof this.onEnter === 'function') this.onEnter(this.value);
-            return;
-        }
+        if (k === 'Tab') { event.preventDefault?.(); this.blur(); return; }
+        if (k === 'Enter') { if (typeof this.onEnter === 'function') this.onEnter(this.value); return; }
         if (k === 'Backspace' || k === 'Delete') {
             this.value = this.value.slice(0, -1);
-            this.updateDisplay();
-            return;
+            return this._afterEdit();
         }
-
         if (k.length === 1 && this.charPattern.test(k) && this.value.length < this.maxLength) {
             this.value += k;
-            this.updateDisplay();
+            return this._afterEdit();
         }
+    }
+
+    _afterEdit() {
+        this.updateDisplay();
+        if (this.onChange) this.onChange(this.value);
     }
 
     updateDisplay() {
         const showCaret = this.focused && this.caretVisible;
         const shown = this.value.length ? this.value : (this.focused ? '' : this.placeholder);
         this.valueText.setText(showCaret ? `${shown}|` : shown);
-        this.valueText.setColor(this.value.length ? '#000000ff' : '#000000ff');
         this.valueText.setStyle({ parse: false });
+        this._updateValidityVisual();
     }
 
-    setValue(v) { this.value = (v ?? '').toString().slice(0, this.maxLength); this.updateDisplay(); }
+    // === NEW: validation helpers ===
+    isValid() {
+        const v = this.value.trim();
+        if (this.required && v.length === 0) return false;
+        if (this.validator) return !!this.validator(v);
+
+        if (this.type === 'email') {
+            if (this.deferEmailUntilFocus && !this._touched) return true; // your deferral logic
+            return EMAIL_RE.test(v); // <-- use module constant
+        }
+        return true;
+    }
+
+    isEmailValid() {
+        const v = this.value.trim();
+        if (this.deferEmailUntilFocus && !this._touched) return true;
+        return EMAIL_RE.test(v);
+    }
+
+    _updateValidityVisual() {
+        const ok = this.isValid();
+
+        // For email: only color after it's been touched (clicked/focused)
+        const shouldColor =
+            (this.type === 'email')
+                ? this._touched
+                : (this.required || this.value.length > 0);
+
+        this.valueText.setColor(shouldColor && !ok ? this.invalidColor : this.validColor);
+
+        if (this.bg.setTint) {
+            if (shouldColor && !ok) this.bg.setTint(0xffe6e6);
+            else this.bg.clearTint();
+        }
+    }
+
+    // convenience (optional)
+    flashInvalid() {
+        if (this.isValid()) return;
+        this.scene.tweens.add({
+            targets: this,
+            alpha: 0.5,
+            duration: 80,
+            yoyo: true,
+            repeat: 2,
+            onComplete: () => this.setAlpha(1)
+        });
+    }
+
+    setValue(v) { this.value = (v ?? '').toString().slice(0, this.maxLength); this._afterEdit(); }
     getValue() { return this.value; }
+
+
     setLabel(text) { this.labelText.setText(text); }
 
     setBoxWidth(w) {
@@ -191,9 +256,9 @@ export default class TextInputBox extends Phaser.GameObjects.Container {
         this.valueText.setX(-this.width / 2 + this.paddingX);
     }
 
-    destroy(fromScene) {
+    destroy() {
         this.blur();
         this.caretEvt?.remove(false);
-        super.destroy(fromScene);
+        super.destroy();
     }
 }

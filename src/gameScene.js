@@ -9,6 +9,7 @@ import GameUI from './gameUI.js';
 export default class GameScene extends Phaser.Scene {
     constructor() {
         super('GameScene');
+        this.gameStart = false;
     }
 
     init(data) {
@@ -56,7 +57,8 @@ export default class GameScene extends Phaser.Scene {
         this._nextSpeedAt = this.speedEveryPixels;
 
 
-        this.background = new ParallaxBackground(this, 0, this.onGroundReset.bind(this));
+        this.background = new ParallaxBackground(this, this.onGroundReset.bind(this));
+        this.background.setVelocityX(this.rockSpeed);
 
         this.ground = this.add.rectangle(this.scale.width / 2, this.background.ground._0.y - this.background.ground._0.height + 25, this.scale.width, 2, 0x00000000);
         this.ground.alpha = 0;
@@ -65,17 +67,16 @@ export default class GameScene extends Phaser.Scene {
 
 
         var playerConfig = {
-            x: this.scale.height / 2,
+            x: this.scale.width / 2,
             y: this.ground.y - 100,
             level: this.level,
             scale: 1,
-            initialVelocity: 200,
+            initialVelocity: 0,
             gravityY: this.gravityY,
             groundY: this.ground.y
         };
         this.player = new Player(this, playerConfig);
-
-
+        this.player.setVisible(false);
 
         this.physics.add.collider(this.player.getColliders(), this.ground, () => { this.jumpCount = 0; });
 
@@ -92,36 +93,14 @@ export default class GameScene extends Phaser.Scene {
         // this.coins = this.physics.add.group();
         this.coins = new Coins(this);
 
-
-
-
         this.physics.add.overlap(this.player.getColliders(), this.rock.getColliders(), this.handleHit, null, this);
         this.physics.add.overlap(this.player.getColliders(), this.coins.getColliders(), this.collectCoin, null, this);
 
-
-
         this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-
-
-
-        this.applySpeed = (s) => {
-            this.rockSpeed = s;//Phaser.Math.Clamp(s, 50, this.maxRockSpeed);
-
-            this.rock.setVelocityX(this.rockSpeed);
-            this.background.setVelocityX(this.rockSpeed);
-            this.coins.setVelocityX(this.rockSpeed);
-
-            // Optional: scale gravity with speed so jumps feel consistent
-            const gBase = 600;
-            this.player.updateGravity(gBase, this.rockSpeed, this.baseSpeed);
-
-        };
+       
         // HUD texts
 
-        this.startPopup = new StartPopup(this, (playerName) => {
-            console.log(`Game started for: ${playerName}`);
-            this.beginGameplay();
-        });
+        this.startPopup = new StartPopup(this, this.beginGameplay.bind(this));
         this.startPopup.setDepth(10);
 
 
@@ -130,23 +109,17 @@ export default class GameScene extends Phaser.Scene {
     update(time, delta) {
 
         this.background.update();
-        this.ui.updateDistance(this.rockSpeed);
-        this.ui.updateCoin(100);
-
-
-        if (!this.reachedCenter) {
-            if (this.player.getX() >= this.scale.width / 2) {
-                this.player.setX(this.scale.width / 2);
-                this.player.setVelocityX(0);
-                this.reachedCenter = true;
-            }
+        // this.ui.updateDistance(this.rockSpeed);
+        // this.ui.updateCoin(100);
+        
+        if(!this.gameStart){
+            return;
         }
-        else {
-            if (Phaser.Input.Keyboard.JustDown(this.spaceKey) && this.jumpCount < 1) {
-                this.player._currPlayer.setVelocityY(this.jumpVelocity);
-                this.jumpCount++;
-                this.player.jump();
-            }
+
+        if ( Phaser.Input.Keyboard.JustDown(this.spaceKey) && this.jumpCount < 1) {
+            this.player._currPlayer.setVelocityY(this.jumpVelocity);
+            this.jumpCount++;
+            this.player.jump();
         }
 
 
@@ -183,13 +156,21 @@ export default class GameScene extends Phaser.Scene {
         }
     }
 
-    beginGameplay() {
-        this.add.text(400, 300, 'Game Started!', {
-            fontSize: '32px',
-            color: '#00ff00'
-        }).setOrigin(0.5);
+    beginGameplay({name,company,email}) {
 
+        console.log(name);
+        console.log(company);
+        console.log(email);
+        this.startPopup.setVisible(false);
+
+        this.gameStart = true;
+        this.player.setVisible(true);
         this.spawnCoins(this.rock.getX(), this.rock.getY());
+
+        this.background.gameStart = true;
+        this.rock.setVelocityX(this.rockSpeed);
+        this.background.setVelocityX(this.rockSpeed);
+        this.coins.setVelocityX(this.rockSpeed);
     }
 
     handleHit(player, rock) {
