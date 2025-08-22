@@ -10,6 +10,7 @@ export default class GameScene extends Phaser.Scene {
     constructor() {
         super('GameScene');
         this.gameStart = false;
+        this.distance = 0;
     }
 
     init(data) {
@@ -32,7 +33,6 @@ export default class GameScene extends Phaser.Scene {
         });
 
 
-        this.reachedCenter = false;
         this.jumpCount = 0;
         this.coinsCollected = 0;
         this.level = 0;
@@ -97,7 +97,7 @@ export default class GameScene extends Phaser.Scene {
         this.physics.add.overlap(this.player.getColliders(), this.coins.getColliders(), this.collectCoin, null, this);
 
         this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-       
+
         // HUD texts
 
         this.startPopup = new StartPopup(this, this.beginGameplay.bind(this));
@@ -111,12 +111,20 @@ export default class GameScene extends Phaser.Scene {
         this.background.update();
         // this.ui.updateDistance(this.rockSpeed);
         // this.ui.updateCoin(100);
-        
+
         if(!this.gameStart){
             return;
         }
 
-        if ( Phaser.Input.Keyboard.JustDown(this.spaceKey) && this.jumpCount < 1) {
+        if (this.distance <= 100) {
+            this.distance++;
+        }
+        else {
+            this.distance = 0;
+            this.ui.updateDistance(1);
+        }
+
+        if (Phaser.Input.Keyboard.JustDown(this.spaceKey) && this.jumpCount < 1) {
             this.player._currPlayer.setVelocityY(this.jumpVelocity);
             this.jumpCount++;
             this.player.jump();
@@ -156,7 +164,7 @@ export default class GameScene extends Phaser.Scene {
         }
     }
 
-    beginGameplay({name,company,email}) {
+    beginGameplay({ name, company, email }) {
 
         console.log(name);
         console.log(company);
@@ -208,8 +216,8 @@ export default class GameScene extends Phaser.Scene {
 
     collectCoin(player, coin) {
         coin.destroy();
-        this.coinsCollected++;
-               // Test updates
+        this.coinsCollected += 100;
+        // Test updates
         this.ui.updateCoin(this.coinsCollected);
     }
 
@@ -230,42 +238,5 @@ export default class GameScene extends Phaser.Scene {
 
     }
 
-    makeSlider(scene, x, y, width, min, max, initial, label, onChange) {
-        const track = scene.add.rectangle(x, y, width, 6, 0x666666).setOrigin(0, 0.5).setInteractive();
-        const knobX = x + ((initial - min) / (max - min)) * width;
-        const knob = scene.add.circle(knobX, y, 10, 0xffffff).setInteractive({ draggable: true });
-        const text = scene.add.text(x, y - 24, `${label}: ${Math.round(initial)}`, { fontSize: '16px', fill: '#fff' });
-
-        // Drag logic
-        scene.input.setDraggable(knob, true);
-        knob.on('drag', (_pointer, dragX) => {
-            // clamp to track
-            const clamped = Phaser.Math.Clamp(dragX, x, x + width);
-            knob.x = clamped;
-
-            // normalize: fraction along the track (0..1)
-            const t = (clamped - x) / width;
-
-            // safe interpolation between min and max
-            const value = Phaser.Math.Linear(min, max, t);
-
-            text.setText(`${label}: ${Math.round(value)}`);
-            onChange(value);
-        });
-
-        // Click on track jumps knob
-        track.on('pointerdown', (pointer) => {
-            const clamped = Phaser.Math.Clamp(pointer.x, x, x + width);
-            knob.x = clamped;
-
-            const t = (clamped - x) / width;
-            const value = Phaser.Math.Linear(min, max, t);
-
-            text.setText(`${label}: ${Math.round(value)}`);
-            onChange(value);
-        });
-
-        return { track, knob, text };
-    }
 
 }
