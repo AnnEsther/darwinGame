@@ -3,10 +3,10 @@ import ParallaxBackground from '../ParallaxBackground.js';
 import Rock from '../Rock.js';
 import Coins from '../Coins.js';
 import Player from '../Player.js';
-import StartPopup from '../startPopup.js';
+import StartPopup from '../popups/startPopup.js';
 import GameUI from '../gameUI.js';
 import AudioManager from '../AudioManager.js';
-import GameOverPopup from '../gameOverPopup.js'
+import GameOverPopup from '../popups/gameOverPopup.js'
 
 export default class GameScene extends Phaser.Scene {
     constructor() {
@@ -50,22 +50,15 @@ export default class GameScene extends Phaser.Scene {
         this.rocksPassed = 0;
         this.rocksPassedPrev = -1;
         this.levelSprites = ['lizard', 'ostrich', 'monkey_1', 'man'];
+        
         this.gravityY = 0;
-
         this.rockSpeed = -500;
-        this.baseSpeed = -200;
         this.rockStepSpeed = 25;
-        this.maxRockSpeed = -1000;
-
-        this.jumpVelocity = -800;
-        this.jumpBaseVelocity = -600;
-        this.jumpStepVelocity = 15;
-        this.maxJumpVelocity = -1000;
+        this.jumpVelocity = -600;
+        this.jumpStepVelocity = 20;
 
         // Distance-based ramp
         this.distance = 0;      // total distance "run" in pixels
-        this.speedEveryPixels = 2500;   // threshold to increase speed
-        this._nextSpeedAt = this.speedEveryPixels;
 
 
         this.background = new ParallaxBackground(this, this.onGroundReset.bind(this));
