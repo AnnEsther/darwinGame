@@ -6,7 +6,8 @@ import Player from '../Player.js';
 import StartPopup from '../popups/startPopup.js';
 import GameUI from '../gameUI.js';
 import AudioManager from '../AudioManager.js';
-import GameOverPopup from '../popups/gameOverPopup.js'
+import GameOverPopup from '../popups/gameOverPopup.js';
+import RunnerJumpTuner from '../RunnerJumpTuner.js';
 
 export default class GameScene extends Phaser.Scene {
     constructor() {
@@ -50,9 +51,9 @@ export default class GameScene extends Phaser.Scene {
         this.rocksPassed = 0;
         this.rocksPassedPrev = -1;
         this.levelSprites = ['lizard', 'ostrich', 'monkey_1', 'man'];
-        
+
         this.gravityY = 0;
-        this.rockSpeed = -500;
+        this.rockSpeed = -700;
         this.rockStepSpeed = 25;
         this.jumpVelocity = -600;
         this.jumpStepVelocity = 20;
@@ -60,15 +61,12 @@ export default class GameScene extends Phaser.Scene {
         // Distance-based ramp
         this.distance = 0;      // total distance "run" in pixels
 
-
         this.background = new ParallaxBackground(this, this.onGroundReset.bind(this));
         this.background.setVelocityX(this.rockSpeed);
 
         this.ground = this.add.rectangle(this.scale.width / 2, this.background.ground._0.y - this.background.ground._0.height + 25, this.scale.width, 2, 0x00000000);
         this.ground.alpha = 0;
         this.physics.add.existing(this.ground, true);
-
-
 
         var playerConfig = {
             x: this.scale.width / 2,
@@ -120,6 +118,18 @@ export default class GameScene extends Phaser.Scene {
         this.gameOverPopup.setDepth(10);
         this.gameOverPopup.setVisible(false);
 
+        // Tuner: pass a function that returns current world speed magnitude
+        this.tuner = new RunnerJumpTuner(
+            this,
+            this.player._currPlayer,    // or this.player if that’s your sprite
+            this.spaceKey,
+            () => Math.abs(this.rockSpeed)
+        );
+
+        this.tuner.retune();          // set initial gravity/jump/maxFall
+
+        // Apply initial parallax speed
+        this.background.setVelocityX(this.rockSpeed);
 
     }
 
@@ -132,6 +142,9 @@ export default class GameScene extends Phaser.Scene {
         if (!this.gameStart) {
             return;
         }
+
+        // per-frame jump feel updates
+        this.tuner.update();
 
         if (this.distance <= 100) {
             this.distance++;
@@ -153,13 +166,8 @@ export default class GameScene extends Phaser.Scene {
             this.rock.playerPassed = true;
             this.rocksPassed++;
 
-            if (this.level != this.levelSprites.length - 1 && this.rocksPassed > this.rocksPassedPrev) {
-                this.rockSpeed -= this.rockStepSpeed;
-                this.gravityY = this.gravityY + 10;
-                this.jumpVelocity -= this.jumpStepVelocity;
-                this.player._currPlayer.setGravityY(this.gravityY); // Faster fall
-                this.rocksPassedPrev = this.rocksPassed;
-                this.background.setVelocityX(this.rockSpeed);
+            if (this.isLevelUp()) {
+                this.levelUp();
             }
         }
 
@@ -179,6 +187,30 @@ export default class GameScene extends Phaser.Scene {
             //     });
             // }
         }
+    }
+
+    isLevelUp() {
+        return this.level != this.levelSprites.length - 1 && this.rocksPassed > this.rocksPassedPrev;
+    }
+
+    levelUp() {
+        // this.rockSpeed -= this.rockStepSpeed;
+        // this.gravityY = this.gravityY + 10;
+        // this.jumpVelocity -= this.jumpStepVelocity;
+        // this.player._currPlayer.setGravityY(this.gravityY); // Faster fall
+        this.rocksPassedPrev = this.rocksPassed;
+        // this.background.setVelocityX(this.rockSpeed);
+
+        // Level up
+        this.rockSpeed -= this.rockStepSpeed;                // world speeds up (more negative)
+        this.background.setVelocityX(this.rockSpeed);        // parallax update
+
+        // Let the tuner recompute gravity/jump/maxFall based on the new speed
+        this.tuner.retune();
+
+        // (Optional) If you still use these vars elsewhere, keep them in sync visually:
+        this.gravityY = this.player._currPlayer.body.gravity.y;
+        this.jumpVelocity = this.tuner.currentJump;
     }
 
     beginGameplay({ name, company, email }) {
