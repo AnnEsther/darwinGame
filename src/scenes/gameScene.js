@@ -247,10 +247,10 @@ export default class GameScene extends Phaser.Scene {
         else if (isReset[1]) {
             var spawnCoin = Math.floor(Math.random() * 10);
             const padding = 200;
-            if (spawnCoin > 5) {
+            if (spawnCoin > 2 && spawnCoin < 8) {
                 this.spawnCoins(
-                    this.background.ground._1.x + padding + Math.floor(Math.random() * (this.background.ground._1.width - (2 * padding))),
-                    this.rock.getY() - 100);
+                    this.background.ground._1.x + (this.background.ground._1.width * spawnCoin * 0.1),
+                    this.rock.getY() - 200);
             }
         }
     }
