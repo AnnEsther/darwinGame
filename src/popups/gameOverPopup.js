@@ -1,4 +1,4 @@
-import TintButton from "./tintButton";
+import TintButton from "../tintButton";
 
 const padding = 50;
 

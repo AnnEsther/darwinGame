@@ -1,5 +1,5 @@
-import TextInputBox from "./textInputBox";
-import TintButton from "./tintButton";
+import TextInputBox from "../textInputBox";
+import TintButton from "../tintButton";
 
 const padding = 50;
 
