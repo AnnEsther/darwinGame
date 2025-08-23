@@ -5,6 +5,8 @@ import Coins from './Coins.js';
 import Player from './Player.js';
 import StartPopup from './startPopup.js';
 import GameUI from './gameUI.js';
+import AudioManager from './AudioManager.js';
+import GameOverPopup from './gameOverPopup.js'
 
 export default class GameScene extends Phaser.Scene {
     constructor() {
@@ -15,9 +17,18 @@ export default class GameScene extends Phaser.Scene {
 
     init(data) {
         this.playerName = data.playerName || 'Anonymous';
+        this.gameStart = false;
+        this.getInfo = data.getInfo;
+        this.name = data.name;
+        this.company = data.company;
+        this.email = data.email;
     }
 
     create() {
+
+        // ??AUDIO MANAGER
+        this.audio = AudioManager.getInstance(this);
+        // audio.playMusic('bgMusic', { loop: true, volume: 0.3 });
 
         this.ui = new GameUI(this, {
             leftBgKey: 'coinLabel',
@@ -100,8 +111,21 @@ export default class GameScene extends Phaser.Scene {
 
         // HUD texts
 
-        this.startPopup = new StartPopup(this, this.beginGameplay.bind(this));
-        this.startPopup.setDepth(10);
+        if (this.getInfo) {
+            this.startPopup = new StartPopup(this, this.beginGameplay.bind(this));
+            this.startPopup.setDepth(10);
+        }
+        else {
+            const name = this.name;
+            const company = this.company;
+            const email = this.email;
+            this.beginGameplay({ name, company, email });
+        }
+
+
+        this.gameOverPopup = new GameOverPopup(this, this.reloadGame.bind(this));
+        this.gameOverPopup.setDepth(10);
+        this.gameOverPopup.setVisible(false);
 
 
     }
@@ -112,7 +136,7 @@ export default class GameScene extends Phaser.Scene {
         // this.ui.updateDistance(this.rockSpeed);
         // this.ui.updateCoin(100);
 
-        if(!this.gameStart){
+        if (!this.gameStart) {
             return;
         }
 
@@ -155,16 +179,20 @@ export default class GameScene extends Phaser.Scene {
                 this.level = newLevel;
                 this.player.updateLevel(this.level);
             }
-            if (this.level >= this.levelSprites.length) {
-                this.scene.start('LeaderboardScene', {
-                    playerName: this.playerName,
-                    coins: this.coinsCollected
-                });
-            }
+            // if (this.level >= this.levelSprites.length) {
+            //     this.scene.start('LeaderboardScene', {
+            //         playerName: this.playerName,
+            //         coins: this.coinsCollected
+            //     });
+            // }
         }
     }
 
     beginGameplay({ name, company, email }) {
+
+        this.name = name;
+        this.company = company;
+        this.email = email;
 
         console.log(name);
         console.log(company);
@@ -172,13 +200,18 @@ export default class GameScene extends Phaser.Scene {
         this.startPopup.setVisible(false);
 
         this.gameStart = true;
+        this.background.gameStart = true;
+
         this.player.setVisible(true);
         this.spawnCoins(this.rock.getX(), this.rock.getY());
 
-        this.background.gameStart = true;
         this.rock.setVelocityX(this.rockSpeed);
         this.background.setVelocityX(this.rockSpeed);
         this.coins.setVelocityX(this.rockSpeed);
+    }
+
+    reloadGame() {
+        this.scene.start('GameScene', { getInfo: false, name: this.name, company: this.company, email: this.email });
     }
 
     handleHit(player, rock) {
@@ -189,12 +222,21 @@ export default class GameScene extends Phaser.Scene {
             });
         }
         else {
-            this.player.deadth(() => { this.scene.start('GameOverScene') });
+            this.player.deadth(this.showGameOver.bind(this));
         }
         this.rockSpeed = 0;
         this.rock.setVelocityX(this.rockSpeed);
         this.background.setVelocityX(this.rockSpeed);
         this.coins.setVelocityX(this.rockSpeed);
+    }
+
+    showGameOver() {
+        this.gameOverPopup.setLevel(this.level);
+        console.log(this.ui.getScore());
+        this.gameOverPopup.setScore(this.ui.getScore());
+        this.gameOverPopup.setVisible(true);
+        this.gameStart = false;
+
     }
 
     onGroundReset(isReset) {
