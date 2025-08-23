@@ -1,12 +1,12 @@
 // [GameScene remains unchanged, omitted for brevity]
-import ParallaxBackground from './ParallaxBackground.js';
-import Rock from './Rock.js';
-import Coins from './Coins.js';
-import Player from './Player.js';
-import StartPopup from './startPopup.js';
-import GameUI from './gameUI.js';
-import AudioManager from './AudioManager.js';
-import GameOverPopup from './gameOverPopup.js'
+import ParallaxBackground from '../ParallaxBackground.js';
+import Rock from '../Rock.js';
+import Coins from '../Coins.js';
+import Player from '../Player.js';
+import StartPopup from '../startPopup.js';
+import GameUI from '../gameUI.js';
+import AudioManager from '../AudioManager.js';
+import GameOverPopup from '../gameOverPopup.js'
 
 export default class GameScene extends Phaser.Scene {
     constructor() {

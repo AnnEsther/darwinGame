@@ -1,4 +1,4 @@
-import LoadingOverlay from "./LoadingOverlay";
+import LoadingOverlay from "../LoadingOverlay";
 
 export default class LandingScene extends Phaser.Scene {
     constructor() { super('LandingScene'); }
@@ -12,10 +12,27 @@ export default class LandingScene extends Phaser.Scene {
         this.load.once('complete', () => {
             this.overlay.setProgress(1);
             this.overlay.close();
-            this.scene.start('GameScene'); // now everything is loaded
+            this.scene.start('GameScene', {getInfo:true, name: '', company: '', email: ''});
+            
         });
 
         // === LOAD EVERYTHING GAME SCENE NEEDS HERE ===
+        //UI
+        this.load.image('Logo', 'assets/ui/logo.png');
+        this.load.image('nameLabel', 'assets/ui/nameLabel.png');
+        this.load.image('companyLabel', 'assets/ui/companyLabel.png');
+        this.load.image('emailLabel', 'assets/ui/mailLabel.png');
+        this.load.image('startBtn', 'assets/ui/startBtn.png');
+        this.load.image('scoreLabel', 'assets/ui/scoreLabel.png');
+        this.load.image('coinLabel', 'assets/ui/coinLabel.png');
+        this.load.image('instructionBox', 'assets/ui/instructionBox.png');
+        this.load.image('popup_bg', 'assets/ui/popup_bg.png');
+        this.load.image('scorebox', 'assets/ui/scorebox.png');
+        this.load.image('lizardFossil', 'assets/ui/lizardFossil.png');
+        this.load.image('birdFossil', 'assets/ui/birdFossil.png');
+        this.load.image('monkeyFossil', 'assets/ui/monkeyFossil.png');
+        this.load.image('Retry', 'assets/ui/Retry.png');
+        this.load.image('Close', 'assets/ui/Close.png');
         //COINS
         this.load.image('coin0000', 'assets/Coin/coin0000.png');
         this.load.image('coin0001', 'assets/Coin/coin0001.png');
@@ -119,10 +136,6 @@ export default class LandingScene extends Phaser.Scene {
 
 
 
-        this.load.image('lizard', 'assets/lizard.png');
-        this.load.image('ostrich', 'assets/ostrich.png');
-        this.load.image('man', 'assets/man.png');
-
         this.load.image('explosionSmall_0', 'assets/explosion/small/explosion0000.png');
         this.load.image('explosionSmall_1', 'assets/explosion/small/explosion0001.png');
         this.load.image('explosionSmall_2', 'assets/explosion/small/explosion0002.png');
@@ -142,21 +155,18 @@ export default class LandingScene extends Phaser.Scene {
         this.load.image('explosionLarge_6', 'assets/explosion/large/explosion0006.png');
         this.load.image('explosionLarge_7', 'assets/explosion/large/explosion0007.png');
         this.load.image('explosionLarge_8', 'assets/explosion/large/explosion0008.png');
-        //UI
-        this.load.image('nameLabel', 'assets/ui/nameLabel.png');
-        this.load.image('companyLabel', 'assets/ui/companyLabel.png');
-        this.load.image('emailLabel', 'assets/ui/mailLabel.png');
-        this.load.image('startBtn', 'assets/ui/startBtn.png');
-        this.load.image('scoreLabel', 'assets/ui/scoreLabel.png');
-        this.load.image('coinLabel', 'assets/ui/coinLabel.png');
-        this.load.image('instructionBox', 'assets/ui/instructionBox.png');
+        
+        //GameOverScene
+
+        //SFX
+        // this.load.audio('backgroundMusic', 'assets/audio/background.mp3');
 
     }
 
     create() {
 
         this.time.delayedCall(2000, () => {
-            this.scene.start('GameScene');
+            this.scene.start('GameScene', {getInfo:true, name: '', company: '', email: ''});
         });
     }
 }

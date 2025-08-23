@@ -11,34 +11,36 @@ export default class StartPopup {
         // Semi-transparent overlay
 
         // DarwinBox presents
-        this.company = scene.add.text(scene.scale.width / 2, 200, 'darwinbox', {
-            fontSize: '72px',
-            color: '#ffffff',
-            fontStyle: 'bold'
-        }).setOrigin(0.5);
-        this.presents = scene.add.text(scene.scale.width / 2, 250, 'PRESENTS', {
-            fontSize: '48px',
-            color: '#ffffff',
-            fontStyle: 'bold'
-        }).setOrigin(0.5);
+        // this.company = scene.add.text(scene.scale.width / 2, 200, 'darwinbox', {
+        //     fontSize: '72px',
+        //     color: '#ffffff',
+        //     fontStyle: 'bold'
+        // }).setOrigin(0.5);
+        // this.presents = scene.add.text(scene.scale.width / 2, 250, 'PRESENTS', {
+        //     fontSize: '48px',
+        //     color: '#ffffff',
+        //     fontStyle: 'bold'
+        // }).setOrigin(0.5);
 
-        // Title
-        this.title = scene.add.text(scene.scale.width / 2, scene.scale.height * 0.62, 'Evolve or', {
-            fontSize: '96px',
-            color: '#ffffff',
-            fontStyle: 'bold'
-        }).setOrigin(0.5);
-        this.title2 = scene.add.text(scene.scale.width / 2, this.title.y + 50, 'Fossilize', {
-            fontSize: '96px',
-            color: '#ffffff',
-            fontStyle: 'bold'
-        }).setOrigin(0.5);
+        // // Title
+        // this.title = scene.add.text(scene.scale.width / 2, scene.scale.height * 0.62, 'Evolve or', {
+        //     fontSize: '96px',
+        //     color: '#ffffff',
+        //     fontStyle: 'bold'
+        // }).setOrigin(0.5);
+        // this.title2 = scene.add.text(scene.scale.width / 2, this.title.y + 50, 'Fossilize', {
+        //     fontSize: '96px',
+        //     color: '#ffffff',
+        //     fontStyle: 'bold'
+        // }).setOrigin(0.5);
 
+        this.logo = scene.add.sprite(scene.scale.width/2, scene.scale.height/2 + 70, 'Logo').setOrigin(0.5);
+        this.logo.setScale(3);
         // Subtitle
-        this.subtitle = scene.add.text(400, 260, 'Click to continue', {
-            fontSize: '24px',
-            color: '#dddddd'
-        }).setOrigin(0.5);
+        // this.subtitle = scene.add.text(400, 260, 'Click to continue', {
+        //     fontSize: '24px',
+        //     color: '#dddddd'
+        // }).setOrigin(0.5);
 
         // Wait for first click
         scene.input.once('pointerdown', () => this.showForm());
@@ -119,11 +121,12 @@ export default class StartPopup {
 
     showForm() {
         // Remove initial title/subtitle
-        this.company.destroy();
-        this.presents.destroy();
-        this.title.destroy();
-        this.title2.destroy();
-        this.subtitle.destroy();
+        // this.company.setVisible(false);
+        // this.presents.setVisible(false);
+        // this.title.setVisible(false);
+        // this.title2.setVisible(false);
+        // this.subtitle.setVisible(false);
+        this.logo.setVisible(false);
 
         //Coin
         this.coin.setVisible(true);
@@ -193,10 +196,12 @@ export default class StartPopup {
 
     setDepth(depth) {
 
-        this.company.setDepth(depth + 1);
-        this.presents.setDepth(depth + 1);
-        this.title.setDepth(depth + 1);
-        this.title2.setDepth(depth + 1);
+        // this.company.setDepth(depth + 1);
+        // this.presents.setDepth(depth + 1);
+        // this.title.setDepth(depth + 1);
+        // this.title2.setDepth(depth + 1);
+        this.logo.setDepth(depth);
+
         this.nameInput ? this.nameInput.setDepth(depth) : null;
         this.startButton ? this.startButton.setDepth(depth) : null;
 
@@ -210,6 +215,12 @@ export default class StartPopup {
     }
 
     setVisible(flag) {
+
+        // this.company.setVisible(flag);
+        // this.presents.setVisible(flag);
+        // this.title.setVisible(flag);
+        // this.title2.setVisible(flag);
+        // this.subtitle.setVisible(flag);
 
         this.coin.setVisible(flag);
         this.nameBox.setVisible(flag);

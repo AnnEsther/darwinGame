@@ -1,9 +1,7 @@
-import LandingScene from './landingScene';
-import FormScene from './formScene';
-import GameScene from './gameScene';
+import LandingScene from './scenes/landingScene';
+import GameScene from './scenes/gameScene';
 import GameOverScene from './GameOverScene';
 import LeaderboardScene from './leaderboardScene';
-import WinScene from './winScene';
 
 const config = {
     type: Phaser.AUTO,
@@ -15,12 +13,43 @@ const config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 600 },
-            debug: false,
+            gravity: { y: 700 },
+            debug: true,
         }
     },
-    scene: [LandingScene, GameScene, WinScene, GameOverScene, LeaderboardScene],
+    scene: [LandingScene, GameScene, GameOverScene, LeaderboardScene],
     // scene: [LandingScene, FormScene, GameScene, WinScene, GameOverScene, LeaderboardScene],
 };
 
 new Phaser.Game(config);
+
+
+/* ------------ DONE --------------
+coin anim | FIXED
+lizard - bird - monkey - human || FIXED
+loading screen || FIXED [maybe change colors]
+added start pop up
+added form logic
+set up play
+start popup
+fix coin spawn location
+added bump animation to score update
+------------------------------------*/
+
+/* ------------ TODO --------------
+update jump animation logic
+ui
+sfx
+api
+play dead
+nautilus fossil only in the bottom
+evolve fall down
+another coin sprite for start up pop up?
+MISSING : fonts for start screen
+fonts
+max number of digits in ui
+leaderboard popup
+deadth popup
+orstrich animation falling off ?
+fossil file i soversized
+------------------------------------*/
