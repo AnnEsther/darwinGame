@@ -132,7 +132,6 @@ export default class GameScene extends Phaser.Scene {
             if(this.tuner.jumpCount > 0){
                 this.tuner.jumpCount = 0; 
                 this.player.jumpOver();
-                this.player._currPlayer.body.setAllowGravity(false);
             }
         });
 
@@ -144,8 +143,6 @@ export default class GameScene extends Phaser.Scene {
     update(time, delta) {
 
         this.background.update();
-        // this.ui.updateDistance(this.rockSpeed);
-        // this.ui.updateCoin(100);
 
         if (!this.gameStart) {
             return;
@@ -185,15 +182,13 @@ export default class GameScene extends Phaser.Scene {
         if(this.rocksPassed % 10 === 0){
             const newLevel = Math.floor(this.rocksPassed / 10);
             if (newLevel !== this.level && newLevel < this.levelSprites.length) {
-                this.level = newLevel;
-                if(newLevel < 3){
+                // this.level = newLevel;
                     //stop everything
                     this.player.updateLevel(newLevel, ()=>{
                         console.log("level up");
                         this.player._currPlayer.setY(this.ground.y - this.player._currPlayer.height);
                         this.level = newLevel;
                     }, this.ground);
-                }
             }
         }
     }
@@ -276,15 +271,14 @@ export default class GameScene extends Phaser.Scene {
 
     onGroundReset(isReset) {
         if (isReset[0]) {
-            this.rock.resetRockPos(this.rockSpeed, this.background.ground._1.x);
+            this.rock.resetRockPos(this.rockSpeed);
             this.spawnCoins(this.rock.getX(), this.rock.getY() - 100);
         }
         else if (isReset[1]) {
             var spawnCoin = Math.floor(Math.random() * 10);
-            const padding = 200;
             if (spawnCoin > 2 && spawnCoin < 8) {
                 this.spawnCoins(
-                    this.background.ground._1.x + (this.background.ground._1.width * 0.5),
+                    this.background.ground._1.x + (this.background.ground._1.width * 0.5),//this.rock.getX() + 520,
                     this.rock.getY() - 100);
             }
         }

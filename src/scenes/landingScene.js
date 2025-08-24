@@ -131,16 +131,16 @@ export default class LandingScene extends Phaser.Scene {
         this.load.image('ostrichJump_6', 'assets/bird/jump/ostrich-jump-(1)_0006_ostrich-jump-(7).png');
         //HUMAN_RUN
         this.load.image('humanRun_0', 'assets/human/run/Man_RUn_00001.png');
-        this.load.image('humanRun_1', 'assets/human/run/Man_RUn_00003.png');
-        this.load.image('humanRun_2', 'assets/human/run/Man_RUn_00005.png');
-        this.load.image('humanRun_3', 'assets/human/run/Man_RUn_00007.png');
-        this.load.image('humanRun_4', 'assets/human/run/Man_RUn_00009.png');
-        this.load.image('humanRun_5', 'assets/human/run/Man_RUn_00011.png');
-        this.load.image('humanRun_6', 'assets/human/run/Man_RUn_00013.png');
-        this.load.image('humanRun_7', 'assets/human/run/Man_RUn_00015.png');
-        this.load.image('humanRun_8', 'assets/human/run/Man_RUn_00017.png');
-        this.load.image('humanRun_9', 'assets/human/run/Man_RUn_00019.png');
-        this.load.image('humanRun_10', 'assets/human/run/Man_RUn_00021.png');
+        this.load.image('humanRun_1', 'assets/human/run/Man_RUn_00002.png');
+        this.load.image('humanRun_2', 'assets/human/run/Man_RUn_00003.png');
+        this.load.image('humanRun_3', 'assets/human/run/Man_RUn_00004.png');
+        this.load.image('humanRun_4', 'assets/human/run/Man_RUn_00005.png');
+        this.load.image('humanRun_5', 'assets/human/run/Man_RUn_00006.png');
+        this.load.image('humanRun_6', 'assets/human/run/Man_RUn_00007.png');
+        this.load.image('humanRun_7', 'assets/human/run/Man_RUn_00008.png');
+        this.load.image('humanRun_8', 'assets/human/run/Man_RUn_00009.png');
+        this.load.image('humanRun_9', 'assets/human/run/Man_RUn_00010.png');
+        this.load.image('humanRun_10', 'assets/human/run/Man_RUn_00011.png');
         //HUMAN_JUMP        
         this.load.image('humanJump_0', 'assets/human/jump/man_Jump_tk010002.png');
         this.load.image('humanJump_1', 'assets/human/jump/man_Jump_tk010006.png');

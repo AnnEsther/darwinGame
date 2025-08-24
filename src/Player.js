@@ -22,7 +22,6 @@ export default class Player {
 
 
         this._currPlayer.body.setGravityY(config.gravityY);
-        this._currPlayer.body.setAllowGravity(false);
 
 
         this._explosion = this.scene.add.sprite(this.scene.scale.width / 2, config.groundY, 'explosion_small');
@@ -185,7 +184,7 @@ export default class Player {
     }
 
     evolvePlayer(level, _callback, ground) {
-        const flickerDuration = 2000; // 2 seconds
+        const flickerDuration = 1000; // 2 seconds
         const flickerInterval = 100;  // toggle every 100ms
 
         let elapsed = 0;
@@ -196,25 +195,19 @@ export default class Player {
 
         var x = this._currPlayer.x;
 
+
         // Timer event for flickering
         const flickerEvent = this.scene.time.addEvent({
             delay: flickerInterval,
             loop: true,
             callback: () => {
-                this._currPlayer.setY(ground.y - this._currPlayer.height);
 
 
-                if (elapsed < 600) {
+                if (elapsed < 500) {
                     this._currPlayer.setVisible(!this._currPlayer.visible);
-                }
-                else if (elapsed < 1200) {
-                    level = (level == currLevel) ? nextLevel : currLevel;
-                    this._currPlayer.setTexture(levelSprites[level]);
-                    this._currPlayer.setY(ground.y - this._currPlayer.height);
                 }
                 else {
                     this._currPlayer.setTexture(levelSprites[nextLevel]);
-                    this._currPlayer.setY(ground.y - this._currPlayer.height);
                     this._currPlayer.setVisible(!this._currPlayer.visible);
                 }
 
@@ -224,14 +217,13 @@ export default class Player {
                 if (elapsed >= flickerDuration) {
                     flickerEvent.remove();
                     this._currPlayer.setVisible(true); // ensure visible
-
                     this._currPlayer.setTexture(levelSprites[nextLevel]); // switch sprite
-                    this._currPlayer.play(levelRunAnims[nextLevel]);
-
-
+                    // this._currPlayer.play(levelRunAnims[nextLevel]);
                 }
 
                 this._currPlayer.body.setSize(this._currPlayer.width, this._currPlayer.height, true);
+                this._currPlayer.setY(ground.y - this._currPlayer.height);
+                this._currPlayer.refreshBody();
                 this._currPlayer.setCollideWorldBounds(true); // Enable world bounds collision
 
                 _callback();

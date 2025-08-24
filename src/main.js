@@ -18,7 +18,6 @@ const config = {
         }
     },
     scene: [LandingScene, GameScene, LeaderboardScene],
-    // scene: [LandingScene, FormScene, GameScene, WinScene, GameOverScene, LeaderboardScene],
 };
 
 new Phaser.Game(config);
@@ -47,6 +46,9 @@ play dead
 updated ground sprite
 start up pop up - coin updated
 start screen logo added
+--
+updated ground without fossil
+updated sprite animations - monkey and man has white outline ?
 ------------------------------------*/
 
 /* ------------ TODO --------------
@@ -57,11 +59,8 @@ evolve fall down
 
 fonts
 leaderboard popup
-orstrich animation falling off ?
+
 fossil file is oversized
-updated ground without fossil
-updated sprite animations
-7. Transformation from Lizard to Ostrich isn’t celebrated ??
 
 
 ------------TO CHECK------------

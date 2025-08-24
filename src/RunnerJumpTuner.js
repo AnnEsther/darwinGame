@@ -48,8 +48,7 @@ export default class RunnerJumpTuner {
         if (!body) return;
 
         // Handle jump press with your existing "JustDown"
-        if (Phaser.Input.Keyboard.JustDown(this.jumpKey) && this.jumpCount < 1) {
-            this.player.body.setAllowGravity(true);
+        if (this.jumpKey.isDown && this.jumpCount < 1) {
             this.player.setGravityY(this.currentG);
             AudioManager.getInstance(this).playSFX('jump', { loop: false, volume: 1 });
             
@@ -74,7 +73,9 @@ export default class RunnerJumpTuner {
         if (Math.abs(body.velocity.y) <= this.apexVelEps) gScale *= this.apexScale;
 
         // Apply extra gravity this frame (over Arcade’s per-body gravity)
+        // gScale = Math.max(gScale, 1);
         const extra = (this.currentG * (gScale - 1)) * dt;
-        body.velocity.y = Math.min(body.velocity.y + extra, this.player.body.maxVelocity.y);
+        // body.velocity.y = Math.min(body.velocity.y + extra, this.player.body.maxVelocity.y);
+        
     }
 }
