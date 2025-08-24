@@ -19,6 +19,7 @@ export default class GameScene extends Phaser.Scene {
     init(data) {
         this.playerName = data.playerName || 'Anonymous';
         this.gameStart = false;
+        this.gameOver = false;
         this.getInfo = data.getInfo;
         this.name = data.name;
         this.company = data.company;
@@ -80,7 +81,6 @@ export default class GameScene extends Phaser.Scene {
         this.player = new Player(this, playerConfig);
         this.player.setVisible(false);
 
-        this.physics.add.collider(this.player.getColliders(), this.ground, () => { this.jumpCount = 0; });
 
         var rockConfig = {
             x: this.background.ground._0.width + this.background.ground._1.width + (Math.random() * this.background.ground._0.width),
@@ -128,6 +128,14 @@ export default class GameScene extends Phaser.Scene {
 
         this.tuner.retune();          // set initial gravity/jump/maxFall
 
+        this.physics.add.collider(this.player.getColliders(), this.ground, 
+        () => { 
+            if(this.tuner.jumpCount > 0){
+                this.tuner.jumpCount = 0; 
+                this.player.jumpOver();
+            }
+        });
+
         // Apply initial parallax speed
         this.background.setVelocityX(this.rockSpeed);
 
@@ -154,11 +162,6 @@ export default class GameScene extends Phaser.Scene {
             this.ui.updateDistance(1);
         }
 
-        if (Phaser.Input.Keyboard.JustDown(this.spaceKey) && this.jumpCount < 1) {
-            this.player._currPlayer.setVelocityY(this.jumpVelocity);
-            this.jumpCount++;
-            this.player.jump();
-        }
 
 
         //rocks passed
@@ -236,11 +239,14 @@ export default class GameScene extends Phaser.Scene {
     }
 
     reloadGame() {
+        this.gameOver = false;
         this.scene.start('GameScene', { getInfo: false, name: this.name, company: this.company, email: this.email });
     }
 
     handleHit(player, rock) {
+        if(this.gameOver){ return;}
 
+        this.gameOver = true;
         if (this.level == this.levelSprites.length - 1) {
             this.player.deadth(() => {
                 this.scene.start('LeaderboardScene', { playerName: this.playerName, coins: this.coinsCollected });
@@ -257,7 +263,6 @@ export default class GameScene extends Phaser.Scene {
 
     showGameOver() {
         this.gameOverPopup.setLevel(this.level);
-        console.log(this.ui.getScore());
         this.gameOverPopup.setScore(this.ui.getScore());
         this.gameOverPopup.setVisible(true);
         this.gameStart = false;

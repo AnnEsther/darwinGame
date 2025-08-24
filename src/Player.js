@@ -68,7 +68,7 @@ export default class Player {
                 { key: 'explosionSmall_6' },
                 { key: 'explosionSmall_7' },
                 { key: 'explosionSmall_8' }
-            ], frameRate: 7, repeat: 1
+            ], frameRate: 7, repeat: 0
         });
 
         this.scene.anims.create({
@@ -83,7 +83,7 @@ export default class Player {
                 { key: 'explosionLarge_6' },
                 { key: 'explosionLarge_7' },
                 { key: 'explosionLarge_8' }
-            ], frameRate: 7, repeat: 1
+            ], frameRate: 7, repeat: 0
         });
 
         //LIZARD
@@ -99,9 +99,6 @@ export default class Player {
             { key: 'LizardJump_000007' }, { key: 'LizardJump_000008' }
             ], frameRate: 2, repeat: 0
         });
-        this._currPlayer.on('animationcomplete-lizard_jump', () => {
-            this._currPlayer.play('lizard_run');
-        });
 
         //MONKEY
         this.scene.anims.create({
@@ -115,9 +112,6 @@ export default class Player {
             frames: [{ key: 'monkeyJump_1' }, { key: 'monkeyJump_2' }, { key: 'monkeyJump_3' }, { key: 'monkeyJump_4' }, { key: 'monkeyJump_5' }, { key: 'monkeyJump_6' },
             { key: 'monkeyJump_7' }, { key: 'monkeyJump_8' }
             ], frameRate: 14, repeat: 0
-        });
-        this._currPlayer.on('animationcomplete-monkey_jump', () => {
-            this._currPlayer.play('monkey_run');
         });
 
         //BIRD
@@ -148,9 +142,7 @@ export default class Player {
                 { key: 'ostrichJump_6' }
             ], frameRate: 14, repeat: -1
         });
-        this._currPlayer.on('animationcomplete-ostritch_jump', () => {
-            this._currPlayer.play('ostrich_run');
-        });
+
 
         //HUMAN
         this.scene.anims.create({
@@ -179,9 +171,6 @@ export default class Player {
                 { key: 'humanJump_5' }
             ], frameRate: 14, repeat: -1
         });
-        this._currPlayer.on('animationcomplete-human_jump', () => {
-            this._currPlayer.play('human_run');
-        });
 
     }
 
@@ -191,8 +180,6 @@ export default class Player {
         this._currPlayer.play(levelRunAnims[level]);
 
         this.evolvePlayer(level);
-
-
     }
 
     evolvePlayer(level) {
@@ -243,7 +230,10 @@ export default class Player {
 
     }
 
-    jump() {
+    jumpStart() {
         this._currPlayer.play(levelJumpAnims[this.level]);
+    }
+    jumpOver() {
+        this._currPlayer.play(levelRunAnims[this.level]);
     }
 }

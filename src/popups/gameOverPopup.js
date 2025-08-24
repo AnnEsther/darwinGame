@@ -93,8 +93,6 @@ export default class GameOverPopup {
     }
 
     setScore(score) {
-        console.log(this.score);
-
         this.score.setText(score);
     }
 
