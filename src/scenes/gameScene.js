@@ -38,7 +38,7 @@ export default class GameScene extends Phaser.Scene {
             boxWidth: 0,
             boxHeight: 0,
             fontFamily: 'Press Start 2P', // ensure loaded via CSS/WebFont
-            fontSize: 44,
+            fontSize: 36,
             textColor: '#000000ff',
             margin: 16,
             pad: 14,
@@ -56,7 +56,7 @@ export default class GameScene extends Phaser.Scene {
         this.gravityY = 0;
         this.rockSpeed = -700;
         this.rockStepSpeed = 25;
-        this.jumpVelocity = -600;
+        this.jumpVelocity = -800;
         this.jumpStepVelocity = 20;
 
         // Distance-based ramp
@@ -247,14 +247,9 @@ export default class GameScene extends Phaser.Scene {
         if(this.gameOver){ return;}
 
         this.gameOver = true;
-        if (this.level == this.levelSprites.length - 1) {
-            this.player.deadth(() => {
-                this.scene.start('LeaderboardScene', { playerName: this.playerName, coins: this.coinsCollected });
-            });
-        }
-        else {
-            this.player.deadth(this.showGameOver.bind(this));
-        }
+        
+        this.player.deadth(this.showGameOver.bind(this));
+        
         this.rockSpeed = 0;
         this.rock.setVelocityX(this.rockSpeed);
         this.background.setVelocityX(this.rockSpeed);

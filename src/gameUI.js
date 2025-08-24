@@ -47,18 +47,20 @@ export default class GameUI {
     // if (boxHeight) this.leftBg.displayHeight = boxHeight;
 
     // Coin value text (left-aligned inside the box)
+    const innerWidth = this.leftBg.displayWidth - pad * 2;
     this.coinText = scene.add.text(
-      this.leftBg.x + this.leftBg.displayWidth - pad,
-      this.leftBg.y + this.leftBg.displayHeight / 2,
-      '0',
+      this.leftBg.x + 40 + (this.leftBg.displayWidth * 0.5),
+      this.leftBg.y + 5 + this.leftBg.displayHeight / 2,
+      '0000',
       {
-        // fontFamily,
+        fontFamily: "nokia",
         fontSize: `${fontSize}px`,
         color: textColor,
         padding: { bottom: 6 }, // avoids underscore clipping
-        align: 'left'
-      }
-    ).setOrigin(1, 0.5)
+        align: 'center',
+        fixedWidth: innerWidth,              // keep centered and prevent jitter
+        wordWrap: { width: innerWidth }      // (not really needed, just safe)
+      }).setOrigin(0.5)
       .setScrollFactor(0)
       .setDepth(depth + 1);
 
@@ -74,10 +76,10 @@ export default class GameUI {
     // Distance value text (right-aligned inside the box)
     this.distanceLabel = scene.add.text(
       this.rightBg.x - (this.rightBg.displayWidth * 2) + 180,
-      this.rightBg.y + this.rightBg.displayHeight / 2,
+      this.rightBg.y + 5 + this.rightBg.displayHeight / 2,
       'SCORE',
       {
-        // fontFamily,
+        fontFamily: "nokia",
         fontSize: `${fontSize}px`,
         color: textColor,
         padding: { bottom: 6 },
@@ -92,10 +94,10 @@ export default class GameUI {
 
     this.distanceText = scene.add.text(
       this.rightBg.x - this.pad,
-      this.rightBg.y + this.rightBg.displayHeight / 2,
+      this.rightBg.y + 5 + this.rightBg.displayHeight / 2,
       '0m',
       {
-        // fontFamily,
+        fontFamily: "nokia",
         fontSize: `${fontSize}px`,
         color: textColor,
         padding: { bottom: 6 },
@@ -109,22 +111,37 @@ export default class GameUI {
     // Internal values
     this._coins = 0;
     this._distance = 0;
+  }
 
-  
+  formatCoins(n, maxLen = 8) {
+    const sign = n < 0 ? '-' : '';
+    const absInt = Math.floor(Math.abs(n));
+
+    // Always show at least 4 digits (zero-padded) for small values
+    if (absInt < 10000) {
+      const padded = String(absInt).padStart(4, '0');
+      return sign ? ('-' + padded) : padded; // keep the minus if needed
+    }
+    // Otherwise, use compact formatter capped to maxLen chars
+    return formatCompactMax(n, maxLen);
   }
 
   updateCoin(value) {
     this._coins += value | 0;
     // this.coinText.setText(String(this._coins));
-    this.coinText.setText(this.formatCompactMax(value, 8)); // e.g., "12.3M"
+    this.coinText.setText(this.formatCoins(value, 8)); // e.g., "12.3M"
     this._bump(this.coinText);
   }
 
   updateDistance(value) {
     this._distance += value;
     // Show meters; tweak formatting as needed
-    this.distanceText.setText(this.formatCompactMax(this._distance, 8));
+    this.distanceText.setText(this.formatCoins(this._distance, 8) + 'm');
     this._bump(this.distanceText);
+  }
+
+  getScore() {
+    return this._distance;
   }
 
   // Small feedback animation on update
@@ -151,28 +168,21 @@ export default class GameUI {
     const sign = n < 0 ? '-' : '';
     let abs = Math.abs(n);
 
-    // Try raw integer first (no suffix)
     const raw = sign + String(Math.floor(abs));
     if (raw.length <= maxLen) return raw;
 
     for (let u = 1; u < units.length; u++) {
       let scaled = abs / Math.pow(1000, u);
-
-      // 2,1,0 decimals; trim trailing zeros
       for (let d = 2; d >= 0; d--) {
         let s = scaled.toFixed(d).replace(/\.0+$|(\.\d*[1-9])0+$/, '$1');
-
-        // If rounding hits 1000, bump to next unit as "1<nextUnit>"
         if (s === '1000' && u < units.length - 1) {
           const out = sign + '1' + units[u + 1];
           if (out.length <= maxLen) return out;
         }
-
         const out = sign + s + units[u];
         if (out.length <= maxLen) return out;
       }
     }
-    // Fallback for astronomicals
     const u = units.length - 1;
     return sign + Math.round(abs / Math.pow(1000, u)) + units[u];
   }

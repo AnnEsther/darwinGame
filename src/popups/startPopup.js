@@ -108,8 +108,8 @@ export default class StartPopup {
             this.instructionBox.y - this.instructionBox.height / 2, // Y position (center of the camera)
             'Catch the coins!\ndon\'t touch the fossils!', // Text content with new lines
             {
-                fontFamily: 'Arial',
-                fontSize: '24px',
+                fontFamily: "nokia",
+                fontSize: '30px',
                 fill: '#000000ff',
                 align: 'center' // This aligns multi-line text horizontally
             }

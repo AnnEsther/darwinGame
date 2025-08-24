@@ -33,13 +33,13 @@ export default class LoadingOverlay {
 
     // Optional label + percentage
     this.label = scene.add.text(sw / 2, this.barY - 40, this.labelText, {
-      fontFamily: 'monospace',
+      fontFamily: "nokia",
       fontSize: '18px',
       color: '#ffffff'
     }).setOrigin(0.5, 0.5).setScrollFactor(0).setDepth(this.depth + 2);
 
     this.percentText = scene.add.text(sw / 2, this.barY + 28, '0%', {
-      fontFamily: 'monospace',
+      fontFamily: "nokia",
       fontSize: '16px',
       color: '#aaaaaa'
     }).setOrigin(0.5, 0.5).setScrollFactor(0).setDepth(this.depth + 2);
@@ -52,8 +52,8 @@ export default class LoadingOverlay {
     this.track.fillRoundedRect(this.barX, this.barY, this.barWidth, this.barHeight, 6);
 
     // Keep responsive on resize
-    this._onResize = (gameSize) => this._layout(gameSize.width, gameSize.height);
-    scene.scale.on('resize', this._onResize);
+    // this._onResize = (gameSize) => this._layout(gameSize.width, gameSize.height);
+    // scene.scale.on('resize', this._onResize);
 
     // Initial progress
     this.setProgress(0);

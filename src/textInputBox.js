@@ -55,7 +55,7 @@ export default class TextInputBox extends Phaser.GameObjects.Container {
 
         // --- Label on the RIGHT side of the box ---
         this.labelText = scene.add.text(this.width / 2 + this.labelGap, 0, `${label}`, {
-            fontSize: '20px',
+            fontFamily: "nokia", fontSize: '20px',
             color: '#ffff00',
             parse: false
         }).setOrigin(0, 0.5) // anchor left edge; vertically centered
@@ -72,7 +72,7 @@ export default class TextInputBox extends Phaser.GameObjects.Container {
         // --- Value text inside the box (right aligned) ---
         const rightEdgeX = this.width / 2 - this.paddingX;
         this.valueText = scene.add.text(rightEdgeX, 0, '', {
-            fontSize: '20px',
+            fontFamily: "nokia", fontSize: '20px',
             color: '#000000',
             padding: { top: 0, right: 0, bottom: 6, left: 0 },
             // For multiline/right-wrap alignment (optional):

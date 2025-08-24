@@ -12,18 +12,18 @@ export default class GameOverPopup {
         this.scoreBox = this.scene.add.sprite(this.scene.scale.width * 0.5, this.popupBg.y - this.popupBg.height / 2, 'scorebox').setOrigin(0.5, 1);
 
         this.scoreTitle = this.scene.add.text(this.scoreBox.x - (this.scoreBox.width * 0.2), this.scoreBox.y - (this.scoreBox.height * 0.5), 'SCORE', {
-            fontSize: '24px',
+            fontSize: '24px', fontFamily: "nokia",
             color: '#000000ff'
         }).setOrigin(0.5);
 
         this.score = this.scene.add.text(this.scoreBox.x + (this.scoreBox.width * 0.5) - 100, this.scoreTitle.y, '0000', {
-            fontSize: '24px',
+            fontSize: '24px', fontFamily: "nokia",
             color: '#000000ff'
         }).setOrigin(0.5);
 
         this.title = this.scene.add.text(this.scoreBox.x, this.scoreBox.y + 100, 'GAME OVER', {
-            fontSize: '36px',
-            color: '#000000ff'
+            fontSize: '36px', fontFamily: "title",
+            color: '#ffffffff'
         }).setOrigin(0.5);
 
         this.fossil_lizard = this.scene.add.sprite(this.title.x, this.title.y + 100, 'lizardFossil').setOrigin(0.5);
@@ -47,8 +47,9 @@ export default class GameOverPopup {
         this.fossil_man.setVisible(false);
 
         this.text = this.scene.add.text(this.popupBg.x, this.popupBg.y + 150, 'You fossilized!\nBetter luck next time!', {
-            fontSize: '36px',
-            color: '#000000ff'
+            fontSize: '36px', fontFamily: "nokia",
+            color: '#ffffffff',
+            align: 'center'
         }).setOrigin(0.5);
 
         this.redoBtn = new TintButton(this.scene,

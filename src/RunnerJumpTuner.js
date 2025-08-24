@@ -4,11 +4,11 @@ export default class RunnerJumpTuner {
         this.scene = scene;
         this.player = player;                    // your sprite (Arcade)
         this.jumpKey = jumpKey;                  // e.g., this.spaceKey
-         this.getSpeed = getSpeed;                // () => Math.abs(rockSpeed)
+        this.getSpeed = getSpeed;                // () => Math.abs(rockSpeed)
         this.jumpCount= 0;
 
         // Tunables
-        this.baseGravity = 1600;                 // good starting point
+        this.baseGravity = 1500;                 // good starting point
         this.baseJump = -720;                    // base jump impulse
         this.baseMaxFall = 1300;                 // terminal velocity (Y)
 
