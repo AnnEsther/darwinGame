@@ -95,7 +95,7 @@ export default class GameUI {
     this.distanceText = scene.add.text(
       this.rightBg.x - this.pad,
       this.rightBg.y + 5 + this.rightBg.displayHeight / 2,
-      '0m',
+      '0000',
       {
         fontFamily: "nokia",
         fontSize: `${fontSize}px`,
@@ -136,7 +136,7 @@ export default class GameUI {
   updateDistance(value) {
     this._distance += value;
     // Show meters; tweak formatting as needed
-    this.distanceText.setText(this.formatCoins(this._distance, 8) + 'm');
+    this.distanceText.setText(this.formatCoins(this._distance, 8));
     this._bump(this.distanceText);
   }
 
