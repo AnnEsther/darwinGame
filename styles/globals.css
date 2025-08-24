@@ -10,18 +10,27 @@
   }
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
+html, body { height: 100%; margin: 0; }
+#game-shell {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center; /* center */
+  background: #111; /* optional */
 }
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Maintain 16:9, center, and ONLY scale down (never above 1920x1080) */
+#game-holder {
+  /* size that fits both viewport and native size */
+  width:  min(100vw, 1920px, calc(100vh * 16 / 9));
+  height: min(100vh, 1080px, calc(100vw * 9 / 16));
+  position: relative;
+}
+/* Make Phaser canvas (and DOM overlay, if any) fill the holder */
+#game-holder > canvas,
+#game-holder > .dom-container {
+  width: 100%;
+  height: 100%;
+  display: block;
+  /* nicer pixels for retro fonts/sprites; safe to keep */
+  image-rendering: pixelated;
 }
 
 * {
@@ -40,3 +49,17 @@ a {
     color-scheme: dark;
   }
 }
+
+@font-face {
+    font-family: nokia;
+    src: url('/assets/fonts/nokiafc22.ttf');
+    font-weight: 400;
+    font-weight: normal;
+}
+
+/* @font-face {
+    font-family: title;
+    src: url('/assets/fonts/04B_30__.woff2') format("woff2");
+    font-weight: 400;
+    font-weight: normal;
+} */

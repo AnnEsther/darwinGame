@@ -7,6 +7,7 @@ const config = {
     type: Phaser.AUTO,
     width: 1920,
     height: 1080,
+    parent: 'game-holder',
     dom: {
         createContainer: true
     },
@@ -14,7 +15,7 @@ const config = {
         default: 'arcade',
         arcade: {
             gravity: { y: 700 },
-            debug: true,
+            debug: false,
         }
     },
     scene: [LandingScene, GameScene, GameOverScene, LeaderboardScene],
@@ -34,11 +35,19 @@ set up play
 start popup
 fix coin spawn location
 added bump animation to score update
+------------8/23------------
+coin spawining
+jump logic updated
+update jump animation
+deadth popup
+max number of digits in ui
+Fit to screen
+center game to the screen
+ui
+
 ------------------------------------*/
 
 /* ------------ TODO --------------
-update jump animation logic
-ui
 sfx
 api
 play dead
@@ -47,9 +56,16 @@ evolve fall down
 another coin sprite for start up pop up?
 MISSING : fonts for start screen
 fonts
-max number of digits in ui
 leaderboard popup
-deadth popup
 orstrich animation falling off ?
-fossil file i soversized
+fossil file is oversized
+updated ground without fossil
+updated sprite animations
+7. Transformation from Lizard to Ostrich isn’t celebrated ??
+
+jump
+------------TO CHECK------------
+jump animation
+content font error, just pngs will do
+
 ------------------------------------*/

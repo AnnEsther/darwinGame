@@ -16,8 +16,9 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Phaser Game</h1>
-      <div id="phaser-container" />
+      <div id="game-shell">
+        <div id="game-holder" />
+      </div>
     </div>
   );
 }
