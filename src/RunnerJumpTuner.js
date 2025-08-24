@@ -38,7 +38,7 @@ export default class RunnerJumpTuner {
         this.currentJump = this.baseJump - this.kJump * speed;
         const maxFall = this.baseMaxFall + this.kMaxFall * speed;
 
-        this.player.setGravityY(this.currentG);
+        
         this.player.setMaxVelocity(Number.MAX_SAFE_INTEGER, maxFall);
     }
 
@@ -49,6 +49,8 @@ export default class RunnerJumpTuner {
 
         // Handle jump press with your existing "JustDown"
         if (Phaser.Input.Keyboard.JustDown(this.jumpKey) && this.jumpCount < 1) {
+            this.player.body.setAllowGravity(true);
+            this.player.setGravityY(this.currentG);
             AudioManager.getInstance(this).playSFX('jump', { loop: false, volume: 1 });
             
             body.velocity.y = this.currentJump;

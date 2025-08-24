@@ -123,7 +123,7 @@ export default class GameUI {
       return sign ? ('-' + padded) : padded; // keep the minus if needed
     }
     // Otherwise, use compact formatter capped to maxLen chars
-    return formatCompactMax(n, maxLen);
+    return this.formatCompactMax(n, maxLen);
   }
 
   updateCoin(value) {

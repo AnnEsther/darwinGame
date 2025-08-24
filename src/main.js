@@ -1,6 +1,5 @@
 import LandingScene from './scenes/landingScene';
 import GameScene from './scenes/gameScene';
-import GameOverScene from './GameOverScene';
 import LeaderboardScene from './leaderboardScene';
 
 const config = {
@@ -18,7 +17,7 @@ const config = {
             debug: false,
         }
     },
-    scene: [LandingScene, GameScene, GameOverScene, LeaderboardScene],
+    scene: [LandingScene, GameScene, LeaderboardScene],
     // scene: [LandingScene, FormScene, GameScene, WinScene, GameOverScene, LeaderboardScene],
 };
 
@@ -40,21 +39,22 @@ coin spawining
 jump logic updated
 update jump animation
 deadth popup
-max number of digits in ui
+ui
 Fit to screen
 center game to the screen
-ui
-
+sfx
+play dead
+updated ground sprite
+start up pop up - coin updated
+start screen logo added
 ------------------------------------*/
 
 /* ------------ TODO --------------
-sfx
 api
-play dead
-nautilus fossil only in the bottom
+
+
 evolve fall down
-another coin sprite for start up pop up?
-MISSING : fonts for start screen
+
 fonts
 leaderboard popup
 orstrich animation falling off ?
@@ -63,9 +63,10 @@ updated ground without fossil
 updated sprite animations
 7. Transformation from Lizard to Ostrich isn’t celebrated ??
 
-jump
+
 ------------TO CHECK------------
 jump animation
 content font error, just pngs will do
+couldnt find updated ground files
 
 ------------------------------------*/
