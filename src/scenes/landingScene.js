@@ -33,6 +33,21 @@ export default class LandingScene extends Phaser.Scene {
         this.load.image('monkeyFossil', 'assets/ui/monkeyFossil.png');
         this.load.image('Retry', 'assets/ui/Retry.png');
         this.load.image('Close', 'assets/ui/Close.png');
+        this.load.image('coin1', 'assets/ui/coin/coin_1.png');
+        this.load.image('coin2', 'assets/ui/coin/coin_2.png');
+        this.load.image('coin3', 'assets/ui/coin/coin_3.png');
+        this.load.image('coin4', 'assets/ui/coin/coin_4.png');
+        this.load.image('coin5', 'assets/ui/coin/coin_5.png');
+        this.load.image('coin6', 'assets/ui/coin/coin_6.png');
+
+        //SFX
+        this.load.audio('click', 'assets/audio/click.wav');
+        this.load.audio('collect', 'assets/audio/coinCollect.wav');
+        this.load.audio('evolve', 'assets/audio/Evolution.mp3');
+        this.load.audio('gameOver', 'assets/audio/GameOver.wav');
+        this.load.audio('8BitSpring', 'assets/audio/8BitSpring.mp3');
+        this.load.audio('getClappy', 'assets/audio/GetClappy.mp3');
+        this.load.audio('jump', 'assets/audio/jump.mp3');
         //COINS
         this.load.image('coin0000', 'assets/Coin/coin0000.png');
         this.load.image('coin0001', 'assets/Coin/coin0001.png');
@@ -156,10 +171,7 @@ export default class LandingScene extends Phaser.Scene {
         this.load.image('explosionLarge_7', 'assets/explosion/large/explosion0007.png');
         this.load.image('explosionLarge_8', 'assets/explosion/large/explosion0008.png');
         
-        //GameOverScene
-
-        //SFX
-        // this.load.audio('backgroundMusic', 'assets/audio/background.mp3');
+        
 
     }
 

@@ -1,3 +1,5 @@
+import AudioManager from "./AudioManager";
+
 const EMAIL_RE = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
 export default class TextInputBox extends Phaser.GameObjects.Container {
@@ -102,8 +104,8 @@ export default class TextInputBox extends Phaser.GameObjects.Container {
         });
 
         // Interactions
-        this.bg.on('pointerdown', () => this.focus());
-        this.labelText.on('pointerdown', () => this.focus());
+        this.bg.on('pointerdown', () => {this.focus(); AudioManager.getInstance(this).playSFX('click', { loop: false, volume: 1 });});
+        this.labelText.on('pointerdown', () => {this.focus(); AudioManager.getInstance(this).playSFX('click', { loop: false, volume: 1 });});
 
         // Hover effects (image tint or rect fill tweak)
         if (this.bg.setTint) {

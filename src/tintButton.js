@@ -1,5 +1,6 @@
 // Preload example:
 // this.load.image('btnBg', 'assets/ui/button_bg.png');
+import AudioManager from "./AudioManager";
 
 export default class TintButton {
   constructor(scene, x, y, bgKey, label = '', onClick = () => {}, opts = {}) {
@@ -62,6 +63,7 @@ export default class TintButton {
     };
 
     this._onDown = () => {
+      AudioManager.getInstance(this).playSFX('click', { loop: false, volume: 1 });
       if (downTint !== null) this.sprite.setTint(downTint);
       if (this._pressScale) {
         this.sprite.setScale(this.baseScaleX * this._pressScale, this.baseScaleY * this._pressScale);

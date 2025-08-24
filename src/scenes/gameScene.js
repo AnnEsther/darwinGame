@@ -28,9 +28,8 @@ export default class GameScene extends Phaser.Scene {
 
     create() {
 
-        // ??AUDIO MANAGER
-        this.audio = AudioManager.getInstance(this);
-        // audio.playMusic('bgMusic', { loop: true, volume: 0.3 });
+        // AUDIO MANAGER
+        AudioManager.getInstance(this).playMusic('8BitSpring', { loop: true, volume: 1 });
 
         this.ui = new GameUI(this, {
             leftBgKey: 'coinLabel',
@@ -221,10 +220,10 @@ export default class GameScene extends Phaser.Scene {
         this.name = name;
         this.company = company;
         this.email = email;
-
         console.log(name);
         console.log(company);
         console.log(email);
+
         this.startPopup.setVisible(false);
 
         this.gameStart = true;
@@ -249,7 +248,7 @@ export default class GameScene extends Phaser.Scene {
         this.gameOver = true;
         
         this.player.deadth(this.showGameOver.bind(this));
-        
+
         this.rockSpeed = 0;
         this.rock.setVelocityX(this.rockSpeed);
         this.background.setVelocityX(this.rockSpeed);
@@ -286,6 +285,7 @@ export default class GameScene extends Phaser.Scene {
         this.coinsCollected += 100;
         // Test updates
         this.ui.updateCoin(this.coinsCollected);
+        AudioManager.getInstance(this).playSFX('collect', { loop: false, volume: 1 });
     }
 
     spawnCoins(x, y) {

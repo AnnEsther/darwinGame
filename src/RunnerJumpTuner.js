@@ -1,3 +1,5 @@
+import AudioManager from './AudioManager.js';
+
 // RunnerJumpTuner.js
 export default class RunnerJumpTuner {
     constructor(scene, player, jumpKey, getSpeed) {
@@ -47,6 +49,8 @@ export default class RunnerJumpTuner {
 
         // Handle jump press with your existing "JustDown"
         if (Phaser.Input.Keyboard.JustDown(this.jumpKey) && this.jumpCount < 1) {
+            AudioManager.getInstance(this).playSFX('jump', { loop: false, volume: 1 });
+            
             body.velocity.y = this.currentJump;
             this.jumpCount++;
             this.scene.player.jumpStart();

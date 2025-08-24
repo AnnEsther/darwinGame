@@ -1,8 +1,9 @@
+import AudioManager from './AudioManager.js';
 
 // const levelSprites = ['LizardRun_000001', 'monkey_1', 'ostrich', 'man'];
 const levelSprites = ['LizardRun_000001', 'ostrichRun_1', 'monkey_1', 'man'];
 const levelRunAnims = ['lizard_run', 'ostrich_run', 'monkey_run', 'human_run'];
-const levelJumpAnims = ['lizard_jump', 'ostrich_jump','monkey_jump', 'human_jump'];
+const levelJumpAnims = ['lizard_jump', 'ostrich_jump', 'monkey_jump', 'human_jump'];
 export default class Player {
     constructor(scene, config) {
         this.scene = scene;
@@ -46,7 +47,7 @@ export default class Player {
         this._currPlayer.setVelocityX(velocity); // Initial movement (if needed)
     }
 
-    setVisible(flag){
+    setVisible(flag) {
         this._currPlayer.setVisible(flag);
     }
 
@@ -188,6 +189,9 @@ export default class Player {
 
         let elapsed = 0;
 
+        AudioManager.getInstance(this).playSFX('evolve', { loop: false, volume: 1 });
+
+
         // Timer event for flickering
         const flickerEvent = this.scene.time.addEvent({
             delay: flickerInterval,
@@ -195,7 +199,6 @@ export default class Player {
             callback: () => {
                 this._currPlayer.setVisible(!this._currPlayer.visible);
                 elapsed += flickerInterval;
-
                 // Stop after flickerDuration
                 if (elapsed >= flickerDuration) {
                     flickerEvent.remove();
@@ -203,7 +206,6 @@ export default class Player {
 
                     this._currPlayer.setTexture(levelSprites[level]); // switch sprite
                     this._currPlayer.play(levelRunAnims[level]);
-
                 }
 
                 this._currPlayer.body.setSize(this._currPlayer.width, this._currPlayer.height, true);
@@ -215,6 +217,10 @@ export default class Player {
     deadth(exit) {
         // this._currPlayer.setVisible(false);
         this._explosion.setVisible(true);
+        AudioManager.getInstance(this).playSFX('gameOver', { loop: false, volume: 1 });
+        AudioManager.getInstance(this).stopMusic();
+        this._currPlayer.anims.stop();
+        this._currPlayer.setVisible(false);
         if (this.level == 0 || this.level == 1) {
             this._explosion.anims.play('explosion_small', true);
             this._explosion.once(`animationcomplete-explosion_small`, () => {

@@ -1,5 +1,6 @@
 import TextInputBox from "../textInputBox";
 import TintButton from "../tintButton";
+import AudioManager from "../AudioManager";
 
 const padding = 50;
 
@@ -8,51 +9,30 @@ export default class StartPopup {
         this.scene = scene;
         this.onStartCallback = onStartCallback;
 
-        // Semi-transparent overlay
-
-        // DarwinBox presents
-        // this.company = scene.add.text(scene.scale.width / 2, 200, 'darwinbox', {
-        //     fontSize: '72px',
-        //     color: '#ffffff',
-        //     fontStyle: 'bold'
-        // }).setOrigin(0.5);
-        // this.presents = scene.add.text(scene.scale.width / 2, 250, 'PRESENTS', {
-        //     fontSize: '48px',
-        //     color: '#ffffff',
-        //     fontStyle: 'bold'
-        // }).setOrigin(0.5);
-
-        // // Title
-        // this.title = scene.add.text(scene.scale.width / 2, scene.scale.height * 0.62, 'Evolve or', {
-        //     fontSize: '96px',
-        //     color: '#ffffff',
-        //     fontStyle: 'bold'
-        // }).setOrigin(0.5);
-        // this.title2 = scene.add.text(scene.scale.width / 2, this.title.y + 50, 'Fossilize', {
-        //     fontSize: '96px',
-        //     color: '#ffffff',
-        //     fontStyle: 'bold'
-        // }).setOrigin(0.5);
-
         this.logo = scene.add.sprite(scene.scale.width/2, scene.scale.height/2 + 70, 'Logo').setOrigin(0.5);
         this.logo.setScale(3);
-        // Subtitle
-        // this.subtitle = scene.add.text(400, 260, 'Click to continue', {
-        //     fontSize: '24px',
-        //     color: '#dddddd'
-        // }).setOrigin(0.5);
 
         // Wait for first click
-        scene.input.once('pointerdown', () => this.showForm());
+        scene.input.once('pointerdown', () => {this.showForm(); AudioManager.getInstance(this).playSFX('click', { loop: false, volume: 1 });});
         this.scene.time.delayedCall(3000, () => {
             this.showForm();
         });
 
+        this.scene.anims.create({
+            key: 'coinAnim', // Animation name
+            frames: [
+                { key: 'coin1' }, { key: 'coin2' }, { key: 'coin3' },
+                { key: 'coin4' }, { key: 'coin5' }, { key: 'coin6' }
+            ],
+            frameRate: 20, // 10 frames per second (adjust as needed)
+            repeat: -1 // Loop infinitely
+        });
+
         //create objects
-        this.coin = this.scene.add.sprite(this.scene.scale.width * 0.5, this.scene.scale.height * 0.2, 'coin0000').setOrigin(0.5, 0.5);
+        this.coin = this.scene.add.sprite(this.scene.scale.width * 0.5, this.scene.scale.height * 0.2, 'coin1').setOrigin(0.5, 0.5);
         this.coin.setVisible(false);
 
-        this.nameBox = new TextInputBox(this.scene, this.coin.x, this.coin.y + (this.coin.height * 2) + padding, 420, '', {
+        this.nameBox = new TextInputBox(this.scene, this.coin.x, this.coin.y + (this.coin.height * 0.6) + padding, 420, '', {
             placeholder: '_YourName_',
             maxLength: 40,
             onEnter: () => this.companyBox.focus(),
@@ -130,8 +110,7 @@ export default class StartPopup {
 
         //Coin
         this.coin.setVisible(true);
-        this.coin.setScale(2);
-        this.coin.play('coinSpin');
+        this.coin.play('coinAnim');
         this.coin.anims.timeScale = 0.5;
 
         // Labels + inputs
