@@ -25,17 +25,17 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
 
     // basic config
     this.scores = Array.isArray(scores) ? scores.slice() : [];
-    this.rowHeight = 40;
-    this.headerHeight = 50;
-    this.paddingX = 20;
-    this.scoreBoxWidth = 64;
+    this.rowHeight = 108;
+    this.headerHeight = -50;
+    this.paddingX = 200;
+    this.rowGap = 8; 
 
-    // tiny 2x2 white texture for tintable sprites
     const WHITE = this._ensureWhite(scene);
 
-
     // ---------- body (sprite) ----------
-    const body = scene.add.sprite(0, 10, 'bg').setOrigin(0.5);
+    const body = scene.add.sprite(0, 0, 'bg').setOrigin(0.5);
+    width = body.width;
+    height = body.height;
     this.add(body);
 
 
@@ -43,8 +43,9 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
     const listX = -width / 2 + this.paddingX;
     const listY = -height / 2 + (this.headerHeight + 10);
     const listWidth = width - (this.paddingX * 2) - 40; // room for scrollbar
-    const listHeight = height - (this.headerHeight + 30);
+    const listHeight = (height * 0.7) - (this.headerHeight + 30);
 
+    this._listX = listX;
     this._listY = listY;
     this._listWidth = listWidth;
     this._listHeight = listHeight;
@@ -52,6 +53,22 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
     // container holding all rows
     this.entries = scene.add.container(listX, listY);
     this.add(this.entries);
+
+    // --- GEOMETRY MASK that follows this container position ---
+    // Create graphics in SCENE space, positioned at the list area in WORLD coords.
+    // Geometry masks do not inherit Container transforms, so compute world position:
+    const worldListX = this.x + listX;
+    const worldListY = this.y + listY;
+
+    const maskG = scene.make.graphics({ x: worldListX, y: body.y + (body.height * 0.35), add: false });
+    maskG.fillStyle(0xffffff, 1).fillRect(0, 0, listWidth, listHeight);
+    const listMask = maskG.createGeometryMask();
+
+    this.entries.setMask(listMask);
+
+    // keep refs for cleanup / resync (if you ever move the popup later, rebuild the mask)
+    this._maskGraphics = maskG;
+    this._mask = listMask;
 
     // wheel capture area (sprite)
     const wheelArea = scene.add.sprite(0, 0, WHITE).setOrigin(0, 0).setAlpha(0.001);
@@ -83,7 +100,7 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
     scene.input.setDraggable(handle);
     handle.on('drag', (_pointer, _dx, dragY) => {
       const minY = track.y - (track.height * 0.5 * 0.9);
-      const maxY =  track.y + (track.height * 0.5 * 0.9);
+      const maxY = track.y + (track.height * 0.5 * 0.9);
       handle.y = Phaser.Math.Clamp(dragY, minY, maxY);
       if (this._maxScroll > 0) {
         const ratio = (handle.y - minY) / (maxY - minY);
@@ -125,15 +142,15 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
       const entry = scene.add.container(0, i * this.rowHeight);
 
       // full-width row background
-      const rowBg = scene.add.image(140, 0, 'item_bg').setOrigin(0.5);
+      const rowBg = scene.add.image(0, 0, 'item_bg').setOrigin(0,1);
       entry.add(rowBg);
 
       // rank + name (left)
       const nameText = scene.add.text(
-        12, (this.rowHeight - 4) / 2,
+        20, (this.rowHeight - 4) / 2,
         `${i + 1}. ${s.name}`.toUpperCase(),
         {
-          fontFamily: '"Press Start 2P", monospace',
+          fontFamily: 'nokia',
           fontSize: '36px',
           color: '#000000'
         }
@@ -144,7 +161,7 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
         this._listWidth - 12, (this.rowHeight - 4) / 2,
         String(s.score),
         {
-          fontFamily: '"Press Start 2P", monospace',
+          fontFamily: 'nokia',
           fontSize: '36px',
           color: '#ffffff',
           stroke: '#000000',
