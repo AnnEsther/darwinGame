@@ -21,10 +21,13 @@ export default class GameOverPopup {
             color: '#000000ff'
         }).setOrigin(0.5);
 
-        this.title = this.scene.add.text(this.scoreBox.x, this.scoreBox.y + 100, 'GAME OVER', {
-            fontSize: '36px', fontFamily: "title",
-            color: '#ffffffff'
-        }).setOrigin(0.5);
+        // this.title = this.scene.add.text(this.scoreBox.x, this.scoreBox.y + 100, 'GAME OVER', {
+        //     fontSize: '36px', fontFamily: "title",
+        //     color: '#ffffffff'
+        // }).setOrigin(0.5);
+
+        this.title = this.scene.add.sprite(this.scoreBox.x, this.scoreBox.y + 100, 'gameOverTitle').setOrigin(0.5).setScale(2).setVisible(false);
+        this.title_win = this.scene.add.sprite(this.scoreBox.x, this.scoreBox.y + 100, 'wayToGoTitle').setOrigin(0.5).setScale(2).setVisible(false);
 
         this.fossil_lizard = this.scene.add.sprite(this.title.x, this.title.y + 100, 'lizardFossil').setOrigin(0.5);
         this.fossil_lizard.setScale(0.3);
@@ -104,6 +107,7 @@ export default class GameOverPopup {
         this.scoreTitle.setDepth(depth);
         this.score.setDepth(depth);
         this.title.setDepth(depth);
+        this.title_win.setDepth(depth);
 
         this.fossil_lizard.setDepth(depth);
         this.fossil_bird.setDepth(depth);
@@ -126,14 +130,12 @@ export default class GameOverPopup {
         console.log(this.level);
         if (this.level == 0) {
             this.fossil_lizard.setVisible(flag);
-            this.title.setText("GAME OVER");
             this.text.setPosition(this.text.x, this.fossil_lizard.y + (this.fossil_lizard.height * 0.2))
             this.text.setText("You fossilized!\nBetter luck next time!");
 
         }
         else if (this.level == 1) {
             this.fossil_bird.setVisible(flag);
-            this.title.setText("GAME OVER");
             this.text.setPosition(this.text.x, this.fossil_bird.y + (this.fossil_bird.height * 0.2))
             this.text.setText("You fossilized!\nBetter luck next time!");
 
@@ -141,13 +143,14 @@ export default class GameOverPopup {
         }
         else if (this.level == 2) {
             this.fossil_monkey.setVisible(flag);
-            this.title.setText("GAME OVER");
             this.text.setPosition(this.text.x, this.fossil_monkey.y + (this.fossil_monkey.height * 0.2))
             this.text.setText("You fossilized!\nBetter luck next time!");
         }
         else {
             this.fossil_man.setVisible(flag);
-            this.title.setText("WAY TO GO!");
+            this.title.setVisible(false);
+            this.title_win.setVisible(true);
+
             this.text.setText("What will you\nevolve into next?");
             this.fossil_man.play('human_run');
 

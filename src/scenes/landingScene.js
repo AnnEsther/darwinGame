@@ -17,28 +17,32 @@ export default class LandingScene extends Phaser.Scene {
         });
 
         // === LOAD EVERYTHING GAME SCENE NEEDS HERE ===
-        //UI
+        //START POPUP
         this.load.image('Logo', 'assets/ui/logo.png');
         this.load.image('nameLabel', 'assets/ui/nameLabel.png');
         this.load.image('companyLabel', 'assets/ui/companyLabel.png');
         this.load.image('emailLabel', 'assets/ui/mailLabel.png');
         this.load.image('startBtn', 'assets/ui/startBtn.png');
-        this.load.image('scoreLabel', 'assets/ui/scoreLabel.png');
-        this.load.image('coinLabel', 'assets/ui/coinLabel.png');
-        this.load.image('instructionBox', 'assets/ui/instructionBox.png');
-        this.load.image('popup_bg', 'assets/ui/popup_bg.png');
-        this.load.image('scorebox', 'assets/ui/scorebox.png');
-        this.load.image('lizardFossil', 'assets/ui/lizardFossil.png');
-        this.load.image('birdFossil', 'assets/ui/birdFossil.png');
-        this.load.image('monkeyFossil', 'assets/ui/monkeyFossil.png');
-        this.load.image('Retry', 'assets/ui/Retry.png');
-        this.load.image('Close', 'assets/ui/Close.png');
         this.load.image('coin1', 'assets/ui/coin/coin_1.png');
         this.load.image('coin2', 'assets/ui/coin/coin_2.png');
         this.load.image('coin3', 'assets/ui/coin/coin_3.png');
         this.load.image('coin4', 'assets/ui/coin/coin_4.png');
         this.load.image('coin5', 'assets/ui/coin/coin_5.png');
         this.load.image('coin6', 'assets/ui/coin/coin_6.png');
+        //UI
+        this.load.image('scoreLabel', 'assets/ui/scoreLabel.png');
+        this.load.image('coinLabel', 'assets/ui/coinLabel.png');
+        this.load.image('instructionBox', 'assets/ui/instructionBox.png');
+        //GAME OVER POPUP
+        this.load.image('popup_bg', 'assets/ui/popup_bg.png');
+        this.load.image('gameOverTitle', 'assets/ui/Game_over_title.png');
+        this.load.image('wayToGoTitle', 'assets/ui/Way_to_go.png');
+        this.load.image('scorebox', 'assets/ui/scorebox.png');
+        this.load.image('lizardFossil', 'assets/ui/lizardFossil.png');
+        this.load.image('birdFossil', 'assets/ui/birdFossil.png');
+        this.load.image('monkeyFossil', 'assets/ui/monkeyFossil.png');
+        this.load.image('Retry', 'assets/ui/Retry.png');
+        this.load.image('Close', 'assets/ui/Close.png');
 
         //SFX
         this.load.audio('click', 'assets/audio/click.wav');
