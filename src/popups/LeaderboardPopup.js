@@ -1,268 +1,206 @@
 // LeaderboardPopup.js
-export default class LeaderboardPopup {
+// Uses your preloaded textures:
+//  - 'bg'      : popup body
+//  - 'item_bg' : row background
+//  - 'slide'   : scrollbar track
+//  - 'slider'  : scrollbar handle
+// Clips rows with a geometry mask (hides anything outside the list).
+
+export default class LeaderboardPopup extends Phaser.GameObjects.Container {
   /**
    * @param {Phaser.Scene} scene
-   * @param {Array<{name:string, score:number}>} data  - up to 20 rows (or more)
-   * @param {object} opts
+   * @param {number} x
+   * @param {number} y
+   * @param {{name:string, score:number}[]} scores
+   * @param {number} width
+   * @param {number} height
+   * @param {{overlay?:boolean, scale?:number}} options
    */
-  constructor(scene, data = [], opts = {}) {
-    this.scene = scene;
-    this.opts = Object.assign({
-      panelWidth: 420,
-      panelHeight: 520,
-      rowHeight: 32,
-      pad: 16,
-      title: 'Leaderboard',
-      fontFamily: 'Arial', // swap to your custom font if needed
-      fontSize: 18,
-      titleSize: 24,
-      bgColor: 0x000000,
-      bgAlpha: 0.5,
-      panelColor: 0x1e1e2e,
-      panelAlpha: 0.98,
-      textColor: '#ffffff',
-      accentColor: 0xffd166, // title/score color
-      closeKey: 'X', // just label; not a texture key
-    }, opts);
+  constructor(scene, x, y, scores = [], width = 360, height = 320, options = {}) {
+    super(scene, x, y);
+    scene.add.existing(this);
 
-    // Sort by score (desc) by default
-    this.data = [...data].sort((a, b) => (b.score|0) - (a.score|0));
+    const { overlay = false, scale = 1 } = options;
+    this.setScale(scale);
 
-    this._build();
-  }
+    // basic config
+    this.scores = Array.isArray(scores) ? scores.slice() : [];
+    this.rowHeight = 40;
+    this.headerHeight = 50;
+    this.paddingX = 20;
+    this.scoreBoxWidth = 64;
 
-  _build() {
-    const s = this.scene;
-    const {
-      panelWidth, panelHeight, pad, title, fontFamily, fontSize,
-      titleSize, bgColor, bgAlpha, panelColor, panelAlpha, textColor,
-      accentColor, rowHeight
-    } = this.opts;
+    // tiny 2x2 white texture for tintable sprites
+    const WHITE = this._ensureWhite(scene);
 
-    const cx = s.scale.width / 2;
-    const cy = s.scale.height / 2;
 
-    // Dim background (click to close)
-    this.backdrop = s.add.rectangle(0, 0, s.scale.width, s.scale.height, bgColor, bgAlpha)
-      .setOrigin(0, 0).setScrollFactor(0)
-      .setInteractive({ useHandCursor: true })
-      .on('pointerdown', () => this.destroy());
+    // ---------- body (sprite) ----------
+    const body = scene.add.sprite(0, 10, 'bg').setOrigin(0.5);
+    this.add(body);
 
-    // Panel
-    this.panel = s.add.rectangle(cx, cy, panelWidth, panelHeight, panelColor, panelAlpha)
-      .setOrigin(0.5).setScrollFactor(0)
-      .setStrokeStyle(2, 0x333344);
 
-    // Title
-    this.titleText = s.add.text(cx, cy - panelHeight/2 + pad + 6, title, {
-      fontFamily, fontSize: `${titleSize}px`, color: accentColor
-    }).setOrigin(0.5, 0);
+    // ---------- list area + mask (to HIDE overflow) ----------
+    const listX = -width / 2 + this.paddingX;
+    const listY = -height / 2 + (this.headerHeight + 10);
+    const listWidth = width - (this.paddingX * 2) - 40; // room for scrollbar
+    const listHeight = height - (this.headerHeight + 30);
 
-    // Close button (text button)
-    this.closeText = s.add.text(
-      cx + panelWidth/2 - pad, cy - panelHeight/2 + pad + 6,
-      '✕', { fontFamily, fontSize: `${titleSize}px`, color: '#bbbbbb' }
-    ).setOrigin(1, 0).setInteractive({ useHandCursor: true })
-     .on('pointerdown', () => this.destroy())
-     .on('pointerover', () => this.closeText.setColor('#ffffff'))
-     .on('pointerout',  () => this.closeText.setColor('#bbbbbb'));
+    this._listY = listY;
+    this._listWidth = listWidth;
+    this._listHeight = listHeight;
 
-    // Scroll area geometry
-    const listTop = this.titleText.y + this.titleText.height + pad;
-    const listHeight = panelHeight - (listTop - (cy - panelHeight/2)) - pad; // inner height below title
-    const listLeft = cx - panelWidth/2 + pad;
-    const listWidth = panelWidth - pad*2 - 10; // leave room for scrollbar
+    // container holding all rows
+    this.entries = scene.add.container(listX, listY);
+    this.add(this.entries);
 
-    // Invisible interactive zone for scroll / drag
-    this.hitZone = s.add.rectangle(listLeft, listTop, listWidth, listHeight, 0x000000, 0.0001)
-      .setOrigin(0, 0).setScrollFactor(0).setInteractive();
-
-    // List container (holds rows)
-    this.list = s.add.container(listLeft, listTop).setScrollFactor(0);
-
-    // Add rows (index, name, score right-aligned)
-    this.rows = [];
-    const nameWidth = Math.floor(listWidth * 0.6);
-    const scoreWidth = listWidth - nameWidth;
-
-    this.data.forEach((row, i) => {
-      const y = i * rowHeight + 4;
-
-      const rankText = s.add.text(0, y, `${i + 1}.`, {
-        fontFamily, fontSize: `${fontSize}px`, color: textColor
-      }).setOrigin(0, 0);
-
-      const nameText = s.add.text(40, y, row.name ?? 'Player', {
-        fontFamily, fontSize: `${fontSize}px`, color: textColor
-      }).setOrigin(0, 0)
-        .setFixedSize(nameWidth - 50, rowHeight)
-        .setWordWrapWidth(nameWidth - 50, true);
-
-      const scoreText = s.add.text(40 + nameWidth, y, String(row.score ?? 0), {
-        fontFamily, fontSize: `${fontSize}px`, color: accentColor, align: 'right',
-        fixedWidth: scoreWidth - 8
-      }).setOrigin(1, 0); // right-aligned at its x
-
-      this.list.add([rankText, nameText, scoreText]);
-      this.rows.push({ rankText, nameText, scoreText });
+    // wheel capture area (sprite)
+    const wheelArea = scene.add.sprite(0, 0, WHITE).setOrigin(0, 0).setAlpha(0.001);
+    wheelArea.displayWidth = listWidth;
+    wheelArea.displayHeight = listHeight;
+    wheelArea.setPosition(listX, listY).setInteractive();
+    this.add(wheelArea);
+    wheelArea.on('wheel', (_p, _dx, dy) => {
+      this.entries.y = Phaser.Math.Clamp(this.entries.y - dy, -this._maxScroll, 0);
+      this._syncHandle();
     });
 
-    // Mask to clip list to the view
-    const maskGfx = s.add.graphics().setScrollFactor(0);
-    maskGfx.fillStyle(0xffffff);
-    maskGfx.fillRect(listLeft, listTop, listWidth, listHeight);
-    this.mask = maskGfx.createGeometryMask();
-    this.list.setMask(this.mask);
+    // ---------- scrollbar ----------
+    // track
+    const track = scene.add.sprite(body.x + (body.width * 0.4), body.y + (body.height * 0.08), 'slider').setOrigin(0.5);
+    // give it a consistent visual size (if your image is larger)
+    this.add(track);
+    this.track = track;
 
-    // Scrollbar
-    this.scrollTrack = s.add.rectangle(
-      listLeft + listWidth + 6, listTop, 4, listHeight, 0xffffff, 0.15
-    ).setOrigin(0.5, 0).setScrollFactor(0);
+    // build rows & compute metrics BEFORE making handle
+    this._buildEntries();
 
-    this.scrollHandle = s.add.rectangle(
-      this.scrollTrack.x, this.scrollTrack.y, 6, 40, 0xffffff, 0.5
-    ).setOrigin(0.5, 0).setScrollFactor(0);
+    // handle
+    const handle = scene.add.sprite(track.x, track.y, 'slide').setOrigin(0.5);
+    handle.setInteractive({ draggable: true, useHandCursor: true });
+    this.add(handle);
+    this.handle = handle;
 
-    // Scroll state
-    this.contentHeight = Math.max(this.data.length * rowHeight, listHeight);
-    this.viewHeight = listHeight;
-    this.scrollY = 0; // 0..(contentHeight - viewHeight)
-    this._dragging = false;
-    this._dragStartY = 0;
-    this._scrollStartY = 0;
-
-    this._updateScrollHandle();
-    this._wireInput();
-  }
-
-  _wireInput() {
-    const s = this.scene;
-
-    // Mouse wheel over the hitZone
-    this._wheelHandler = (pointer, gameObjects, dx, dy) => {
-      if (!this.hitZone.input || !this.hitZone.getBounds().contains(pointer.x, pointer.y)) return;
-      const step = 40;
-      this._scrollBy(dy > 0 ? step : -step);
-    };
-    s.input.on('wheel', this._wheelHandler);
-
-    // Drag to scroll
-    this.hitZone.on('pointerdown', (p) => {
-      this._dragging = true;
-      this._dragStartY = p.y;
-      this._scrollStartY = this.scrollY;
-    });
-    s.input.on('pointerup',   () => { this._dragging = false; });
-    s.input.on('pointermove', (p) => {
-      if (!this._dragging) return;
-      const dy = p.y - this._dragStartY;
-      this._setScroll(this._scrollStartY - dy);
+    scene.input.setDraggable(handle);
+    handle.on('drag', (_pointer, _dx, dragY) => {
+      const minY = track.y - (track.height * 0.5 * 0.9);
+      const maxY =  track.y + (track.height * 0.5 * 0.9);
+      handle.y = Phaser.Math.Clamp(dragY, minY, maxY);
+      if (this._maxScroll > 0) {
+        const ratio = (handle.y - minY) / (maxY - minY);
+        this.entries.y = -ratio * this._maxScroll;
+      }
     });
 
-    // Drag scrollbar handle
-    this.scrollHandle.setInteractive({ draggable: true, useHandCursor: true });
-    s.input.setDraggable(this.scrollHandle);
-    this.scrollHandle.on('drag', (pointer, dragX, dragY) => {
-      // clamp handle within track
-      const minY = this.scrollTrack.y;
-      const maxY = this.scrollTrack.y + this.scrollTrack.height - this.scrollHandle.height;
-      const clampedY = Phaser.Math.Clamp(dragY, minY, maxY);
-      this.scrollHandle.y = clampedY;
+    // bring UI bits to front
+    this.bringToTop(this.handle);
+  }
 
-      // map handle position -> scrollY
-      const t = (clampedY - minY) / (maxY - minY || 1);
-      const maxScroll = Math.max(this.contentHeight - this.viewHeight, 0);
-      this._setScroll(t * maxScroll);
+  // ---------- Public API ----------
+  setScores(list = []) {
+    this.scores = Array.isArray(list) ? list.slice() : [];
+    this._buildEntries();
+    this._resizeHandle();
+    this._syncHandle();
+  }
+
+  addScore(name, score) {
+    this.scores.push({ name, score });
+    this._buildEntries();
+    this._resizeHandle();
+    this._syncHandle();
+  }
+
+  // ---------- Internals ----------
+  _buildEntries() {
+    const scene = this.scene;
+
+    // sort high → low
+    this.scores.sort((a, b) => b.score - a.score);
+
+    // clear
+    this.entries.removeAll(true);
+
+    // rebuild rows using ONE background sprite per row
+    this.scores.forEach((s, i) => {
+      const entry = scene.add.container(0, i * this.rowHeight);
+
+      // full-width row background
+      const rowBg = scene.add.image(140, 0, 'item_bg').setOrigin(0.5);
+      entry.add(rowBg);
+
+      // rank + name (left)
+      const nameText = scene.add.text(
+        12, (this.rowHeight - 4) / 2,
+        `${i + 1}. ${s.name}`.toUpperCase(),
+        {
+          fontFamily: '"Press Start 2P", monospace',
+          fontSize: '36px',
+          color: '#000000'
+        }
+      ).setOrigin(0, 0.5);
+
+      // score (right, on same background)
+      const scoreText = scene.add.text(
+        this._listWidth - 12, (this.rowHeight - 4) / 2,
+        String(s.score),
+        {
+          fontFamily: '"Press Start 2P", monospace',
+          fontSize: '36px',
+          color: '#ffffff',
+          stroke: '#000000',
+          strokeThickness: 2
+        }
+      ).setOrigin(1, 0.5);
+
+      entry.add([nameText, scoreText]);
+      this.entries.add(entry);
     });
+
+    // scroll metrics
+    const contentH = this.scores.length * this.rowHeight;
+    this._maxScroll = Math.max(contentH - this._listHeight, 0);
+
+    // handle size for current content
+    this._handleHeight = (this._maxScroll > 0)
+      ? Math.max(this._listHeight * (this._listHeight / contentH), 20)
+      : this._listHeight;
+
+    // clamp current scroll
+    this.entries.y = Phaser.Math.Clamp(this.entries.y, -this._maxScroll, 0);
+  }
+  _resizeHandle() {
+    this.handle.displayHeight = this._handleHeight;
+    const minY = this._listY + this._handleHeight / 2;
+    const maxY = this._listY + this._listHeight - this._handleHeight / 2;
+    this.handle.y = Phaser.Math.Clamp(this.handle.y, minY, maxY);
   }
 
-  _scrollBy(dy) {
-    this._setScroll(this.scrollY + dy);
-  }
-
-  _setScroll(y) {
-    const maxScroll = Math.max(this.contentHeight - this.viewHeight, 0);
-    this.scrollY = Phaser.Math.Clamp(y, 0, maxScroll);
-    // Move the list (upward as scroll increases)
-    this.list.y = (this.list.y - (this.list.y)) + // normalize (no-op to avoid lint)
-                  (this.panel.y - this.panel.height/2 + this.opts.pad + this.titleText.height + this.opts.pad) - this.scrollY;
-    // The above can be simplified as we already set list at build; recompute:
-    // Recompute base top:
-    const listTop = this.titleText.y + this.titleText.height + this.opts.pad;
-    this.list.setY(listTop - this.scrollY);
-
-    this._updateScrollHandle();
-  }
-
-  _updateScrollHandle() {
-    // Hide scrollbar if content fits
-    if (this.contentHeight <= this.viewHeight + 1) {
-      this.scrollTrack.setVisible(false);
-      this.scrollHandle.setVisible(false);
-      return;
+  _syncHandle() {
+    const minY = this._listY + this._handleHeight / 2;
+    const maxY = this._listY + this._listHeight - this._handleHeight / 2;
+    if (this._maxScroll > 0) {
+      const ratio = -this.entries.y / this._maxScroll;
+      this.handle.y = minY + (maxY - minY) * ratio;
+    } else {
+      this.handle.y = this._listY + this._listHeight / 2;
     }
-    this.scrollTrack.setVisible(true);
-    this.scrollHandle.setVisible(true);
-
-    const track = this.scrollTrack;
-    const viewRatio = Phaser.Math.Clamp(this.viewHeight / this.contentHeight, 0.1, 1);
-    const handleH = Math.max(track.height * viewRatio, 24); // min size
-    this.scrollHandle.height = handleH;
-
-    const maxScroll = this.contentHeight - this.viewHeight;
-    const t = (maxScroll === 0) ? 0 : (this.scrollY / maxScroll);
-    const minY = track.y;
-    const maxY = track.y + track.height - handleH;
-    this.scrollHandle.y = Phaser.Math.Linear(minY, maxY, t);
   }
 
-  setData(data = []) {
-    // Destroy old row texts
-    this.rows?.forEach(r => { r.rankText.destroy(); r.nameText.destroy(); r.scoreText.destroy(); });
-    this.rows = [];
-    this.data = [...data].sort((a, b) => (b.score|0) - (a.score|0));
-
-    const { rowHeight, fontFamily, fontSize, textColor, accentColor } = this.opts;
-    const listWidth = this.panel.width - this.opts.pad*2 - 10;
-    const nameWidth = Math.floor(listWidth * 0.6);
-    const scoreWidth = listWidth - nameWidth;
-
-    this.data.forEach((row, i) => {
-      const y = i * rowHeight + 4;
-      const rankText = this.scene.add.text(0, y, `${i + 1}.`, {
-        fontFamily, fontSize: `${fontSize}px`, color: textColor
-      }).setOrigin(0, 0);
-      const nameText = this.scene.add.text(40, y, row.name ?? 'Player', {
-        fontFamily, fontSize: `${fontSize}px`, color: textColor
-      }).setOrigin(0, 0).setFixedSize(nameWidth - 50, rowHeight).setWordWrapWidth(nameWidth - 50, true);
-      const scoreText = this.scene.add.text(40 + nameWidth, y, String(row.score ?? 0), {
-        fontFamily, fontSize: `${fontSize}px`, color: accentColor, align: 'right',
-        fixedWidth: scoreWidth - 8
-      }).setOrigin(1, 0);
-
-      this.list.add([rankText, nameText, scoreText]);
-      this.rows.push({ rankText, nameText, scoreText });
-    });
-
-    // Recompute heights & reset scroll
-    this.contentHeight = Math.max(this.data.length * rowHeight, this.viewHeight);
-    this._setScroll(0);
+  _ensureWhite(scene) {
+    const key = '__white';
+    if (!scene.textures.exists(key)) {
+      const g = scene.make.graphics({ x: 0, y: 0, add: false });
+      g.fillStyle(0xffffff, 1).fillRect(0, 0, 2, 2);
+      g.generateTexture(key, 2, 2);
+      g.destroy();
+    }
+    return key;
   }
 
-  destroy() {
-    const s = this.scene;
-    s.input.off('wheel', this._wheelHandler);
-    s.input.off('pointerup');
-    s.input.off('pointermove');
-
-    this.backdrop?.destroy();
-    this.panel?.destroy();
-    this.titleText?.destroy();
-    this.closeText?.destroy();
-    this.hitZone?.destroy();
-    this.list?.destroy(true);
-    this.scrollTrack?.destroy();
-    this.scrollHandle?.destroy();
-    this.mask?.destroy();
+  destroy(fromScene) {
+    this.entries?.clearMask(true);
+    this._maskG?.destroy();
+    if (this._overlay && !this._overlay.destroyed) this._overlay.destroy();
+    super.destroy(fromScene);
   }
 }

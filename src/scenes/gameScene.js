@@ -151,17 +151,13 @@ export default class GameScene extends Phaser.Scene {
         // per-frame jump feel updates
         this.tuner.update();
 
-        if (this.distance <= 100) {
+        if (this.distance <= 10) {
             this.distance++;
         }
         else {
             this.distance = 0;
             this.ui.updateDistance(1);
         }
-
-        // if(this.tuner.jumpCount < 1){
-        //     this.player._currPlayer.setY(this.ground.y - this.player._currPlayer.height);
-        // }
 
         //rocks passed
         if (!this.rock.playerPassed && this.rock._sprite.x + this.rock._sprite.width < this.player._currPlayer.x) {
@@ -201,12 +197,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     updateSpeed() {
-        // this.rockSpeed -= this.rockStepSpeed;
-        // this.gravityY = this.gravityY + 10;
-        // this.jumpVelocity -= this.jumpStepVelocity;
-        // this.player._currPlayer.setGravityY(this.gravityY); // Faster fall
         this.rocksPassedPrev = this.rocksPassed;
-        // this.background.setVelocityX(this.rockSpeed);
 
         // Level up
         this.rockSpeed -= this.rockStepSpeed;                // world speeds up (more negative)
