@@ -10,6 +10,8 @@ export default class Player {
 
         this._currPlayer = this.scene.physics.add.sprite(config.x, config.y, levelSprites[config.level]);
 
+        this._evolve = this.scene.add.sprite(config.x, scene.scale.height * 0.25, 'evolveTite');
+        this._evolve.setVisible(false);
 
         this.createAnims();
 
@@ -119,16 +121,16 @@ export default class Player {
         this.scene.anims.create({
             key: 'ostrich_run',
             frames: [
-                { key: 'ostrichRun_1' },
-                { key: 'ostrichRun_2' },
-                { key: 'ostrichRun_3' },
-                { key: 'ostrichRun_4' },
-                { key: 'ostrichRun_5' },
-                { key: 'ostrichRun_6' },
-                { key: 'ostrichRun_7' },
-                { key: 'ostrichRun_8' },
+                { key: 'ostrichRun_10' },
                 { key: 'ostrichRun_9' },
-                { key: 'ostrichRun_10' }
+                { key: 'ostrichRun_8' },
+                { key: 'ostrichRun_7' },
+                { key: 'ostrichRun_6' },
+                { key: 'ostrichRun_5' },
+                { key: 'ostrichRun_4' },
+                { key: 'ostrichRun_3' },
+                { key: 'ostrichRun_2' },
+                { key: 'ostrichRun_1' }
             ], frameRate: 14, repeat: -1
         });
         this.scene.anims.create({
@@ -189,36 +191,93 @@ export default class Player {
 
         let elapsed = 0;
 
-        AudioManager.getInstance(this).playSFX('evolve', { loop: false, volume: 1 });
-        let currLevel = level - 1;
-        let nextLevel = level;
+        let x = this._currPlayer.x;
 
-        var x = this._currPlayer.x;
+        const holdMs = 500;            // use 500000 for 500 seconds
+        this._evolve.setScale(0);
+        this._evolve.setAlpha(1);
+        this._evolve.setVisible(true);
 
+        const pinFeet = () => {
+            const s = this._evolve;
+            if (!s.body) return;
+            s.body.setSize(s.width, s.height, true);
+            s.setY(ground.y - s.height);
+            s.refreshBody();
+        };
 
+        // timeline
+        const tl = this.scene.tweens.createTimeline({ loop: 0 });
+
+        // 1) 0 -> 1 (grow in)
+        tl.add({
+            targets: this._evolve,
+            scaleX: 1, scaleY: 1,
+            duration: 220,
+            ease: 'Back.Out',   // snappy grow-in
+            onUpdate: pinFeet
+        });
+
+        // 2) bounce to 1.2 and back, twice
+        tl.add({
+            targets: this._evolve,
+            scaleX: 1.2, scaleY: 1.2,
+            duration: 150,
+            ease: 'Bounce.Out',
+            yoyo: true,         // go back to 1
+            repeat: 1,          // do the (up->down) cycle twice
+            onUpdate: pinFeet
+        });
+
+        // 3) hold at 1 for 500 ms (or 500000 ms for 500 sec)
+        tl.add({
+            targets: this._evolve,
+            alpha: 1,           // noop prop → acts as a timed hold
+            duration: holdMs,
+            onUpdate: pinFeet
+        });
+
+        // 4) fade out and hide
+        tl.add({
+            targets: this._evolve,
+            alpha: 0,
+            duration: 150,
+            ease: 'Sine.In',
+            onUpdate: pinFeet,
+            onComplete: () => {
+                this._evolve.setVisible(false);
+                this._evolve.setAlpha(1);   // reset for next time
+                this._evolve.setScale(1);   // end state at scale 1
+            }
+        });
+
+        tl.play();
+
+        AudioManager.getInstance(this.scene).playSFX('evolve', { loop: false, volume: 1 });
         // Timer event for flickering
         const flickerEvent = this.scene.time.addEvent({
             delay: flickerInterval,
             loop: true,
             callback: () => {
 
-
                 if (elapsed < 500) {
                     this._currPlayer.setVisible(!this._currPlayer.visible);
                 }
                 else {
-                    this._currPlayer.setTexture(levelSprites[nextLevel]);
+                    this._currPlayer.setTexture(levelSprites[level]);
                     this._currPlayer.setVisible(!this._currPlayer.visible);
                 }
-
 
                 elapsed += flickerInterval;
                 // Stop after flickerDuration
                 if (elapsed >= flickerDuration) {
                     flickerEvent.remove();
                     this._currPlayer.setVisible(true); // ensure visible
-                    this._currPlayer.setTexture(levelSprites[nextLevel]); // switch sprite
-                    // this._currPlayer.play(levelRunAnims[nextLevel]);
+                    this._currPlayer.setTexture(levelSprites[level]); // switch sprite
+                    // this._currPlayer.play(levelRunAnims[level]);
+
+                    // stop the zoom effect and restore base scale
+                    this._evolve.setVisible(false);
                 }
 
                 this._currPlayer.body.setSize(this._currPlayer.width, this._currPlayer.height, true);
@@ -234,8 +293,8 @@ export default class Player {
     deadth(exit) {
         // this._currPlayer.setVisible(false);
         this._explosion.setVisible(true);
-        AudioManager.getInstance(this).playSFX('gameOver', { loop: false, volume: 1 });
         AudioManager.getInstance(this).stopMusic();
+        AudioManager.getInstance(this).playSFX('gameOver', { loop: false, volume: 1 });
         this._currPlayer.anims.stop();
         this._currPlayer.setVisible(false);
         if (this.level == 0 || this.level == 1) {

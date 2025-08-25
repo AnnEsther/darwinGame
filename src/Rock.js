@@ -64,20 +64,20 @@ export default class Rock {
             case 2:
                 this.rockRect1.setSize(this._sprite.width * 0.95, this._sprite.height / 2, true);
                 this.rockCircle1.body.setCircle((this._sprite.height / 2) * 0.8);
-                this.rockCircle1.body.setOffset(-50, -20);
+                this.rockCircle1.body.setOffset(-30, -0);
                 this.rockCircle2.body.setCircle(20);
-                this.rockCircle2.body.setOffset(-70, -10);
+                this.rockCircle2.body.setOffset(-30, -10);
 
                 this.rockCircle3.body.setCircle(20);
-                this.rockCircle3.body.setOffset(-70, -10);
+                this.rockCircle3.body.setOffset(-30, -10);
                 break;
             case 3:
-                this.rockRect1.setSize(this._sprite.width * 0.95, this._sprite.height * 0.6, true);
-                this.rockRect1.setOffset(-60, -40);
+                this.rockRect1.setSize(this._sprite.width * 0.9, this._sprite.height * 0.6, true);
+                this.rockRect1.setOffset(-40, -40);
                 this.rockCircle1.body.setCircle((this._sprite.height / 2) * 0.72);
-                this.rockCircle1.body.setOffset(-30, -10);
+                this.rockCircle1.body.setOffset(-20, -10);
                 this.rockCircle2.body.setCircle(20);
-                this.rockCircle2.body.setOffset(-50, -10);
+                this.rockCircle2.body.setOffset(-40, -10);
 
                 this.rockCircle3.body.setCircle(20);
                 this.rockCircle3.body.setOffset(-50, -10);

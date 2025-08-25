@@ -13,7 +13,7 @@ export default class StartPopup {
         this.logo.setScale(3);
 
         // Wait for first click
-        scene.input.once('pointerdown', () => {this.showForm(); AudioManager.getInstance(this).playSFX('click', { loop: false, volume: 1 });});
+        scene.input.once('pointerdown', () => {this.showForm(); AudioManager.getInstance(this).playSFX('click', { loop: false, volume: 0.7 });});
         this.scene.time.delayedCall(3000, () => {
             this.showForm();
         });

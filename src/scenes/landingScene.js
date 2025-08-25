@@ -175,6 +175,7 @@ export default class LandingScene extends Phaser.Scene {
         this.load.image('explosionLarge_7', 'assets/explosion/large/explosion0007.png');
         this.load.image('explosionLarge_8', 'assets/explosion/large/explosion0008.png');
         
+        this.load.image('evolveTite', 'assets/ui/Evolve_title.png');
         
 
     }
