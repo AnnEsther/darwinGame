@@ -21,14 +21,13 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
     scene.add.existing(this);
 
     const { overlay = false, scale = 1 } = options;
-    this.setScale(scale);
 
     // basic config
     this.scores = Array.isArray(scores) ? scores.slice() : [];
     this.rowHeight = 108;
     this.headerHeight = -50;
     this.paddingX = 200;
-    this.rowGap = 8; 
+    this.rowGap = 8;
 
     const WHITE = this._ensureWhite(scene);
 
@@ -60,7 +59,8 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
     const worldListX = this.x + listX;
     const worldListY = this.y + listY;
 
-    const maskG = scene.make.graphics({ x: worldListX, y: body.y + (body.height * 0.35), add: false });
+    // const maskG = scene.make.graphics({ x: worldListX, y: body.y + (body.height * 0.35), add: false });
+    const maskG = scene.make.graphics({ x: worldListX, y: worldListY, add: false });
     maskG.fillStyle(0xffffff, 1).fillRect(0, 0, listWidth, listHeight);
     const listMask = maskG.createGeometryMask();
 
@@ -97,10 +97,14 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
     this.add(handle);
     this.handle = handle;
 
+    this._resizeHandle();       // size the handle for current content
+    this.entries.y = 0;         // force top-of-list
+    this._syncHandle();         // place handle to the top
+
     scene.input.setDraggable(handle);
     handle.on('drag', (_pointer, _dx, dragY) => {
-      const minY = track.y - (track.height * 0.5 * 0.9);
-      const maxY = track.y + (track.height * 0.5 * 0.9);
+      const minY = this.track.y - (this.track.height * 0.5 * 0.9);
+      const maxY = this.track.y + (this.track.height * 0.5 * 0.9);
       handle.y = Phaser.Math.Clamp(dragY, minY, maxY);
       if (this._maxScroll > 0) {
         const ratio = (handle.y - minY) / (maxY - minY);
@@ -117,6 +121,7 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
     this.scores = Array.isArray(list) ? list.slice() : [];
     this._buildEntries();
     this._resizeHandle();
+    this.entries.y = 0
     this._syncHandle();
   }
 
@@ -124,6 +129,7 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
     this.scores.push({ name, score });
     this._buildEntries();
     this._resizeHandle();
+    this.entries.y = 0
     this._syncHandle();
   }
 
@@ -142,12 +148,11 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
       const entry = scene.add.container(0, i * this.rowHeight);
 
       // full-width row background
-      const rowBg = scene.add.image(0, 0, 'item_bg').setOrigin(0,1);
-      entry.add(rowBg);
+      const rowBg = scene.add.image(0, 0, 'item_bg').setOrigin(0, 0);
 
       // rank + name (left)
       const nameText = scene.add.text(
-        20, (this.rowHeight - 4) / 2,
+        30, rowBg.height / 2,
         `${i + 1}. ${s.name}`.toUpperCase(),
         {
           fontFamily: 'nokia',
@@ -158,7 +163,7 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
 
       // score (right, on same background)
       const scoreText = scene.add.text(
-        this._listWidth - 12, (this.rowHeight - 4) / 2,
+        rowBg.width - 12, rowBg.height / 2,
         String(s.score),
         {
           fontFamily: 'nokia',
@@ -169,7 +174,8 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
         }
       ).setOrigin(1, 0.5);
 
-      entry.add([nameText, scoreText]);
+      entry.add([rowBg, nameText, scoreText]);
+      entry.moveTo(rowBg, 0);
       this.entries.add(entry);
     });
 
@@ -186,15 +192,15 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
     this.entries.y = Phaser.Math.Clamp(this.entries.y, -this._maxScroll, 0);
   }
   _resizeHandle() {
-    this.handle.displayHeight = this._handleHeight;
-    const minY = this._listY + this._handleHeight / 2;
-    const maxY = this._listY + this._listHeight - this._handleHeight / 2;
+    // this.handle.displayHeight = this._handleHeight;
+    const minY = this.track.y - (this.track.height * 0.5 * 0.9);
+    const maxY = this.track.y + (this.track.height * 0.5 * 0.9);
     this.handle.y = Phaser.Math.Clamp(this.handle.y, minY, maxY);
   }
 
   _syncHandle() {
-    const minY = this._listY + this._handleHeight / 2;
-    const maxY = this._listY + this._listHeight - this._handleHeight / 2;
+    const minY = this.track.y - (this.track.height * 0.5 * 0.9);
+    const maxY = this.track.y + (this.track.height * 0.5 * 0.9);
     if (this._maxScroll > 0) {
       const ratio = -this.entries.y / this._maxScroll;
       this.handle.y = minY + (maxY - minY) * ratio;
@@ -214,10 +220,10 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
     return key;
   }
 
-  destroy(fromScene) {
+  destroy(scene) {
     this.entries?.clearMask(true);
     this._maskG?.destroy();
     if (this._overlay && !this._overlay.destroyed) this._overlay.destroy();
-    super.destroy(fromScene);
+    super.destroy(scene);
   }
 }
