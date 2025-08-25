@@ -1,7 +1,7 @@
 import AudioManager from './AudioManager.js';
 
 // const levelSprites = ['LizardRun_000001', 'monkey_1', 'ostrich', 'man'];
-const levelSprites = ['LizardRun_000001', 'ostrichRun_1', 'monkey_1', 'man'];
+const levelSprites = ['LizardRun_000001', 'ostrichRun_1', 'monkey_1', 'humanRun_0'];
 const levelRunAnims = ['lizard_run', 'ostrich_run', 'monkey_run', 'human_run'];
 const levelJumpAnims = ['lizard_jump', 'ostrich_jump', 'monkey_jump', 'human_jump'];
 export default class Player {

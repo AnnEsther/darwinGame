@@ -185,7 +185,6 @@ export default class GameScene extends Phaser.Scene {
                 // this.level = newLevel;
                     //stop everything
                     this.player.updateLevel(newLevel, ()=>{
-                        console.log("level up");
                         this.player._currPlayer.setY(this.ground.y - this.player._currPlayer.height);
                         this.level = newLevel;
                     }, this.ground);
