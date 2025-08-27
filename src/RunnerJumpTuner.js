@@ -16,7 +16,7 @@ export default class RunnerJumpTuner {
 
         // How strongly to scale with speed (tweak these 3)
         this.kGravity = 1.0;     // gravity += k * speed
-        this.kJump = 0.55;       // jump more negative as speed rises
+        this.kJump = 0.65;       // jump more negative as speed rises
         this.kMaxFall = 0.6;     // faster terminal fall with speed
 
         // Variable jump & fall feel
@@ -73,9 +73,9 @@ export default class RunnerJumpTuner {
         if (Math.abs(body.velocity.y) <= this.apexVelEps) gScale *= this.apexScale;
 
         // Apply extra gravity this frame (over Arcade’s per-body gravity)
-        // gScale = Math.max(gScale, 1);
+        gScale = Math.max(gScale, 1);
         const extra = (this.currentG * (gScale - 1)) * dt;
-        // body.velocity.y = Math.min(body.velocity.y + extra, this.player.body.maxVelocity.y);
+        body.velocity.y = Math.min(body.velocity.y + extra, this.player.body.maxVelocity.y);
         
     }
 }

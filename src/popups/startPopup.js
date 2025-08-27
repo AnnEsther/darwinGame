@@ -9,11 +9,14 @@ export default class StartPopup {
         this.scene = scene;
         this.onStartCallback = onStartCallback;
 
-        this.logo = scene.add.sprite(scene.scale.width/2, scene.scale.height/2 + 70, 'Logo').setOrigin(0.5);
+        AudioManager.getInstance(scene).playMusic('8BitSpring', { loop: true, volume: 1 });
+        
+
+        this.logo = scene.add.sprite(scene.scale.width / 2, scene.scale.height / 2 + 70, 'Logo').setOrigin(0.5);
         this.logo.setScale(3);
 
         // Wait for first click
-        scene.input.once('pointerdown', () => {this.showForm(); AudioManager.getInstance(this).playSFX('click', { loop: false, volume: 0.7 });});
+        scene.input.once('pointerdown', () => { this.showForm(); AudioManager.getInstance(this).playSFX('click', { loop: false, volume: 0.7 }); });
         this.scene.time.delayedCall(3000, () => {
             this.showForm();
         });
@@ -83,10 +86,10 @@ export default class StartPopup {
         this.instructionBox.setY(this.scene.scale.height - padding);
         this.instructionBox.setVisible(false);
 
-        this.instructionBox_text = this.scene.add.text(
+        this.instructionBox_text1 = this.scene.add.text(
             this.instructionBox.x + this.instructionBox.width / 2, // X position (center of the camera)
-            this.instructionBox.y - this.instructionBox.height / 2, // Y position (center of the camera)
-            'Catch the coins!\ndon\'t touch the fossils!', // Text content with new lines
+            this.instructionBox.y - this.instructionBox.height / 2 - 20, // Y position (center of the camera)
+            'Catch the coins!', // Text content with new lines
             {
                 fontFamily: "nokia",
                 fontSize: '30px',
@@ -94,8 +97,22 @@ export default class StartPopup {
                 align: 'center' // This aligns multi-line text horizontally
             }
         );
-        this.instructionBox_text.setOrigin(0.5, 0.5);
-        this.instructionBox_text.setVisible(false);
+        this.instructionBox_text1.setOrigin(0.5, 0.5);
+        this.instructionBox_text1.setVisible(false);
+
+        this.instructionBox_text2 = this.scene.add.text(
+            this.instructionBox.x + this.instructionBox.width / 2, // X position (center of the camera)
+            this.instructionBox.y - this.instructionBox.height / 2 + 20, // Y position (center of the camera)
+            'Don\'t touch the fossils!', // Text content with new lines
+            {
+                fontFamily: "nokia",
+                fontSize: '30px',
+                fill: '#000000ff',
+                align: 'center' // This aligns multi-line text horizontally
+            }
+        );
+        this.instructionBox_text2.setOrigin(0.5, 0.5);
+        this.instructionBox_text2.setVisible(false);
 
     }
 
@@ -119,7 +136,8 @@ export default class StartPopup {
         this.emailBox.setVisible(true);
         this.submitBg.setVisible(true);
         this.instructionBox.setVisible(true);
-        this.instructionBox_text.setVisible(true);
+        this.instructionBox_text1.setVisible(true);
+        this.instructionBox_text2.setVisible(true);
 
 
         // Focus first field
@@ -170,7 +188,8 @@ export default class StartPopup {
         }
 
         // proceed with valid data
-        this.onStartCallback?.({ name, company, email});
+
+        this.onStartCallback?.({ name, company, email });
     }
 
     setDepth(depth) {
@@ -188,7 +207,8 @@ export default class StartPopup {
         this.nameInput ? this.nameInput.setDepth(depth) : null;
 
         this.instructionBox.setDepth(depth);
-        this.instructionBox_text.setDepth(depth + 1);
+        this.instructionBox_text1.setDepth(depth + 1);
+        this.instructionBox_text2.setDepth(depth + 1);
 
 
     }
@@ -207,6 +227,7 @@ export default class StartPopup {
         this.emailBox.setVisible(flag);
         this.submitBg.setVisible(flag);
         this.instructionBox.setVisible(flag);
-        this.instructionBox_text.setVisible(flag);
+        this.instructionBox_text1.setVisible(flag);
+        this.instructionBox_text2.setVisible(flag);
     }
 }

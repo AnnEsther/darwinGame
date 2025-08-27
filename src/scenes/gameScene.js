@@ -29,7 +29,7 @@ export default class GameScene extends Phaser.Scene {
     create() {
 
         // AUDIO MANAGER
-        AudioManager.getInstance(this).playMusic('8BitSpring', { loop: true, volume: 1 });
+        // AudioManager.getInstance(this).playMusic('8BitSpring', { loop: true, volume: 1 });
 
         this.ui = new GameUI(this, {
             leftBgKey: 'coinLabel',
@@ -54,7 +54,7 @@ export default class GameScene extends Phaser.Scene {
 
         this.gravityY = 0;
         this.rockSpeed = -700;
-        this.rockStepSpeed = 25;
+        this.rockStepSpeed = 50;
         this.jumpVelocity = -800;
         this.jumpStepVelocity = 20;
 
@@ -127,13 +127,13 @@ export default class GameScene extends Phaser.Scene {
 
         this.tuner.retune();          // set initial gravity/jump/maxFall
 
-        this.physics.add.collider(this.player.getColliders(), this.ground, 
-        () => { 
-            if(this.tuner.jumpCount > 0){
-                this.tuner.jumpCount = 0; 
-                this.player.jumpOver();
-            }
-        });
+        this.physics.add.collider(this.player.getColliders(), this.ground,
+            () => {
+                if (this.tuner.jumpCount > 0) {
+                    this.tuner.jumpCount = 0;
+                    this.player.jumpOver();
+                }
+            });
 
         // Apply initial parallax speed
         this.background.setVelocityX(this.rockSpeed);
@@ -159,7 +159,7 @@ export default class GameScene extends Phaser.Scene {
             this.ui.updateDistance(1);
         }
 
-        //rocks passed
+        //rocks passed player
         if (!this.rock.playerPassed && this.rock._sprite.x + this.rock._sprite.width < this.player._currPlayer.x) {
             this.rock.playerPassed = true;
             this.rocksPassed++;
@@ -169,50 +169,59 @@ export default class GameScene extends Phaser.Scene {
             }
         }
 
+        //rock left screen
+        if (this.rock._sprite.x + this.rock._sprite.width < 0) {
+            this.rock.resetRockPos(this.rockSpeed);
+            this.spawnCoins(this.rock.getX(), this.rock.getY() - 100);
+
+            var spawnCoin = Math.floor(Math.random() * 10);
+            if (spawnCoin > 1 && spawnCoin < 9) {
+                this.spawnCoins(
+                    this.rock.getX() + (0.5 * this.scale.width),//this.rock.getX() + 520,
+                    this.rock.getY() - 100);
+            }
+        }
+
         //level up
 
         this.isLevelUp();
     }
 
-    isLevelUp(){
-        if(this.rocksPassed % 10 === 0){
+    isLevelUp() {
+        if (this.rocksPassed % 10 === 0) {
             const newLevel = Math.floor(this.rocksPassed / 10);
             if (newLevel !== this.level && newLevel < this.levelSprites.length) {
                 // this.level = newLevel;
-                    //stop everything
-                    this.player.updateLevel(newLevel, ()=>{
-                        this.player._currPlayer.setY(this.ground.y - this.player._currPlayer.height);
-                        this.level = newLevel;
-                    }, this.ground);
+                //stop everything
+                this.player.updateLevel(newLevel, () => {
+                    this.player._currPlayer.setY(this.ground.y - this.player._currPlayer.height);
+                    this.level = newLevel;
+                }, this.ground);
             }
         }
     }
 
-    levelUp(){
-
-    }
-
     rockPassed() {
-        return this.level != this.levelSprites.length - 1 && this.rocksPassed > this.rocksPassedPrev;
-    }
+        if (this.rocksPassed > this.rocksPassedPrev) {
+            this.rocksPassedPrev = this.rocksPassed;
 
-    updateSpeed() {
-        this.rocksPassedPrev = this.rocksPassed;
+            // Level up
+            this.rockSpeed -= this.rockStepSpeed;                // world speeds up (more negative)
+            this.background.setVelocityX(this.rockSpeed);        // parallax update
 
-        // Level up
-        this.rockSpeed -= this.rockStepSpeed;                // world speeds up (more negative)
-        this.background.setVelocityX(this.rockSpeed);        // parallax update
+            // Let the tuner recompute gravity/jump/maxFall based on the new speed
+            this.tuner.retune();
 
-        // Let the tuner recompute gravity/jump/maxFall based on the new speed
-        this.tuner.retune();
-
-        // (Optional) If you still use these vars elsewhere, keep them in sync visually:
-        this.gravityY = this.player._currPlayer.body.gravity.y;
-        this.jumpVelocity = this.tuner.currentJump;
+            // (Optional) If you still use these vars elsewhere, keep them in sync visually:
+            this.gravityY = this.player._currPlayer.body.gravity.y;
+            this.jumpVelocity = this.tuner.currentJump;
+        }
     }
 
     beginGameplay({ name, company, email }) {
 
+        AudioManager.getInstance(this).playMusic('getClappy', { loop: true, volume: 0.7 });
+        
         this.name = name;
         this.company = company;
         this.email = email;
@@ -239,10 +248,10 @@ export default class GameScene extends Phaser.Scene {
     }
 
     handleHit(player, rock) {
-        if(this.gameOver){ return;}
+        if (this.gameOver) { return; }
 
         this.gameOver = true;
-        
+
         this.player.deadth(this.showGameOver.bind(this));
 
         this.rockSpeed = 0;
@@ -251,33 +260,39 @@ export default class GameScene extends Phaser.Scene {
         this.coins.setVelocityX(this.rockSpeed);
     }
 
-    showGameOver() {
+    async showGameOver() {
         this.gameOverPopup.setLevel(this.level);
-        this.gameOverPopup.setScore(this.ui.getScore());
+        this.gameOverPopup.setScore(this.ui.getScore() + (this.coinsCollected * 10));
         this.gameOverPopup.setVisible(true);
         this.gameStart = false;
 
+        await this.submitUserScore({
+            userName: this.name,
+            userCompany: this.company,
+            userEmailId: this.email,
+            userScore: this.ui.getScore() + (this.coinsCollected * 10)
+        });
+
+    }
+
+    async submitUserScore({ userName, userCompany, userEmailId, userScore }) {
+        const res = await fetch('https://darwinbox.com/api/videoGame/addUser', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userName, userCompany, userEmailId, userScore })
+        });
+        if (!res.ok) throw new Error(`Submit failed: ${res.status}`);
+        return res.json(); // optional
     }
 
     onGroundReset(isReset) {
-        if (isReset[0]) {
-            this.rock.resetRockPos(this.rockSpeed);
-            this.spawnCoins(this.rock.getX(), this.rock.getY() - 100);
-        }
-        else if (isReset[1]) {
-            var spawnCoin = Math.floor(Math.random() * 10);
-            if (spawnCoin > 2 && spawnCoin < 8) {
-                this.spawnCoins(
-                    this.background.ground._1.x + (this.background.ground._1.width * 0.5),//this.rock.getX() + 520,
-                    this.rock.getY() - 100);
-            }
-        }
+
     }
 
 
     collectCoin(player, coin) {
         coin.destroy();
-        this.coinsCollected += 100;
+        this.coinsCollected += 10;
         // Test updates
         this.ui.updateCoin(this.coinsCollected);
         AudioManager.getInstance(this).playSFX('collect', { loop: false, volume: 1 });

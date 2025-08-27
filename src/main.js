@@ -1,6 +1,5 @@
 import LandingScene from './scenes/landingScene';
 import GameScene from './scenes/gameScene';
-import LeaderboardScene from './leaderboardScene';
 
 const config = {
     type: Phaser.AUTO,
@@ -17,7 +16,7 @@ const config = {
             debug: false,
         }
     },
-    scene: [LandingScene, GameScene, LeaderboardScene],
+    scene: [LandingScene, GameScene],
 };
 
 new Phaser.Game(config);
@@ -49,18 +48,15 @@ start screen logo added
 --
 updated ground without fossil
 updated sprite animations - monkey and man has white outline ?
+----
+fonts - game over subbed weith images
+update player sprites
+evolve popup
 ------------------------------------*/
 
 /* ------------ TODO --------------
 api
-
-
-evolve fall down
-
-fonts
 leaderboard popup
-
-fossil file is oversized
 
 
 ------------TO CHECK------------

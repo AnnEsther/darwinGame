@@ -186,14 +186,14 @@ export default class Player {
     }
 
     evolvePlayer(level, _callback, ground) {
-        const flickerDuration = 1000; // 2 seconds
+        const flickerDuration = 2000; // 2 seconds
         const flickerInterval = 100;  // toggle every 100ms
 
         let elapsed = 0;
 
         let x = this._currPlayer.x;
 
-        const holdMs = 500;            // use 500000 for 500 seconds
+        const holdMs = 1000;            // use 500000 for 500 seconds
         this._evolve.setScale(0);
         this._evolve.setAlpha(1);
         this._evolve.setVisible(true);
@@ -213,7 +213,7 @@ export default class Player {
         tl.add({
             targets: this._evolve,
             scaleX: 1, scaleY: 1,
-            duration: 220,
+            duration: 500,
             ease: 'Back.Out',   // snappy grow-in
             onUpdate: pinFeet
         });
@@ -222,7 +222,7 @@ export default class Player {
         tl.add({
             targets: this._evolve,
             scaleX: 1.2, scaleY: 1.2,
-            duration: 150,
+            duration: 300,
             ease: 'Bounce.Out',
             yoyo: true,         // go back to 1
             repeat: 1,          // do the (up->down) cycle twice
@@ -241,7 +241,7 @@ export default class Player {
         tl.add({
             targets: this._evolve,
             alpha: 0,
-            duration: 150,
+            duration: 300,
             ease: 'Sine.In',
             onUpdate: pinFeet,
             onComplete: () => {
@@ -260,17 +260,14 @@ export default class Player {
             loop: true,
             callback: () => {
 
-                if (elapsed < 500) {
+                if (elapsed < 400) {
                     this._currPlayer.setVisible(!this._currPlayer.visible);
                 }
-                else {
+                else if(elapsed < 800){
                     this._currPlayer.setTexture(levelSprites[level]);
                     this._currPlayer.setVisible(!this._currPlayer.visible);
                 }
-
-                elapsed += flickerInterval;
-                // Stop after flickerDuration
-                if (elapsed >= flickerDuration) {
+                else{
                     flickerEvent.remove();
                     this._currPlayer.setVisible(true); // ensure visible
                     this._currPlayer.setTexture(levelSprites[level]); // switch sprite
@@ -280,8 +277,10 @@ export default class Player {
                     this._evolve.setVisible(false);
                 }
 
+                elapsed += flickerInterval;
+
                 this._currPlayer.body.setSize(this._currPlayer.width, this._currPlayer.height, true);
-                this._currPlayer.setY(ground.y - this._currPlayer.height);
+                // this._currPlayer.setY(ground.y - this._currPlayer.height);
                 this._currPlayer.refreshBody();
                 this._currPlayer.setCollideWorldBounds(true); // Enable world bounds collision
 

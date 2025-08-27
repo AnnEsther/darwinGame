@@ -117,7 +117,7 @@ export default class Rock {
     resetRockPos(speed) {
         this.setVelocityX(0)
         this.updateSprite();
-        var nextPos = this.rockBase.x + (this.rockBase.width * 0.2) + (Math.random() * this.rockBase.width * 0.6);
+        var nextPos = this.scene.scale.width + (Math.random() * this.scene.scale.width * 0.5);
         this.setX(nextPos);
         this.playerPassed = false;
         this.setVelocityX(speed);
