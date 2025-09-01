@@ -127,7 +127,7 @@ export default class GameOverPopup {
         this.score.setVisible(flag);
         this.title.setVisible(flag);
 
-        console.log(this.level);
+        // console.log(this.level);
         if (this.level == 0) {
             this.fossil_lizard.setVisible(flag);
             this.text.setPosition(this.text.x, this.fossil_lizard.y + (this.fossil_lizard.height * 0.2))

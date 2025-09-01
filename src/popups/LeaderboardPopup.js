@@ -45,7 +45,7 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
     const listY = -height / 2 + (this.headerHeight + 10);
     const listWidth = width - (this.paddingX * 2) - 40; // room for scrollbar
     const listHeight = (height * 0.7) - (this.headerHeight);
-    console.log(listHeight);
+    // console.log(listHeight);
 
     this._listX = listX;
     this._listY = listY;

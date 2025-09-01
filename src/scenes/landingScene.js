@@ -73,6 +73,10 @@ export default class LandingScene extends Phaser.Scene {
         this.load.image('rock2', 'assets/Fossil/rock2.png');
         this.load.image('rock3', 'assets/Fossil/rock3.png');
         this.load.image('rock4', 'assets/Fossil/rock4.png');
+        this.load.image('rock5', 'assets/Fossil/rock5.png');
+        this.load.image('rock6', 'assets/Fossil/rock6.png');
+        this.load.image('rock7', 'assets/Fossil/rock7.png');
+        this.load.image('rock8', 'assets/Fossil/rock8.png');
         //LIZARD_JUMP
         this.load.image('LizardJump_000001', 'assets/lizard/jump/Lizard_jumpo_000001.png');
         this.load.image('LizardJump_000002', 'assets/lizard/jump/Lizard_jumpo_000003.png');

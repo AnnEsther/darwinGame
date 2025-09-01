@@ -54,7 +54,7 @@ export default class GameScene extends Phaser.Scene {
 
         this.gravityY = 0;
         this.rockSpeed = -700;
-        this.rockStepSpeed = 50;
+        this.rockStepSpeed = 30;
         this.jumpVelocity = -800;
         this.jumpStepVelocity = 20;
 
@@ -169,18 +169,7 @@ export default class GameScene extends Phaser.Scene {
             }
         }
 
-        //rock left screen
-        if (this.rock._sprite.x + this.rock._sprite.width < 0) {
-            this.rock.resetRockPos(this.rockSpeed);
-            this.spawnCoins(this.rock.getX(), this.rock.getY() - 100);
 
-            var spawnCoin = Math.floor(Math.random() * 10);
-            if (spawnCoin > 1 && spawnCoin < 9) {
-                this.spawnCoins(
-                    this.rock.getX() + (0.5 * this.scale.width),//this.rock.getX() + 520,
-                    this.rock.getY() - 100);
-            }
-        }
 
         //level up
 
@@ -196,7 +185,32 @@ export default class GameScene extends Phaser.Scene {
                 this.player.updateLevel(newLevel, () => {
                     this.player._currPlayer.setY(this.ground.y - this.player._currPlayer.height);
                     this.level = newLevel;
+                    this.rockLeftScreen();
                 }, this.ground);
+            }
+            else{
+                if(newLevel >= this.levelSprites.length){
+                    this.rock.updateMaxRock(8);
+                }
+                this.rockLeftScreen();
+            }
+        }
+        else {
+            this.rockLeftScreen();
+        }
+    }
+
+    rockLeftScreen() {
+        //rock left screen
+        if (this.rock._sprite.x + this.rock._sprite.width < 0) {
+            this.rock.resetRockPos(this.rockSpeed);
+            this.spawnCoins(this.rock.getX(), this.rock.getY() - 100);
+
+            var spawnCoin = Math.floor(Math.random() * 10);
+            if (spawnCoin > 1 && spawnCoin < 9) {
+                this.spawnCoins(
+                    this.rock.getX() + (0.5 * this.scale.width),//this.rock.getX() + 520,
+                    this.rock.getY() - 100);
             }
         }
     }
@@ -225,9 +239,9 @@ export default class GameScene extends Phaser.Scene {
         this.name = name;
         this.company = company;
         this.email = email;
-        console.log(name);
-        console.log(company);
-        console.log(email);
+        // console.log(name);
+        // console.log(company);
+        // console.log(email);
 
         this.startPopup.setVisible(false);
 
@@ -262,7 +276,7 @@ export default class GameScene extends Phaser.Scene {
 
     async showGameOver() {
         this.gameOverPopup.setLevel(this.level);
-        this.gameOverPopup.setScore(this.ui.getScore() + (this.coinsCollected * 10));
+        this.gameOverPopup.setScore(this.ui.getScore() + this.coinsCollected);
         this.gameOverPopup.setVisible(true);
         this.gameStart = false;
 
@@ -270,7 +284,7 @@ export default class GameScene extends Phaser.Scene {
             userName: this.name,
             userCompany: this.company,
             userEmailId: this.email,
-            userScore: this.ui.getScore() + (this.coinsCollected * 10)
+            userScore: this.ui.getScore() + this.coinsCollected
         });
 
     }
