@@ -15,32 +15,11 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
    * @param {{name:string, score:number}[]} scores
    * @param {number} width
    * @param {number} height
-   * @param {{overlay?:boolean, scale?:number, autoScroll?:boolean, scrollSpeed?:number, pauseDuration?:number}} options
    */
   constructor(scene, x, y, scores = [], width = 360, height = 320, options = {}) {
     super(scene, x, y);
     scene.add.existing(this);
 
-    const {
-      overlay = false,
-      scale = 1,
-      autoScroll = true,
-      scrollSpeed = 10000, // Duration in ms for each scroll direction
-      pauseDuration = 2000 // Pause duration at top/bottom in ms
-    } = options;
-
-    // Auto-scroll properties
-    this.autoScroll = autoScroll;
-    this.scrollSpeed = scrollSpeed;
-    this.pauseDuration = pauseDuration;
-    this.autoScrollTween = null;
-    this.isAutoScrolling = false;
-    this.scrollDirection = 1; // 1 = down, -1 = up
-
-    this._pxPerSec = 0;            // computed from scrollSpeed
-    this._pauseUntil = 0;          // timestamp (ms) until which we're paused
-    this._hadUpdateHook = false;   // ensure we only hook once
-    this._pauseTimer = null;       // no stacking
 
     // basic config
     this.scores = Array.isArray(scores) ? scores.slice() : [];
@@ -75,8 +54,6 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
     // build rows & compute metrics BEFORE making handle
     this._buildEntries();
 
-    // Constant speed: full travel in scrollSpeed ms
-    this._recalcSpeed();
 
     // ---------- scrollbar (create BEFORE entries) ----------
     const track = scene.add.sprite(body.x + (body.width * 0.4), body.y + (body.height * 0.08), 'slide').setOrigin(0.5);
@@ -101,7 +78,7 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
     this.maskGraphics.x = this.x + listX;
     this.maskGraphics.y = this.y + listY + 200;
 
-    this.entries.setMask(mask);
+    // this.entries.setMask(mask);
     this._geometryMask = mask;
 
     // ---------- wheel capture area ----------
@@ -113,11 +90,8 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
 
     wheelArea.on('wheel', (_p, _dx, dy) => {
       // Stop auto-scroll when user manually scrolls
-      this._stopAutoScroll();
       this.entries.y = Phaser.Math.Clamp(this.entries.y - dy * 2, -this._maxScroll, 0);
       this._syncHandle();
-      // Restart auto-scroll after a delay
-      this._restartAutoScrollAfterDelay();
     });
 
     // initialize scroll/handle
@@ -129,7 +103,6 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
     scene.input.setDraggable(handle);
     handle.on('drag', (_pointer, _dx, dragY) => {
       // Stop auto-scroll when user drags
-      this._stopAutoScroll();
       const minY = this.track.y - (this.track.height * 0.5 * 0.9);
       const maxY = this.track.y + (this.track.height * 0.5 * 0.9);
       handle.y = Phaser.Math.Clamp(dragY, minY, maxY);
@@ -139,21 +112,7 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
       }
     });
 
-    // Restart auto-scroll when drag ends
-    handle.on('dragend', () => {
-      this._restartAutoScrollAfterDelay();
-    });
 
-    // scale if needed
-    if (scale !== 1) {
-      this.setScale(scale);
-      this._updateMaskPosition();
-    }
-
-    // Start auto-scroll if enabled
-    if (this.autoScroll && this._maxScroll > 0) {
-      this._startAutoScroll();
-    }
   }
 
   _updateMaskPosition() {
@@ -163,70 +122,17 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
     }
   }
 
-  // ---------- Auto-scroll methods ----------
-  _startAutoScroll() {
-    if (!this.autoScroll || this._maxScroll <= 0) return;
-    if (this.isAutoScrolling) return;
-    this.isAutoScrolling = true;
-
-    if (!this._hadUpdateHook) {
-      this._hadUpdateHook = true;
-      this._onUpdate = this._onUpdate.bind(this);
-      this.scene.events.on('update', this._onUpdate);
-    }
-  }
-
-  _stopAutoScroll() {
-    this.isAutoScrolling = false;
-
-    // kill any restart delay
-    if (this._restartTimer && typeof this._restartTimer.remove === 'function') {
-      this._restartTimer.remove();
-      this._restartTimer = null;
-    }
-
-    // kill any pause timer
-    if (this._pauseTimer && typeof this._pauseTimer.remove === 'function') {
-      this._pauseTimer.remove();
-      this._pauseTimer = null;
-    }
-
-    // kill any stray tween path
-    if (this.autoScrollTween) {
-      this.autoScrollTween.stop();
-      if (this.scene && this.scene.tweens) this.scene.tweens.remove(this.autoScrollTween);
-      this.autoScrollTween = null;
-    }
-  }
-
-  _restartAutoScrollAfterDelay() {
-    if (this._restartTimer && typeof this._restartTimer.remove === 'function') {
-      this._restartTimer.remove();
-    }
-    this._restartTimer = this.scene.time.delayedCall(3000, () => {
-      if (this.autoScroll && this._maxScroll > 0) this._startAutoScroll();
-    });
-  }
 
   // ---------- Public API ----------
   setScores(list = []) {
-    const wasAuto = this.isAutoScrolling;
-    const dir = this.scrollDirection;
     const ratio = this._getScrollRatio();
 
-    this._stopAutoScroll(); // stops movement but keeps position
 
     this.scores = Array.isArray(list) ? list.slice() : [];
     this._buildEntries();
     this._resizeHandle();
-    this._recalcSpeed();
 
-    this._applyRatio(ratio);
 
-    this.scrollDirection = dir;
-    if ((wasAuto || this.autoScroll) && this._maxScroll > 0) {
-      this._startAutoScroll();
-    }
   }
 
 
@@ -235,67 +141,7 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
     return Phaser.Math.Clamp(-this.entries.y / this._maxScroll, 0, 1);
   }
 
-  _recalcSpeed() {
-    // pixels per second to traverse the whole scroll in "scrollSpeed" ms
-    const fullDist = Math.max(this._maxScroll, 0);
-    if (fullDist <= 0) {
-      this._pxPerSec = 0;
-      return;
-    }
-    // scrollSpeed is ms per full leg; convert to px/sec
-    this._pxPerSec = (fullDist) / (this.scrollSpeed / 1000);
-  }
 
-
-  _applyRatio(ratio) {
-    this.entries.y = -ratio * (this._maxScroll || 0);
-    this._syncHandle();
-  }
-
-  _setPause(ms) {
-    if (this._pauseTimer && typeof this._pauseTimer.remove === 'function') {
-      this._pauseTimer.remove();
-      this._pauseTimer = null;
-    }
-    this._pauseUntil = this.scene.time.now + ms;
-    // safety: also clear via a timer (in case time.now jumps around)
-    this._pauseTimer = this.scene.time.delayedCall(ms, () => {
-      this._pauseTimer = null;
-    });
-  }
-
-  _onUpdate(_time, delta) {
-    // Only move when active & not paused
-    if (!this.isAutoScrolling || this._maxScroll <= 0) return;
-
-    // respect pause window
-    if (this.scene.time.now < this._pauseUntil) return;
-
-    // move at constant px/sec
-    const step = this._pxPerSec * (delta / 1000) * this.scrollDirection;
-    let nextY = this.entries.y - step; // minus because down is negative y in your math
-    let hitEnd = false;
-
-    if (nextY < -this._maxScroll) {
-      nextY = -this._maxScroll;
-      hitEnd = true;
-      console.log(nextY);
-    }
-    else if (nextY > -200) {
-      nextY = -200;
-      hitEnd = true;
-      console.log(nextY);
-    }
-
-    this.entries.y = nextY;
-    this._syncHandle();
-
-    if (hitEnd) {
-      // pause, then reverse direction
-      this._setPause(this.pauseDuration);
-      this.scrollDirection *= -1;
-    }
-  }
 
   // ---------- Internals ----------
   _buildEntries() {
@@ -375,7 +221,6 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
       this.entries.y = -this._maxScroll;
     }
 
-    this._recalcSpeed();
   }
 
   _formatScore(value) {
@@ -414,7 +259,6 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
   }
 
   destroy(fromScene) {
-    this._stopAutoScroll();
     if (this._restartTimer && typeof this._restartTimer.remove === 'function') {
       this._restartTimer.remove();
       this._restartTimer = null;
