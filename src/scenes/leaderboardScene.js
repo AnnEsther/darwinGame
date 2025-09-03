@@ -15,7 +15,7 @@ export default class LeaderboardScene extends Phaser.Scene {
 
     async create() {
 
-        this.background = new ParallaxBackground(this, () => {});
+        this.background = new ParallaxBackground(this, () => { });
         this.background.setVelocityX(-700);
 
         this.leaderboard = new LeaderboardPopup(
@@ -39,6 +39,7 @@ export default class LeaderboardScene extends Phaser.Scene {
         const scores = await this.fetchLeaderboard();
         this.updateScore(scores); // e.g., popup.setScores(scores)
 
+
         this.polling = this.startLeaderboardPolling(this.updateScore.bind(this));
 
 
@@ -46,6 +47,7 @@ export default class LeaderboardScene extends Phaser.Scene {
 
     updateScore(scores) {
         this.leaderboard.setScores(scores);
+        console.log(scores);
     }
 
     startLeaderboardPolling(callback) {
