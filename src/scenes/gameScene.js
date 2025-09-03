@@ -185,13 +185,11 @@ export default class GameScene extends Phaser.Scene {
                 this.player.updateLevel(newLevel, () => {
                     this.player._currPlayer.setY(this.ground.y - this.player._currPlayer.height);
                     this.level = newLevel;
+                    this.rock.updateLevel(this.level);
                     this.rockLeftScreen();
                 }, this.ground);
             }
             else{
-                if(newLevel >= this.levelSprites.length){
-                    this.rock.updateMaxRock(8);
-                }
                 this.rockLeftScreen();
             }
         }
@@ -243,7 +241,7 @@ export default class GameScene extends Phaser.Scene {
         // console.log(company);
         // console.log(email);
 
-        this.startPopup.setVisible(false);
+        if(this.startPopup)this.startPopup.setVisible(false);
 
         this.gameStart = true;
         this.background.gameStart = true;
@@ -317,7 +315,7 @@ export default class GameScene extends Phaser.Scene {
         var config = {
             maxCount: 6,
             minCount: 1,
-            arcWidth: 150,   // ellipse width (diameter) in px
+            arcWidth: this.rock._sprite.width + 20,   // ellipse width (diameter) in px
             arcHeight: 150,  // ellipse height (diameter) in px
             startDeg: -180,   // arc start angle (degrees)
             endDeg: 0,      // arc end angle (degrees)
