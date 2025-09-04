@@ -67,14 +67,18 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
     this.add(handle);
     this.handle = handle;
 
-    // NEW: center-rest behavior config
-    this.dragScrollFactor = options.dragScrollFactor ?? 1.0; // tune sensitivity
+    const _padding = 0.9; // same padding you use for clamping
+    this._minY = this.track.y - (this.track.height * 0.5 * _padding);
+    this._maxY = this.track.y + (this.track.height * 0.5 * _padding);
+
+    // NEW: top-rest behavior
+    this.dragScrollFactor = options.dragScrollFactor ?? 1.0;
     this._isDragging = false;
-    this._prevHandleY = this.track.y;
+    this._prevHandleY = this._minY;   // start tracking from the top
     this._snapTween = null;
 
-    // Ensure handle starts centered
-    this.handle.y = this.track.y;
+    // Ensure handle starts at TOP (rest)
+    this.handle.y = this._minY;
 
     // ---------- SIMPLE MASK: Create a rectangle mask ----------
     this.maskGraphics = scene.make.graphics({ add: false });
@@ -105,7 +109,7 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
 
     // initialize scroll/handle
     this._resizeHandle();
-    this.entries.y = 0; // Start at top
+    this.entries.y = -220; // Start at top
     this._syncHandle();
 
     // handle drag behavior - make handle only draggable (no clicking)
@@ -118,9 +122,7 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
     });
 
     handle.on('drag', (_pointer, _dx, dragY) => {
-      const minY = this.track.y - (this.track.height * 0.5 * 0.9);
-      const maxY = this.track.y + (this.track.height * 0.5 * 0.9);
-      this.handle.y = Phaser.Math.Clamp(dragY, minY, maxY);
+      this.handle.y = Phaser.Math.Clamp(dragY, this._minY, this._maxY);
 
       // Move entries by the handle delta (joystick-like)
       const deltaHandle = this.handle.y - this._prevHandleY;
@@ -135,7 +137,7 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
       // Snap handle back to center
       this._snapTween = this.scene.tweens.add({
         targets: this.handle,
-        y: this.track.y,
+        y: this._minY,            // <- top, not center
         duration: 150,
         ease: 'Sine.easeOut',
         onComplete: () => { this._snapTween = null; }
@@ -217,7 +219,7 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
     }
 
     // sort high → low
-    this.scores.sort((a, b) => b.score - a.score);
+    this.scores = this.scores.sort((a, b) => b.score - a.score).slice(0, 30);
 
     // clear existing entries
     this.entries.removeAll(true);
@@ -239,8 +241,8 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
 
     // rebuild rows using your item_bg sprite
     duplicatedScores.forEach((s, i) => {
-      const originalIndex = i % this.scores.length;
-      const entry = scene.add.container(0, i * this.rowHeight);
+      const originalIndex = (i % this.scores.length);
+      const entry = scene.add.container(0, (i * this.rowHeight));
 
       // row background using your sprite
       const rowBg = scene.add.image(0, 0, 'item_bg').setOrigin(0, 0);
@@ -260,7 +262,7 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
         }
       ).setOrigin(0, 0.5);
 
-      const company = `${s.company || ''}`;
+      const company = `${s.company}`;
       const clippedCompany = company.length > 28 ? company.slice(0, 28) + '…' : company;
       const displayCompany = clippedCompany.toUpperCase();
       const companyText = scene.add.text(
@@ -313,7 +315,7 @@ export default class LeaderboardPopup extends Phaser.GameObjects.Container {
   _syncHandle() {
     // Keep handle centered unless the user is actively dragging it.
     if (!this._isDragging) {
-      this.handle.y = this.track.y;
+      this.handle.y = this._minY;
     }
   }
 

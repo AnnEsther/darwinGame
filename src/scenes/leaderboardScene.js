@@ -18,6 +18,8 @@ export default class LeaderboardScene extends Phaser.Scene {
         this.background = new ParallaxBackground(this, () => { });
         this.background.setVelocityX(-700);
 
+        const scores = await this.fetchLeaderboard();
+
         this.leaderboard = new LeaderboardPopup(
             this,
             this.cameras.main.centerX,
@@ -30,13 +32,12 @@ export default class LeaderboardScene extends Phaser.Scene {
         this.leaderboard.setDepth(10);
 
         // (optional) open via a key
-        this.input.keyboard.on('keydown-L', () => {
-            if (!this.leaderboard || !this.leaderboard.scene) {
-                this.leaderboard = new LeaderboardPopup(this, this.cameras.main.centerX, this.cameras.main.centerY, scores, 360, 320, { overlay: true });
-            }
-        });
+        // this.input.keyboard.on('keydown-L', () => {
+        //     if (!this.leaderboard || !this.leaderboard.scene) {
+        //         this.leaderboard = new LeaderboardPopup(this, this.cameras.main.centerX, this.cameras.main.centerY, scores, 360, 320, { overlay: true });
+        //     }
+        // });
 
-        const scores = await this.fetchLeaderboard();
         this.updateScore(scores); // e.g., popup.setScores(scores)
 
 
@@ -47,7 +48,6 @@ export default class LeaderboardScene extends Phaser.Scene {
 
     updateScore(scores) {
         this.leaderboard.setScores(scores);
-        console.log(scores);
     }
 
     startLeaderboardPolling(callback) {
