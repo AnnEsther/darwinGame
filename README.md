@@ -1,40 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# DarwinGame
 
-## Getting Started
+DarwinGame is a **Phaser 3** game embedded inside a **Next.js** app.  
+The game can be run locally during development or exported as a static build for deployment.  
+It also supports switching between different entry files (`main.js` and `mainL.js`) based on the route.
 
-First, run the development server:
+---
+
+## 🚀 How It Works
+
+- The game logic lives in the `src/` folder:
+  - `src/main.js` → normal game
+  - `src/mainL.js` → alternate version (used on `/leaderboard/`)
+- Next.js serves as the app shell.  
+- On load, `phaser.min.js` (from `/public/phaser/`) is dynamically added to the page, and the correct game entry is imported depending on the route:
+  - `/` → boots `main.js`
+  - `/leaderboard/` → boots `mainL.js`
+- The game attaches to `<div id="game-holder" />` in the DOM.
+
+---
+
+## 📂 Project Structure
+
+```
+/pages
+  index.js          # Main page that boots Phaser
+  leaderboard.js    # Reuses index but loads `mainL.js`
+/public/phaser
+  phaser.min.js     # Phaser library (served statically)
+/src
+  main.js           # Main game entry
+  mainL.js          # Alternate entry (leaderboard mode)
+```
+
+---
+
+## 🛠 Development
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the dev server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+- [http://localhost:3000/](http://localhost:3000/) → normal game  
+- [http://localhost:3000/leaderboard/](http://localhost:3000/leaderboard/) → leaderboard version  
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+---
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+## 🏗 Build
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Generate a static export:
 
-## Learn More
+```bash
+npm run build
+```
 
-To learn more about Next.js, take a look at the following resources:
+This outputs a static site into the `/out` folder, ready to be hosted on any static hosting service (e.g., Vercel, Netlify, GitHub Pages, AWS S3, etc.).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🐞 Debugging
 
-## Deploy on Vercel
+Inside `src/main.js`, you can enable debug mode by setting:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```js
+const DEBUG = true;
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+This will show debug information during development.
+
+---
+
+## 🌐 API Integration
+
+DarwinGame does **not** include direct API integration logic.  
+It expects calls to be made against the provided API endpoints (e.g., user creation, leaderboard fetching) outside of this repository.  
+
+---
